@@ -44,6 +44,7 @@
       <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
+        <el-table-column align="center" label="ID" prop="ID" width="120" />
         <el-table-column align="center" label="标题" prop="title" width="320" />
         <el-table-column align="center" label="备注" prop="note" min-width="320" />
         <el-table-column align="center" label="日期" width="180">
