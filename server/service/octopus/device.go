@@ -42,7 +42,7 @@ func (deviceService *DeviceService) DeleteDeviceByIds(IDs []string, deletedBy ui
 	return err
 }
 
-func (deviceService *DeviceService) UpdateDevice(device *octopus.Device) (err error) {
+func (deviceService *DeviceService) UpdateDevice(device octopus.Device) (err error) {
 	err = global.GVA_DB.Model(&octopus.Device{}).Where("id = ?", device.ID).Updates(&device).Error
 	return err
 }
