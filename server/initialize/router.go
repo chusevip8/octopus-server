@@ -82,6 +82,7 @@ func Routers() *gin.Engine {
 	{
 		octopusRouter := router.RouterGroupApp.Octopus
 		octopusRouter.InitScriptRouter(PrivateGroup, PublicGroup)
+		octopusRouter.InitDeviceRouter(PrivateGroup, PublicGroup)
 	}
 
 	global.GVA_LOG.Info("router register success")
