@@ -10,21 +10,18 @@ type DeviceRouter struct{}
 
 func (d *DeviceRouter) InitDeviceRouter(Router *gin.RouterGroup, PublicRouter *gin.RouterGroup) {
 	deviceRouter := Router.Group("device").Use(middleware.OperationRecord())
-	//deviceRouterWithoutRecord := Router.Group("device")
-	//deviceRouterWithoutAuth := PublicRouter.Group("device")
+	deviceRouterWithoutRecord := Router.Group("device")
+	deviceRouterWithoutAuth := PublicRouter.Group("device")
 
 	var deviceApi = v1.ApiGroupApp.OctopusApiGroup.DeviceApi
 	{
-		deviceRouter.POST("createScript", deviceApi.CreateDevice)
-		deviceRouter.DELETE("deleteScript", deviceApi.DeleteDevice)
-		deviceRouter.DELETE("deleteScriptByIds", deviceApi.DeleteDeviceByIds)
-		deviceRouter.PUT("updateScript", deviceApi.UpdateDevice)
+		deviceRouter.DELETE("deleteDevice", deviceApi.DeleteDevice)
+		deviceRouter.DELETE("deleteDeviceByIds", deviceApi.DeleteDeviceByIds)
 	}
-	//{
-	//	deviceRouterWithoutRecord.GET("findScript", scriptApi.FindScript)       // 根据ID获取脚本
-	//	deviceRouterWithoutRecord.GET("getScriptList", scriptApi.GetScriptList) // 获取脚本列表
-	//}
-	//{
-	//	deviceRouterWithoutAuth.GET("getScriptPublic", scriptApi.GetScriptPublic) // 获取脚本列表
-	//}
+	{
+		deviceRouterWithoutRecord.GET("getScriptList", deviceApi.GetDeviceList)
+	}
+	{
+		deviceRouterWithoutAuth.POST("registerDevice", deviceApi.RegisterDevice)
+	}
 }
