@@ -1,6 +1,7 @@
 package octopus
 
 import (
+	"errors"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
@@ -11,9 +12,27 @@ import (
 type DeviceService struct {
 }
 
-func (deviceService *DeviceService) CreateDevice(device *octopus.Device) (err error) {
-	err = global.GVA_DB.Create(device).Error
-	return err
+func (deviceService *DeviceService) RegisterDevice(d octopus.Device) (deviceInter octopus.Device, err error) {
+	var user system.SysUser
+	if errors.Is(global.GVA_DB.Model(&system.SysUser{}).Where("username = ?", d.Username).First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
+		return deviceInter, errors.New("用户未注册")
+	}
+	var device octopus.Device
+	if errors.Is(global.GVA_DB.Model(&octopus.Device{}).Where("number = ? AND username = ?", d.Number, d.Username).First(&device).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
+		d.CreatedBy = user.ID
+		if err := global.GVA_DB.Create(&d).Error; err != nil {
+			return deviceInter, err
+		}
+		return d, nil
+	}
+	device.Brand = d.Brand
+	device.OS = d.OS
+	device.Note = d.Note
+	device.Status = 4 //表示离线状态
+	if err := global.GVA_DB.Save(&device).Error; err != nil {
+		return deviceInter, err
+	}
+	return device, nil
 }
 
 func (deviceService *DeviceService) DeleteDevice(ID string, userID uint) (err error) {
@@ -40,16 +59,6 @@ func (deviceService *DeviceService) DeleteDeviceByIds(IDs []string, deletedBy ui
 		return nil
 	})
 	return err
-}
-
-func (deviceService *DeviceService) UpdateDevice(device octopus.Device) (err error) {
-	err = global.GVA_DB.Model(&octopus.Device{}).Where("id = ?", device.ID).Updates(&device).Error
-	return err
-}
-
-func (deviceService *DeviceService) GetDevice(ID string) (device octopus.Device, err error) {
-	err = global.GVA_DB.Where("id = ?", ID).First(&device).Error
-	return
 }
 
 func (deviceService *DeviceService) GetDeviceInfoList(info octopusReq.DeviceSearch) (list []octopus.Device, total int64, err error) {
