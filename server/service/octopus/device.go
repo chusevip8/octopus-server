@@ -69,8 +69,8 @@ func (deviceService *DeviceService) GetDeviceInfoList(info octopusReq.DeviceSear
 		db = db.Where("status = ?", info.Status)
 	}
 	if info.NickName != "" {
-		subQuery := global.GVA_DB.Model(&system.SysUser{}).Select("id").Where("nick_name = ?", info.NickName)
-		db = db.Where("user_id IN (?)", subQuery)
+		subQuery := global.GVA_DB.Model(&system.SysUser{}).Select("username").Where("nick_name = ?", info.NickName)
+		db = db.Where("username IN (?)", subQuery)
 	}
 	err = db.Count(&total).Error
 	if err != nil {
