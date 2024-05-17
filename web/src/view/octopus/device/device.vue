@@ -32,10 +32,10 @@
             <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" />
-                <el-table-column align="center" label="用户" prop="nickName" width="120" />
                 <el-table-column align="center" label="编号" prop="number" width="320" />
                 <el-table-column align="center" label="备注" prop="note" min-width="320" />
                 <el-table-column align="center" label="状态" prop="status" min-width="320" />
+                <el-table-column align="center" label="用户" prop="nickName" width="120" />
 
                 <el-table-column align="center" label="操作" fixed="right" min-width="120">
                     <template #default="scope">
@@ -85,14 +85,10 @@ const statusOptions = ref([
     },
     {
         value: '3',
-        label: '停止'
-    },
-    {
-        value: '4',
         label: '离线'
     },
     {
-        value: '5',
+        value: '4',
         label: '禁用'
     }
 ])

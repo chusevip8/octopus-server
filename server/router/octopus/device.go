@@ -19,7 +19,7 @@ func (d *DeviceRouter) InitDeviceRouter(Router *gin.RouterGroup, PublicRouter *g
 		deviceRouter.DELETE("deleteDeviceByIds", deviceApi.DeleteDeviceByIds)
 	}
 	{
-		deviceRouterWithoutRecord.GET("getScriptList", deviceApi.GetDeviceList)
+		deviceRouterWithoutRecord.GET("getDeviceList", deviceApi.GetDeviceList)
 	}
 	{
 		deviceRouterWithoutAuth.POST("registerDevice", deviceApi.RegisterDevice)
