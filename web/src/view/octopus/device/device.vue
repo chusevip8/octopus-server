@@ -34,7 +34,11 @@
                 <el-table-column type="selection" width="55" />
                 <el-table-column align="center" label="编号" prop="number" width="120" />
                 <el-table-column align="center" label="备注" prop="note" min-width="240" />
-                <el-table-column align="center" label="状态" prop="status" width="120" />
+                <el-table-column align="center" label="状态" fixed="right" width="120">
+                    <template #default="scope">
+                        <span>{{ statusFilter(scope.row.status) }}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column align="center" label="用户" prop="user.nickName" width="240" />
 
                 <el-table-column align="center" label="操作" fixed="right" width="240">
@@ -76,19 +80,19 @@ defineOptions({
 const elSearchFormRef = ref()
 const statusOptions = ref([
     {
-        value: '1',
+        value: 1,
         label: '运行'
     },
     {
-        value: '2',
+        value: 2,
         label: '就绪'
     },
     {
-        value: '3',
+        value: 3,
         label: '离线'
     },
     {
-        value: '4',
+        value: 4,
         label: '禁用'
     }
 ])
@@ -116,6 +120,11 @@ const onSubmit = () => {
     })
 }
 
+
+const statusFilter = (value) => {
+    const target = statusOptions.value.filter(item => item.value === value)[0]
+    return target && `${target.label}`
+}
 // 分页
 const handleSizeChange = (val) => {
     pageSize.value = val
