@@ -34,7 +34,7 @@
                 <el-table-column type="selection" width="55" />
                 <el-table-column align="center" label="编号" prop="number" width="120" />
                 <el-table-column align="center" label="备注" prop="note" min-width="240" />
-                <el-table-column align="center" label="状态" fixed="right" width="120">
+                <el-table-column align="center" label="状态" width="120">
                     <template #default="scope">
                         <span>{{ statusFilter(scope.row.status) }}</span>
                     </template>
@@ -43,7 +43,7 @@
 
                 <el-table-column align="center" label="操作" fixed="right" width="240">
                     <template #default="scope">
-                        <el-button type="primary" link icon="stop" class="table-button"
+                        <el-button type="primary" link icon="close" class="table-button"
                             @click="updateScriptFunc(scope.row)">停止</el-button>
                         <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
                     </template>
