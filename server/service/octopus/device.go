@@ -65,7 +65,7 @@ func (deviceService *DeviceService) GetDeviceInfoList(info octopusReq.DeviceSear
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
-	db := global.GVA_DB.Model(&octopus.Device{})
+	db := global.GVA_DB.Model(&octopus.Device{}).Preload("User")
 	var devices []octopus.Device
 
 	if info.Number != "" {

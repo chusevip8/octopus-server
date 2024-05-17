@@ -35,7 +35,7 @@
                 <el-table-column align="center" label="编号" prop="number" width="120" />
                 <el-table-column align="center" label="备注" prop="note" min-width="240" />
                 <el-table-column align="center" label="状态" prop="status" width="120" />
-                <el-table-column align="center" label="用户" prop="nickName" width="240" />
+                <el-table-column align="center" label="用户" prop="user.nickName" width="240" />
 
                 <el-table-column align="center" label="操作" fixed="right" width="240">
                     <template #default="scope">
