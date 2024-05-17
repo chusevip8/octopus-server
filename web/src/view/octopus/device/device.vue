@@ -14,8 +14,8 @@
                 </el-form-item>
                 <el-form-item label="状态" prop="status">
                     <el-select v-model="searchInfo.status" clearable placeholder="请选择">
-                        <el-option v-for="item in statusOptions" :key="item.value"
-                            :label="`${item.label}(${item.value})`" :value="item.value" />
+                        <el-option v-for="item in statusOptions" :key="item.value" :label="`${item.label}`"
+                            :value="item.value" />
                     </el-select>
                 </el-form-item>
                 <el-form-item>
@@ -32,14 +32,14 @@
             <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" />
-                <el-table-column align="center" label="编号" prop="number" width="320" />
-                <el-table-column align="center" label="备注" prop="note" min-width="320" />
-                <el-table-column align="center" label="状态" prop="status" min-width="320" />
-                <el-table-column align="center" label="用户" prop="nickName" width="120" />
+                <el-table-column align="center" label="编号" prop="number" width="120" />
+                <el-table-column align="center" label="备注" prop="note" min-width="240" />
+                <el-table-column align="center" label="状态" prop="status" width="120" />
+                <el-table-column align="center" label="用户" prop="nickName" width="240" />
 
-                <el-table-column align="center" label="操作" fixed="right" min-width="120">
+                <el-table-column align="center" label="操作" fixed="right" width="240">
                     <template #default="scope">
-                        <el-button type="primary" link icon="edit" class="table-button"
+                        <el-button type="primary" link icon="stop" class="table-button"
                             @click="updateScriptFunc(scope.row)">停止</el-button>
                         <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
                     </template>
