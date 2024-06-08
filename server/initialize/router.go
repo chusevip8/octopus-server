@@ -93,12 +93,6 @@ func Routers() *gin.Engine {
 
 	}
 
-	{
-		octopusRouter := router.RouterGroupApp.Octopus
-		octopusRouter.InitScriptRouter(PrivateGroup, PublicGroup)
-		octopusRouter.InitDeviceRouter(PrivateGroup, PublicGroup)
-	}
-
 	//插件路由安装
 	InstallPlugin(PrivateGroup, PublicGroup)
 
