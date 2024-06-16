@@ -84,6 +84,7 @@ func Routers() *gin.Engine {
 		octopusRouter := router.RouterGroupApp.Octopus
 		octopusRouter.InitScriptRouter(PrivateGroup, PublicGroup)
 		octopusRouter.InitDeviceRouter(PrivateGroup, PublicGroup)
+		octopusRouter.InitCmtTaskMgrRouter(PrivateGroup, PublicGroup)
 
 	}
 
