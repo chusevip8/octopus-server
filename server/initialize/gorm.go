@@ -56,7 +56,7 @@ func RegisterTables() {
 		example.ExaFileUploadAndDownload{},
 
 		octopus.Script{},
-		octopus.Device{}, octopus.DYCmtTask{},
+		octopus.Device{},
 	)
 	if err != nil {
 		global.GVA_LOG.Error("register table failed", zap.Error(err))
