@@ -114,10 +114,13 @@ import {
 import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
-
+import { useRouter, useRoute } from 'vue-router'
 defineOptions({
   name: 'CmtTaskMgr'
 })
+
+const router = useRouter()
+const route = useRoute()
 
 // 控制更多查询条件显示/隐藏状态
 const showAllQuery = ref(false)
@@ -130,8 +133,7 @@ const formData = ref({
   cmtKeyword: '',
 })
 
-
-
+console.log(route.query)
 // 验证规则
 const rule = reactive({
   // appName: [{
@@ -351,6 +353,7 @@ const closeDialog = () => {
 const enterDialog = async () => {
   elFormRef.value?.validate(async (valid) => {
     if (!valid) return
+    formData.value.appName = route.query.appName
     let res
     switch (type.value) {
       case 'create':
