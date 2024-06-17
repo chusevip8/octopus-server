@@ -58,7 +58,7 @@
         <el-table-column align="center" label="评论关键字" prop="cmtKeyword" min-width="240" />
         <el-table-column align="center" label="操作" fixed="right" min-width="240">
           <template #default="scope">
-            <el-button type="primary" link icon="Cellphone" class="table-button">添加设备</el-button>
+            <el-button type="primary" link icon="Cellphone" class="table-button">管理设备</el-button>
             <el-button type="primary" link icon="edit" class="table-button"
               @click="updateCmtTaskMgrFunc(scope.row)">修改</el-button>
             <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
