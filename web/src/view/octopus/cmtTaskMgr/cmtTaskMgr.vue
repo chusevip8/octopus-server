@@ -353,7 +353,7 @@ const closeDialog = () => {
 const enterDialog = async () => {
   elFormRef.value?.validate(async (valid) => {
     if (!valid) return
-    formData.value.appName = route.query.appName
+    formData.value.appName = route.params.appName
     let res
     switch (type.value) {
       case 'create':
