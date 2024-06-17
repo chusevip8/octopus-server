@@ -23,6 +23,7 @@ func (deviceApi *DeviceApi) RegisterDevice(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+	device.CreatedBy = utils.GetUserID(c)
 	if _, err := deviceService.RegisterDevice(device); err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("设备注册失败--"+err.Error(), c)

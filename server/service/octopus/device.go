@@ -29,6 +29,7 @@ func (deviceService *DeviceService) RegisterDevice(d octopus.Device) (deviceInte
 	device.OS = d.OS
 	device.Note = d.Note
 	device.Status = 4 //表示离线状态
+	device.CreatedBy = d.CreatedBy
 	if err := global.GVA_DB.Save(&device).Error; err != nil {
 		return deviceInter, err
 	}
