@@ -131,6 +131,7 @@ const formData = ref({
   taskTitle: '',
   articleID: '',
   cmtKeyword: '',
+  scriptID: '',
 })
 
 console.log(route.query)
@@ -347,6 +348,7 @@ const closeDialog = () => {
     taskTitle: '',
     articleID: '',
     cmtKeyword: '',
+    scriptID: '',
   }
 }
 // 弹窗确定
@@ -354,6 +356,7 @@ const enterDialog = async () => {
   elFormRef.value?.validate(async (valid) => {
     if (!valid) return
     formData.value.appName = route.params.appName
+    formData.value.scriptID = route.params.scriptId
     let res
     switch (type.value) {
       case 'create':
