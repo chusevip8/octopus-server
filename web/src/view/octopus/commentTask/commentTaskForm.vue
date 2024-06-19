@@ -5,14 +5,14 @@
         <el-form-item label="App名称:" prop="appName">
           <el-input v-model="formData.appName" :clearable="false"  placeholder="请输入App名称" />
        </el-form-item>
-        <el-form-item label="任务标题:" prop="taskTitle">
-          <el-input v-model="formData.taskTitle" :clearable="false"  placeholder="请输入任务标题" />
+        <el-form-item label="任务标题:" prop="title">
+          <el-input v-model="formData.title" :clearable="false"  placeholder="请输入任务标题" />
        </el-form-item>
         <el-form-item label="文章ID:" prop="articleID">
           <el-input v-model="formData.articleID" :clearable="false"  placeholder="请输入文章ID" />
        </el-form-item>
-        <el-form-item label="评论关键字:" prop="cmtKeyword">
-          <el-input v-model="formData.cmtKeyword" :clearable="false"  placeholder="请输入评论关键字" />
+        <el-form-item label="评论关键字:" prop="keyword">
+          <el-input v-model="formData.keyword" :clearable="false"  placeholder="请输入评论关键字" />
        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="save">保存</el-button>
@@ -25,13 +25,13 @@
 
 <script setup>
 import {
-  createCmtTaskMgr,
-  updateCmtTaskMgr,
-  findCmtTaskMgr
-} from '@/api/octopus/cmtTaskMgr'
+  createCommentTask,
+  updateCommentTask,
+  findCommentTask
+} from '@/api/octopus/commentTask'
 
 defineOptions({
-    name: 'CmtTaskMgrForm'
+    name: 'CommentTaskForm'
 })
 
 // 自动获取字典
@@ -46,18 +46,18 @@ const router = useRouter()
 const type = ref('')
 const formData = ref({
             appName: '',
-            taskTitle: '',
+            title: '',
             articleID: '',
-            cmtKeyword: '',
+            keyword: '',
         })
 // 验证规则
 const rule = reactive({
                appName : [{
                    required: true,
-                   message: 'App名称不能为空',
+                   message: '',
                    trigger: ['input','blur'],
                }],
-               taskTitle : [{
+               title : [{
                    required: true,
                    message: '任务标题不能为空',
                    trigger: ['input','blur'],
@@ -75,9 +75,9 @@ const elFormRef = ref()
 const init = async () => {
  // 建议通过url传参获取目标数据ID 调用 find方法进行查询数据操作 从而决定本页面是create还是update 以下为id作为url参数示例
     if (route.query.id) {
-      const res = await findCmtTaskMgr({ ID: route.query.id })
+      const res = await findCommentTask({ ID: route.query.id })
       if (res.code === 0) {
-        formData.value = res.data.recmtTaskMgr
+        formData.value = res.data.recommentTask
         type.value = 'update'
       }
     } else {
@@ -93,13 +93,13 @@ const save = async() => {
             let res
            switch (type.value) {
              case 'create':
-               res = await createCmtTaskMgr(formData.value)
+               res = await createCommentTask(formData.value)
                break
              case 'update':
-               res = await updateCmtTaskMgr(formData.value)
+               res = await updateCommentTask(formData.value)
                break
              default:
-               res = await createCmtTaskMgr(formData.value)
+               res = await createCommentTask(formData.value)
                break
            }
            if (res.code === 0) {

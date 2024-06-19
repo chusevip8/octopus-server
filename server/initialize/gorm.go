@@ -57,7 +57,7 @@ func RegisterTables() {
 
 		octopus.Script{},
 		octopus.Device{},
-		octopus.CmtTaskMgr{},
+		octopus.CommentTask{},
 	)
 	if err != nil {
 		global.GVA_LOG.Error("register table failed", zap.Error(err))
