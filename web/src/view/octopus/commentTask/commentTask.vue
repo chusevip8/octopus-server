@@ -55,7 +55,8 @@
         <el-table-column align="center" label="评论关键字" prop="keyword" min-width="240" />
         <el-table-column align="center" label="操作" fixed="right" min-width="240">
           <template #default="scope">
-            <el-button type="primary" link icon="Cellphone" class="table-button">管理设备</el-button>
+            <el-button type="primary" link icon="Cellphone" class="table-button"
+              @click="enterDeviceManager(scope.row)">管理设备</el-button>
             <el-button type="primary" link icon="edit" class="table-button"
               @click="updateCommentTaskFunc(scope.row)">修改</el-button>
             <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
@@ -314,6 +315,11 @@ const deleteCommentTaskFunc = async (row) => {
     }
     getTableData()
   }
+}
+
+const enterDeviceManager = (row) => {
+  console.log(row)
+  router.push({ name: 'execTask' })
 }
 
 // 弹窗控制标记
