@@ -34,15 +34,15 @@
       <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-        <el-table-column align="left" label="设备编号" prop="device.number" width="120" />
-        <el-table-column align="left" label="设备备注" prop="device.note" width="120" />
-        <el-table-column align="left" label="设备状态" prop="device.status" width="120" />
-        <el-table-column align="left" label="任务状态" prop="status" width="120" />
-        <el-table-column align="left" label="错误信息" prop="error" width="120" />
-        <el-table-column align="left" label="操作" fixed="right" min-width="240">
+        <el-table-column align="center" label="设备编号" prop="device.number" width="120" />
+        <el-table-column align="center" label="设备备注" prop="device.note" width="360" />
+        <el-table-column align="center" label="任务状态" prop="status" width="120" />
+        <el-table-column align="center" label="设备状态" prop="device.status" width="120" />
+        <el-table-column align="center" label="错误信息" prop="error" min-width="120" />
+        <el-table-column align="center" label="操作" fixed="right" width="240">
           <template #default="scope">
             <el-button type="primary" link icon="edit" class="table-button"
-              @click="updateExecTaskFunc(scope.row)">变更</el-button>
+              @click="updateExecTaskFunc(scope.row)">停止</el-button>
             <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
           </template>
         </el-table-column>

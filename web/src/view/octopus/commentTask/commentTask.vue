@@ -54,7 +54,7 @@
         <el-table-column align="center" label="操作" fixed="right" min-width="240">
           <template #default="scope">
             <el-button type="primary" link icon="Cellphone" class="table-button"
-              @click="enterDeviceManager(scope.row)">管理设备</el-button>
+              @click="enterDeviceManager(scope.row)">管理任务</el-button>
             <el-button type="primary" link icon="edit" class="table-button"
               @click="updateCommentTaskFunc(scope.row)">修改</el-button>
             <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
