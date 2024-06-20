@@ -1,0 +1,39 @@
+import { ref } from 'vue'
+
+export const deviceStatusOptions = ref([
+    {
+        value: 1,
+        label: '运行'
+    },
+    {
+        value: 2,
+        label: '就绪'
+    },
+    {
+        value: 3,
+        label: '离线'
+    },
+    {
+        value: 4,
+        label: '禁用'
+    }
+])
+
+export const taskStatusOptions = ref([
+    {
+        value: 1,
+        label: '成功'
+    },
+    {
+        value: 2,
+        label: '未执行'
+    },
+    {
+        value: 3,
+        label: '执行中'
+    },
+    {
+        value: 4,
+        label: '失败'
+    }
+])

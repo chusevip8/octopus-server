@@ -7,9 +7,10 @@
         <el-form-item label="设备编号" prop="deviceNumber">
           <el-input v-model="searchInfo.deviceNumber" placeholder="搜索条件" />
         </el-form-item>
-        <el-form-item label="状态" prop="status">
+        <el-form-item label="任务状态" prop="status">
           <el-select v-model="searchInfo.status" clearable placeholder="请选择">
-            <el-option v-for="item in statusOptions" :key="item.value" :label="`${item.label}`" :value="item.value" />
+            <el-option v-for="item in taskStatusOptions" :key="item.value" :label="`${item.label}`"
+              :value="item.value" />
           </el-select>
         </el-form-item>
 
@@ -83,6 +84,7 @@ import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, R
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
 import { DeviceList } from '@/view/octopus/components'
+import { taskStatusOptions } from '@/view/octopus/utils/consts'
 
 defineOptions({
   name: 'ExecTask'
@@ -122,25 +124,6 @@ const searchRule = reactive({
 
 const elFormRef = ref()
 const elSearchFormRef = ref()
-
-const statusOptions = ref([
-  {
-    value: 1,
-    label: '成功'
-  },
-  {
-    value: 2,
-    label: '未执行'
-  },
-  {
-    value: 3,
-    label: '执行中'
-  },
-  {
-    value: 4,
-    label: '失败'
-  }
-])
 
 // =========== 表格控制部分 ===========
 const page = ref(1)
