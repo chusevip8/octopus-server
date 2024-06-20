@@ -27,7 +27,7 @@
     </div>
     <div class="gva-table-box">
       <div class="gva-btn-list">
-        <el-button type="primary" icon="plus" @click="openDialog">新增</el-button>
+        <el-button type="primary" icon="plus" @click="openDialog">添加</el-button>
         <el-button icon="delete" style="margin-left: 10px;" :disabled="!multipleSelection.length"
           @click="onDelete">删除</el-button>
       </div>
@@ -63,12 +63,7 @@
           </div>
         </div>
       </template>
-
-      <el-form :model="formData" label-position="top" ref="elFormRef" :rules="rule" label-width="80px">
-        <el-form-item label="任务错误信息:" prop="error">
-          <el-input v-model="formData.error" :clearable="false" placeholder="请输入任务错误信息" />
-        </el-form-item>
-      </el-form>
+      <device-list />
     </el-drawer>
   </div>
 </template>
@@ -87,6 +82,7 @@ import {
 import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
+import { DeviceList } from '@/view/octopus/components'
 
 defineOptions({
   name: 'ExecTask'
