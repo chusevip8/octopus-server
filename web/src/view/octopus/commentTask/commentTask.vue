@@ -21,11 +21,9 @@
 
         <el-form-item label="任务标题" prop="title">
           <el-input v-model="searchInfo.title" placeholder="搜索条件" />
-
         </el-form-item>
         <el-form-item label="评论关键字" prop="keyword">
           <el-input v-model="searchInfo.keyword" placeholder="搜索条件" />
-
         </el-form-item>
 
         <template v-if="showAllQuery">
