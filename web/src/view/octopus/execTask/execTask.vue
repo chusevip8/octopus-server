@@ -37,8 +37,16 @@
         <el-table-column type="selection" width="55" />
         <el-table-column align="center" label="设备编号" prop="device.number" width="120" />
         <el-table-column align="center" label="设备备注" prop="device.note" width="360" />
-        <el-table-column align="center" label="任务状态" prop="status" width="120" />
-        <el-table-column align="center" label="设备状态" prop="device.status" width="120" />
+        <el-table-column align="center" label="任务状态" width="120">
+          <template #default="scope">
+            <span>{{ taskStatusFilter(scope.row.status) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="设备状态" width="120">
+          <template #default="scope">
+            <span>{{ deviceStatusFilter(scope.row.device.status) }}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="错误信息" prop="error" min-width="120" />
         <el-table-column align="center" label="操作" fixed="right" width="240">
           <template #default="scope">
@@ -85,6 +93,7 @@ import { DeviceList } from '@/view/octopus/components'
 import { taskStatusOptions } from '@/view/octopus/utils/consts'
 import { useRoute } from 'vue-router'
 import { deviceStatusOptions } from '@/view/octopus/utils/consts'
+
 defineOptions({
   name: 'ExecTask'
 })
@@ -140,6 +149,16 @@ const searchInfo = ref({})
 const onReset = () => {
   searchInfo.value = {}
   getTableData()
+}
+
+const deviceStatusFilter = (value) => {
+  const target = deviceStatusOptions.value.filter(item => item.value === value)[0]
+  return target && `${target.label}`
+}
+
+const taskStatusFilter = (value) => {
+  const target = taskStatusOptions.value.filter(item => item.value === value)[0]
+  return target && `${target.label}`
 }
 
 // 搜索
