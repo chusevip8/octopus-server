@@ -68,7 +68,7 @@ const searchInfo = ref({})
 
 
 const rowSelected = (row) => {
-    emit('row-selected', { deviceID: row.ID })
+    emit('row-selected', { deviceID: row.ID, deviceStatus: row.status })
 }
 
 // 重置

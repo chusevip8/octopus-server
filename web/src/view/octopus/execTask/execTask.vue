@@ -73,7 +73,8 @@ import {
   createExecTask,
   deleteExecTask,
   deleteExecTaskByIds,
-  getExecTaskList
+  getExecTaskList,
+  findExecTaskByDeviceId
 } from '@/api/octopus/execTask'
 
 // 全量引入格式化工具 请按需保留
@@ -83,7 +84,7 @@ import { ref, reactive } from 'vue'
 import { DeviceList } from '@/view/octopus/components'
 import { taskStatusOptions } from '@/view/octopus/utils/consts'
 import { useRoute } from 'vue-router'
-
+import { deviceStatusOptions } from '@/view/octopus/utils/consts'
 defineOptions({
   name: 'ExecTask'
 })
@@ -279,18 +280,40 @@ const closeDialog = () => {
 }
 
 const saveExecTask = async (params) => {
-  formData.value.taskType = route.params.taskType
-  formData.value.taskID = route.params.taskID
+  formData.value.taskType = parseInt(route.params.taskType, 10)
+  formData.value.taskID = parseInt(route.params.taskID, 10)
   formData.value.deviceID = params.deviceID
-  console.log(formData)
-  // let res = await createExecTask(formData.value)
-  // if (res.code === 0) {
-  //   ElMessage({
-  //     type: 'success',
-  //     message: '创建/更改成功'
-  //   })
-  //   getTableData()
-  // }
+
+  const deviceStatus = params.deviceStatus
+  if (deviceStatus === deviceStatusOptions.value[2].value) {
+    ElMessage({
+      type: 'error',
+      message: '不能添加离线设备'
+    })
+  } else if (deviceStatus === deviceStatusOptions.value[3].value) {
+    ElMessage({
+      type: 'error',
+      message: '不能添加禁用设备'
+    })
+  } else {
+    let res = await findExecTaskByDeviceId({ deviceID: params.deviceID })
+    if (res.data !== null) {
+      ElMessage({
+        type: 'error',
+        message: '该设备已添加'
+      })
+    } else {
+      let res = await createExecTask(formData.value)
+      if (res.code === 0) {
+        ElMessage({
+          type: 'success',
+          message: '创建/更改成功'
+        })
+        getTableData()
+      }
+    }
+  }
+
 }
 
 </script>

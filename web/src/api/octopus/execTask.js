@@ -95,3 +95,11 @@ export const getExecTaskList = (params) => {
     params
   })
 }
+
+export const findExecTaskByDeviceId = (params) => {
+  return service({
+    url: '/execTask/findExecTaskByDeviceId',
+    method: 'get',
+    params
+  })
+}
