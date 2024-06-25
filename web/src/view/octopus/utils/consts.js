@@ -22,15 +22,15 @@ export const deviceStatusOptions = ref([
 export const taskStatusOptions = ref([
     {
         value: 1,
-        label: '成功'
+        label: '新建'
     },
     {
         value: 2,
-        label: '未执行'
+        label: '执行中'
     },
     {
         value: 3,
-        label: '执行中'
+        label: '完成'
     },
     {
         value: 4,

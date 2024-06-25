@@ -9,6 +9,12 @@
                 <el-form-item label="备注" prop="note">
                     <el-input v-model="searchInfo.note" placeholder="搜索条件" />
                 </el-form-item>
+                <el-form-item label="状态" prop="status">
+                    <el-select v-model="searchInfo.status" clearable placeholder="请选择">
+                        <el-option v-for="item in deviceStatusOptions" :key="item.value" :label="`${item.label}`"
+                            :value="item.value" />
+                    </el-select>
+                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" icon="search" @click="onSubmit">查询</el-button>
                     <el-button icon="refresh" @click="onReset">重置</el-button>
@@ -24,6 +30,11 @@
                 <el-table-column align="center" label="状态" width="120">
                     <template #default="scope">
                         <span>{{ statusFilter(scope.row.status) }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" label="操作" fixed="right" width="120">
+                    <template #default="scope">
+                        <el-button type="primary" link icon="Select" @click="rowSelected(scope.row)">选择</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -44,6 +55,8 @@ import {
 import { ref } from 'vue'
 import { deviceStatusOptions } from '@/view/octopus/utils/consts'
 
+const emit = defineEmits(['row-selected'])
+
 const elSearchFormRef = ref()
 
 // =========== 表格控制部分 ===========
@@ -52,6 +65,11 @@ const total = ref(0)
 const pageSize = ref(10)
 const tableData = ref([])
 const searchInfo = ref({})
+
+
+const rowSelected = (row) => {
+    emit('row-selected', { deviceID: row.ID })
+}
 
 // 重置
 const onReset = () => {

@@ -43,7 +43,7 @@
         <el-table-column align="center" label="操作" fixed="right" width="240">
           <template #default="scope">
             <el-button type="primary" link icon="edit" class="table-button"
-              @click="updateExecTaskFunc(scope.row)">停止</el-button>
+              @click="stopExecTask(scope.row)">停止</el-button>
             <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -57,14 +57,13 @@
     <el-drawer destroy-on-close size="800" v-model="dialogFormVisible" :show-close="false" :before-close="closeDialog">
       <template #header>
         <div class="flex justify-between items-center">
-          <span class="text-lg">{{ type === 'create' ? '添加' : '修改' }}</span>
+          <span class="text-lg">添加</span>
           <div>
-            <el-button type="primary" @click="enterDialog">确 定</el-button>
-            <el-button @click="closeDialog">取 消</el-button>
+            <el-button @click="closeDialog">关闭</el-button>
           </div>
         </div>
       </template>
-      <device-list />
+      <device-list @row-selected="saveExecTask" />
     </el-drawer>
   </div>
 </template>
@@ -74,8 +73,6 @@ import {
   createExecTask,
   deleteExecTask,
   deleteExecTaskByIds,
-  updateExecTask,
-  findExecTask,
   getExecTaskList
 } from '@/api/octopus/execTask'
 
@@ -85,16 +82,23 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
 import { DeviceList } from '@/view/octopus/components'
 import { taskStatusOptions } from '@/view/octopus/utils/consts'
+import { useRoute } from 'vue-router'
 
 defineOptions({
   name: 'ExecTask'
 })
+
+const route = useRoute()
 
 // 控制更多查询条件显示/隐藏状态
 const showAllQuery = ref(false)
 
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
+  taskType: 0,
+  taskID: 0,
+  deviceID: 0,
+  status: 1,
   error: '',
 })
 
@@ -122,7 +126,6 @@ const searchRule = reactive({
   ],
 })
 
-const elFormRef = ref()
 const elSearchFormRef = ref()
 
 // =========== 表格控制部分 ===========
@@ -234,19 +237,11 @@ const onDelete = async () => {
   })
 }
 
-// 行为控制标记（弹窗内部需要增还是改）
-const type = ref('')
 
-// 更新行
-const updateExecTaskFunc = async (row) => {
-  const res = await findExecTask({ ID: row.ID })
-  type.value = 'update'
-  if (res.code === 0) {
-    formData.value = res.data
-    dialogFormVisible.value = true
-  }
+// 停止任务
+const stopExecTask = async (row) => {
+
 }
-
 
 // 删除行
 const deleteExecTaskFunc = async (row) => {
@@ -268,7 +263,6 @@ const dialogFormVisible = ref(false)
 
 // 打开弹窗
 const openDialog = () => {
-  type.value = 'create'
   dialogFormVisible.value = true
 }
 
@@ -276,34 +270,27 @@ const openDialog = () => {
 const closeDialog = () => {
   dialogFormVisible.value = false
   formData.value = {
+    taskType: 0,
+    taskID: 0,
+    deviceID: 0,
+    status: 1,
     error: '',
   }
 }
-// 弹窗确定
-const enterDialog = async () => {
-  elFormRef.value?.validate(async (valid) => {
-    if (!valid) return
-    let res
-    switch (type.value) {
-      case 'create':
-        res = await createExecTask(formData.value)
-        break
-      case 'update':
-        res = await updateExecTask(formData.value)
-        break
-      default:
-        res = await createExecTask(formData.value)
-        break
-    }
-    if (res.code === 0) {
-      ElMessage({
-        type: 'success',
-        message: '创建/更改成功'
-      })
-      closeDialog()
-      getTableData()
-    }
-  })
+
+const saveExecTask = async (params) => {
+  formData.value.taskType = route.params.taskType
+  formData.value.taskID = route.params.taskID
+  formData.value.deviceID = params.deviceID
+  console.log(formData)
+  // let res = await createExecTask(formData.value)
+  // if (res.code === 0) {
+  //   ElMessage({
+  //     type: 'success',
+  //     message: '创建/更改成功'
+  //   })
+  //   getTableData()
+  // }
 }
 
 </script>

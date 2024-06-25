@@ -14,7 +14,7 @@
                 </el-form-item>
                 <el-form-item label="状态" prop="status">
                     <el-select v-model="searchInfo.status" clearable placeholder="请选择">
-                        <el-option v-for="item in statusOptions" :key="item.value" :label="`${item.label}`"
+                        <el-option v-for="item in deviceStatusOptions" :key="item.value" :label="`${item.label}`"
                             :value="item.value" />
                     </el-select>
                 </el-form-item>
@@ -71,6 +71,7 @@ import {
 import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref } from 'vue'
+import { deviceStatusOptions } from '@/view/octopus/utils/consts'
 
 defineOptions({
     name: 'Device'
@@ -78,24 +79,6 @@ defineOptions({
 
 
 const elSearchFormRef = ref()
-const statusOptions = ref([
-    {
-        value: 1,
-        label: '运行'
-    },
-    {
-        value: 2,
-        label: '就绪'
-    },
-    {
-        value: 3,
-        label: '离线'
-    },
-    {
-        value: 4,
-        label: '禁用'
-    }
-])
 
 // =========== 表格控制部分 ===========
 const page = ref(1)
@@ -122,7 +105,7 @@ const onSubmit = () => {
 
 
 const statusFilter = (value) => {
-    const target = statusOptions.value.filter(item => item.value === value)[0]
+    const target = deviceStatusOptions.value.filter(item => item.value === value)[0]
     return target && `${target.label}`
 }
 // 分页
