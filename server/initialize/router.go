@@ -48,6 +48,11 @@ func Routers() *gin.Engine {
 	global.GVA_LOG.Info("register swagger handler")
 
 	PublicGroup := Router.Group(global.GVA_CONFIG.System.RouterPrefix)
+
+	PrivateGroup := Router.Group(global.GVA_CONFIG.System.RouterPrefix)
+
+	PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
+
 	{
 
 		PublicGroup.GET("/health", func(c *gin.Context) {
@@ -58,8 +63,7 @@ func Routers() *gin.Engine {
 		systemRouter.InitBaseRouter(PublicGroup)
 		systemRouter.InitInitRouter(PublicGroup)
 	}
-	PrivateGroup := Router.Group(global.GVA_CONFIG.System.RouterPrefix)
-	PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
+
 	{
 		systemRouter.InitApiRouter(PrivateGroup, PublicGroup)
 		systemRouter.InitJwtRouter(PrivateGroup)
@@ -90,6 +94,9 @@ func Routers() *gin.Engine {
 	}
 
 	InstallPlugin(PrivateGroup, PublicGroup)
+
+	// 注册业务路由
+	initBizRouter(PrivateGroup, PublicGroup)
 
 	global.GVA_LOG.Info("router register success")
 	return Router
