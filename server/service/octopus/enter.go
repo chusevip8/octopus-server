@@ -8,4 +8,5 @@ type ServiceGroup struct {
 	ConversationService
 	ThreadService
 	MessageService
+	CmtMsgMgrService
 }

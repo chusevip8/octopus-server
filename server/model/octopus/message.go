@@ -14,6 +14,7 @@ type Message struct {
 	Receiver   string `json:"receiver" form:"receiver" gorm:"column:receiver;comment:消息接收者;size:50;" binding:"required"`          //消息接收者
 	ReceiverId string `json:"receiverId" form:"receiverId" gorm:"column:receiver_id;comment:消息接收者ID;size:20;" binding:"required"` //消息接收者ID
 	Status     uint   `json:"status" form:"status" gorm:"default:0;column:status;comment:消息状态;" binding:"required"`               //消息状态
+	Content    string `json:"content" form:"content" gorm:"column:content;comment:信息内容;"`                                         // 信息内容
 	CreatedBy  uint   `gorm:"column:created_by;comment:创建者"`
 	UpdatedBy  uint   `gorm:"column:updated_by;comment:更新者"`
 	DeletedBy  uint   `gorm:"column:deleted_by;comment:删除者"`
