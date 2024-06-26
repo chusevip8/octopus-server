@@ -105,6 +105,7 @@ const showAllQuery = ref(false)
 
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
+  appName: '',
   taskType: 0,
   taskID: 0,
   deviceID: 0,
@@ -290,6 +291,7 @@ const openDialog = () => {
 const closeDialog = () => {
   dialogFormVisible.value = false
   formData.value = {
+    appName: '',
     taskType: 0,
     taskID: 0,
     deviceID: 0,
@@ -299,8 +301,9 @@ const closeDialog = () => {
 }
 
 const saveExecTask = async (params) => {
-  formData.value.taskType = parseInt(route.params.taskType, 10)
-  formData.value.taskID = parseInt(route.params.taskID, 10)
+  formData.value.appName = route.params.appName
+  formData.value.taskType = route.params.taskType
+  formData.value.taskID = parseInt(route.params.taskId, 10)
   formData.value.deviceID = params.deviceID
 
   const deviceStatus = params.deviceStatus

@@ -317,7 +317,7 @@ const deleteCommentTaskFunc = async (row) => {
 
 const openTaskManager = (row) => {
 
-  router.push({ name: 'execTask', params: { taskType: 1, taskID: row.ID } })
+  router.push({ name: 'execTask', params: { appName: route.params.appName, taskType: 'comment', taskId: row.ID } })
 }
 
 // 弹窗控制标记
