@@ -5,4 +5,5 @@ type ServiceGroup struct {
 	DeviceService
 	CommentTaskService
 	ExecTaskService
+	ConversationService
 }

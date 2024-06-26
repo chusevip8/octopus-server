@@ -5,4 +5,5 @@ type RouterGroup struct {
 	DeviceRouter
 	CommentTaskRouter
 	ExecTaskRouter
+	ConversationRouter
 }

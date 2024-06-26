@@ -5,4 +5,5 @@ type ApiGroup struct {
 	DeviceApi
 	CommentTaskApi
 	ExecTaskApi
+	ConversationApi
 }
