@@ -6,5 +6,5 @@ import (
 )
 
 func bizModel(db *gorm.DB) error {
-	return db.AutoMigrate(octopus.Conversation{})
+	return db.AutoMigrate(octopus.Conversation{}, octopus.Thread{})
 }

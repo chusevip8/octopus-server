@@ -6,4 +6,5 @@ type ServiceGroup struct {
 	CommentTaskService
 	ExecTaskService
 	ConversationService
+	ThreadService
 }

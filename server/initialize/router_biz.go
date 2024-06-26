@@ -17,6 +17,7 @@ func initBizRouter(routers ...*gin.RouterGroup) {
 	{
 		octopusRouter := router.RouterGroupApp.Octopus
 		octopusRouter.InitConversationRouter(privateGroup, publicGroup)
+		octopusRouter.InitThreadRouter(privateGroup, publicGroup)
 	}
 
 	holder(publicGroup, privateGroup)

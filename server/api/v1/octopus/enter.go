@@ -6,4 +6,5 @@ type ApiGroup struct {
 	CommentTaskApi
 	ExecTaskApi
 	ConversationApi
+	ThreadApi
 }
