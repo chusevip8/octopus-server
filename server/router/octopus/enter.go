@@ -7,4 +7,5 @@ type RouterGroup struct {
 	ExecTaskRouter
 	ConversationRouter
 	ThreadRouter
+	MessageRouter
 }

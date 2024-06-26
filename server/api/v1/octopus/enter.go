@@ -7,4 +7,5 @@ type ApiGroup struct {
 	ExecTaskApi
 	ConversationApi
 	ThreadApi
+	MessageApi
 }

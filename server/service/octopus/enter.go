@@ -7,4 +7,5 @@ type ServiceGroup struct {
 	ExecTaskService
 	ConversationService
 	ThreadService
+	MessageService
 }
