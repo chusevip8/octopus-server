@@ -15,5 +15,16 @@ func initBizRouter(routers ...*gin.RouterGroup) {
 	privateGroup := routers[0]
 	publicGroup := routers[1]
 
+	{
+		octopusRouter := router.RouterGroupApp.Octopus
+		octopusRouter.InitScriptRouter(privateGroup, publicGroup)
+		octopusRouter.InitDeviceRouter(privateGroup, publicGroup)
+		octopusRouter.InitCommentTaskRouter(privateGroup, publicGroup)
+		octopusRouter.InitExecTaskRouter(privateGroup, publicGroup)
+		octopusRouter.InitConversationRouter(privateGroup, publicGroup)
+		octopusRouter.InitThreadRouter(privateGroup, publicGroup)
+		octopusRouter.InitMessageRouter(privateGroup, publicGroup)
+	}
+
 	holder(publicGroup, privateGroup)
 }
