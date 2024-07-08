@@ -9,4 +9,9 @@ type ServiceGroup struct {
 	ThreadService
 	MessageService
 	CmtMsgMgrService
+	CmtTaskOptionService
+	CmtThreadService
+	CmtConversationService
+	CommentService
+	TaskService
 }

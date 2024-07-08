@@ -8,4 +8,9 @@ type ApiGroup struct {
 	ConversationApi
 	ThreadApi
 	MessageApi
+	CmtTaskOptionApi
+	CmtThreadApi
+	CmtConversationApi
+	CommentApi
+	TaskApi
 }
