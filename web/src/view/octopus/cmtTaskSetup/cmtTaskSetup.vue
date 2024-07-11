@@ -112,9 +112,9 @@ const formData = ref({
   taskTitle: '',
   postLink: '',
   keyword: '',
-  findCommentScriptId: undefined,
-  writeCommentScriptId: undefined,
-  replyCommentScriptId: undefined,
+  findCmtScriptId: undefined,
+  writeCmtScriptId: undefined,
+  replyCmtScriptId: undefined,
 })
 
 
@@ -325,9 +325,9 @@ const closeDialog = () => {
     taskTitle: '',
     postLink: '',
     keyword: '',
-    findCommentScriptId: undefined,
-    writeCommentScriptId: undefined,
-    replyCommentScriptId: undefined,
+    findCmtScriptId: undefined,
+    writeCmtScriptId: undefined,
+    replyCmtScriptId: undefined,
   }
 }
 // 弹窗确定
@@ -336,9 +336,9 @@ const enterDialog = async () => {
     if (!valid) return
 
     formData.value.appName = route.params.appName
-    formData.value.findCommentScriptId = parseInt(route.params.findCommentScriptId, 10)
-    formData.value.writeCommentScriptId = parseInt(route.params.writeCommentScriptId, 10)
-    formData.value.replyCommentScriptId = parseInt(route.params.replyCommentScriptId, 10)
+    formData.value.findCmtScriptId = parseInt(route.params.findCmtScriptId, 10)
+    formData.value.writeCmtScriptId = parseInt(route.params.writeCmtScriptId, 10)
+    formData.value.replyCmtScriptId = parseInt(route.params.replyCmtScriptId, 10)
 
     let res
     switch (type.value) {
