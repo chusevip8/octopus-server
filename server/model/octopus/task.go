@@ -9,7 +9,7 @@ import (
 type Task struct {
 	global.GVA_MODEL
 	AppName      string `json:"appName" form:"appName" gorm:"column:app_name;comment:App名称;size:20;" binding:"required"`          //App名称
-	Type         uint   `json:"type" form:"type" gorm:"column:type;comment:任务类型;" binding:"required"`                             //任务类型
+	Type         string `json:"type" form:"type" gorm:"column:type;comment:任务类型;" binding:"required"`                             //任务类型
 	TaskParamsId uint   `json:"taskParamsId" form:"taskParamsId" gorm:"column:task_params_id;comment:任务参数Id;" binding:"required"` //任务参数Id
 	DeviceId     uint   `json:"deviceId" form:"deviceId" gorm:"column:device_id;comment:设备Id;" binding:"required"`                //设备Id
 	Device       Device `json:"device" gorm:"foreignKey:DeviceId;references:ID;comment:关联设备;"`

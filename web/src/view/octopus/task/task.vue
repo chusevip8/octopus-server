@@ -86,6 +86,10 @@ import {
   getTaskList
 } from '@/api/octopus/task'
 
+import {
+  createFindCmtTask
+} from '@/api/octopus/cmtTask'
+
 // 全量引入格式化工具 请按需保留
 import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -332,14 +336,14 @@ const saveTask = async (params) => {
       message: '不能添加禁用设备'
     })
   } else {
-    let res = await findExecTaskByDeviceId({ deviceID: params.deviceID })
+    let res = await findExecTaskByDeviceId({ deviceId: params.deviceId })
     if (res.data !== null) {
       ElMessage({
         type: 'error',
         message: '该设备已添加'
       })
     } else {
-      let res = await createExecTask(formData.value)
+      let res = await createFindCmtTask(formData.value)
       if (res.code === 0) {
         ElMessage({
           type: 'success',

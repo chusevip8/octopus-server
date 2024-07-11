@@ -305,7 +305,7 @@ const deleteCmtTaskSetupFunc = async (row) => {
 }
 
 const openTaskManager = (row) => {
-  router.push({ name: 'task', params: { appName: route.params.appName, taskType: 'comment' } })
+  router.push({ name: 'cmtTask', params: { appName: route.params.appName, taskType: 'cmt', setupId: row.ID, scriptId: row.findCmtScriptId } })
 }
 
 // 弹窗控制标记

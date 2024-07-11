@@ -69,13 +69,11 @@ func (taskService *TaskService) GetTaskInfoList(info octopusReq.TaskSearch) (lis
 	db := global.GVA_DB.Model(&octopus.Task{})
 	var tasks []octopus.Task
 	// 如果有条件搜索 下方会自动创建搜索语句
-	if info.StartCreatedAt != nil && info.EndCreatedAt != nil {
-		db = db.Where("created_at BETWEEN ? AND ?", info.StartCreatedAt, info.EndCreatedAt)
-	}
-	if info.Type != nil {
+
+	if info.Type != "" {
 		db = db.Where("type = ?", info.Type)
 	}
-	if info.Status != nil {
+	if info.Status != 0 {
 		db = db.Where("status = ?", info.Status)
 	}
 	err = db.Count(&total).Error

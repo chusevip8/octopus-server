@@ -9,4 +9,5 @@ type ApiGroup struct {
 	TaskApi
 	CmtTaskParamsApi
 	CmtTaskSetupApi
+	CmtTaskApi
 }

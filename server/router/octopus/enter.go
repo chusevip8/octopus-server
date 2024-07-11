@@ -9,4 +9,5 @@ type RouterGroup struct {
 	TaskRouter
 	CmtTaskParamsRouter
 	CmtTaskSetupRouter
+	CmtTaskRouter
 }
