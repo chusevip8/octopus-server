@@ -4,10 +4,14 @@ import (
 	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
+	"github.com/flipped-aurora/gin-vue-admin/server/service"
 	"strconv"
 )
 
 type CmtTaskService struct{}
+
+var taskService = service.ServiceGroupApp.OctopusServiceGroup.TaskService
+var cmtTaskParamsService = service.ServiceGroupApp.OctopusServiceGroup.CmtTaskParamsService
 
 func (cmtTaskService *CmtTaskService) CreateFindCmtTask(findCmtTask *octopusReq.FindCmtTask) (err error) {
 	params, err := cmtTaskService.buildFindCmtTaskParams(findCmtTask.SetupId)
@@ -20,7 +24,7 @@ func (cmtTaskService *CmtTaskService) CreateFindCmtTask(findCmtTask *octopusReq.
 	cmtTaskParams.ScriptId = findCmtTask.ScriptId
 	cmtTaskParams.CreatedBy = findCmtTask.CreatedBy
 	cmtTaskParams.Params = params
-	err = CmtTaskParamsServiceApp.CreateCmtTaskParams(&cmtTaskParams)
+	err = cmtTaskParamsService.CreateCmtTaskParams(&cmtTaskParams)
 	if err != nil {
 		return err
 	}
@@ -33,7 +37,7 @@ func (cmtTaskService *CmtTaskService) CreateFindCmtTask(findCmtTask *octopusReq.
 	task.Type = findCmtTask.Type
 	task.Status = findCmtTask.Type
 	task.Error = findCmtTask.Error
-	err = TaskServiceApp.CreateTask(&task)
+	err = taskService.CreateTask(&task)
 	return err
 }
 

@@ -9,8 +9,6 @@ import (
 
 type TaskService struct{}
 
-var TaskServiceApp = new(TaskService)
-
 // CreateTask 创建任务记录
 // Author [piexlmax](https://github.com/piexlmax)
 func (taskService *TaskService) CreateTask(task *octopus.Task) (err error) {
