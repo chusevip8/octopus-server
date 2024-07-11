@@ -125,6 +125,16 @@ func (taskApi *TaskApi) FindTask(c *gin.Context) {
 	}
 }
 
+func (taskApi *TaskApi) FindTaskByDeviceId(c *gin.Context) {
+	deviceId := c.Query("deviceId")
+	if retask, err := taskService.GetTaskByDeviceId(deviceId); err != nil {
+		global.GVA_LOG.Error("查询失败!", zap.Error(err))
+		response.FailWithMessage("查询失败", c)
+	} else {
+		response.OkWithData(retask, c)
+	}
+}
+
 // GetTaskList 分页获取任务列表
 // @Tags Task
 // @Summary 分页获取任务列表

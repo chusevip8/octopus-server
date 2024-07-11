@@ -60,6 +60,11 @@ func (taskService *TaskService) GetTask(ID string) (task octopus.Task, err error
 	return
 }
 
+func (taskService *TaskService) GetTaskByDeviceId(deviceId string) (task octopus.Task, err error) {
+	err = global.GVA_DB.Where("device_id = ?", deviceId).First(&task).Error
+	return
+}
+
 // GetTaskInfoList 分页获取任务记录
 // Author [piexlmax](https://github.com/piexlmax)
 func (taskService *TaskService) GetTaskInfoList(info octopusReq.TaskSearch) (list []octopus.Task, total int64, err error) {

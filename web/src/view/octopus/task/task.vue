@@ -83,7 +83,8 @@ import {
   deleteTaskByIds,
   updateTask,
   findTask,
-  getTaskList
+  getTaskList,
+  findTaskByDeviceId
 } from '@/api/octopus/task'
 
 import {
@@ -111,10 +112,11 @@ const showAllQuery = ref(false)
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
   appName: '',
+  setupId: undefined,
   type: undefined,
-  taskOptionId: undefined,
+  scriptId: undefined,
   deviceId: undefined,
-  status: 1,
+  status: undefined,
   error: '',
 })
 
@@ -311,8 +313,9 @@ const closeDialog = () => {
   dialogFormVisible.value = false
   formData.value = {
     appName: '',
+    setupId: undefined,
     type: undefined,
-    taskOptionId: undefined,
+    scriptId: undefined,
     deviceId: undefined,
     status: undefined,
     error: '',
@@ -322,6 +325,9 @@ const saveTask = async (params) => {
   formData.value.appName = route.params.appName
   formData.value.type = route.params.taskType
   formData.value.deviceId = params.deviceId
+  formData.value.setupId = params.setupId
+  formData.value.scriptId = params.scriptId
+  formData.value.status = 1
 
   const deviceStatus = params.deviceStatus
 
@@ -336,7 +342,7 @@ const saveTask = async (params) => {
       message: '不能添加禁用设备'
     })
   } else {
-    let res = await findExecTaskByDeviceId({ deviceId: params.deviceId })
+    let res = await findTaskByDeviceId({ deviceId: params.deviceId })
     if (res.data !== null) {
       ElMessage({
         type: 'error',
