@@ -5,9 +5,9 @@ import (
 	"time"
 )
 
-type MessageSearch struct{
+type CmtTaskSetupSearch struct{
     StartCreatedAt *time.Time `json:"startCreatedAt" form:"startCreatedAt"`
     EndCreatedAt   *time.Time `json:"endCreatedAt" form:"endCreatedAt"`
-    Status  *int `json:"status" form:"status" `
+    Keyword  string `json:"keyword" form:"keyword" `
     request.PageInfo
 }

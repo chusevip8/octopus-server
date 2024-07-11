@@ -14,6 +14,7 @@ type Comment struct {
 	CommentReplier   string `json:"commentReplier" form:"commentReplier" gorm:"column:comment_replier;comment:评论回复者;size:64;"`             //评论回复者
 	CommentReplierId string `json:"commentReplierId" form:"commentReplierId" gorm:"column:comment_replier_id;comment:评论回复者Id;size:20;"`    //评论回复者Id
 	Content          string `json:"content" form:"content" gorm:"column:content;comment:评论内容;" binding:"required"`                         //评论内容
+	PostAt           string `json:"postAt" form:"postAt" gorm:"column:post_at;comment:评论时间;size:20;"`                                      //评论时间
 	Status           uint   `json:"status" form:"status" gorm:"default:0;column:status;comment:评论状态;" binding:"required"`                  //评论状态
 }
 

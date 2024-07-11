@@ -2,11 +2,14 @@
   <div>
     <div class="gva-form-box">
       <el-form :model="formData" ref="elFormRef" label-position="right" :rules="rule" label-width="80px">
-        <el-form-item label="任务类型:" prop="taskType">
-          <el-input v-model.number="formData.taskType" :clearable="false" placeholder="请输入" />
+        <el-form-item label="任务设置Id:" prop="setupId">
+          <el-input v-model.number="formData.setupId" :clearable="false" placeholder="请输入" />
        </el-form-item>
-        <el-form-item label="任务错误信息:" prop="error">
-          <el-input v-model="formData.error" :clearable="false"  placeholder="请输入任务错误信息" />
+        <el-form-item label="任务参数:" prop="params">
+          <el-input v-model="formData.params" :clearable="false"  placeholder="请输入任务参数" />
+       </el-form-item>
+        <el-form-item label="脚本Id:" prop="scriptId">
+          <el-input v-model.number="formData.scriptId" :clearable="false" placeholder="请输入" />
        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="save">保存</el-button>
@@ -19,13 +22,13 @@
 
 <script setup>
 import {
-  createExecTask,
-  updateExecTask,
-  findExecTask
-} from '@/api/octopus/execTask'
+  createCmtTaskParams,
+  updateCmtTaskParams,
+  findCmtTaskParams
+} from '@/api/octopus/cmtTaskParams'
 
 defineOptions({
-    name: 'ExecTaskForm'
+    name: 'CmtTaskParamsForm'
 })
 
 // 自动获取字典
@@ -39,12 +42,23 @@ const router = useRouter()
 
 const type = ref('')
 const formData = ref({
-            taskType: undefined,
-            error: '',
+            setupId: undefined,
+            params: '',
+            scriptId: undefined,
         })
 // 验证规则
 const rule = reactive({
-               taskType : [{
+               setupId : [{
+                   required: true,
+                   message: '',
+                   trigger: ['input','blur'],
+               }],
+               params : [{
+                   required: true,
+                   message: '',
+                   trigger: ['input','blur'],
+               }],
+               scriptId : [{
                    required: true,
                    message: '',
                    trigger: ['input','blur'],
@@ -57,9 +71,9 @@ const elFormRef = ref()
 const init = async () => {
  // 建议通过url传参获取目标数据ID 调用 find方法进行查询数据操作 从而决定本页面是create还是update 以下为id作为url参数示例
     if (route.query.id) {
-      const res = await findExecTask({ ID: route.query.id })
+      const res = await findCmtTaskParams({ ID: route.query.id })
       if (res.code === 0) {
-        formData.value = res.data.reexecTask
+        formData.value = res.data
         type.value = 'update'
       }
     } else {
@@ -75,13 +89,13 @@ const save = async() => {
             let res
            switch (type.value) {
              case 'create':
-               res = await createExecTask(formData.value)
+               res = await createCmtTaskParams(formData.value)
                break
              case 'update':
-               res = await updateExecTask(formData.value)
+               res = await updateCmtTaskParams(formData.value)
                break
              default:
-               res = await createExecTask(formData.value)
+               res = await createCmtTaskParams(formData.value)
                break
            }
            if (res.code === 0) {

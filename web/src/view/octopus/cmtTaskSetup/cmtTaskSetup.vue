@@ -4,18 +4,16 @@
       <el-form ref="elSearchFormRef" :inline="true" :model="searchInfo" class="demo-form-inline" :rules="searchRule"
         @keyup.enter="onSubmit">
 
+        <el-form-item label="任务标题" prop="taskTitle">
+          <el-input v-model="searchInfo.title" placeholder="搜索条件" />
+        </el-form-item>
+        <el-form-item label="评论关键字" prop="keyword">
+          <el-input v-model="searchInfo.keyword" placeholder="搜索条件" />
+
+        </el-form-item>
+
         <template v-if="showAllQuery">
           <!-- 将需要控制显示状态的查询条件添加到此范围内 -->
-          <el-form-item label="App名称" prop="appName">
-            <el-input v-model="searchInfo.appName" placeholder="搜索条件" />
-
-          </el-form-item>
-
-          <el-form-item label="任务类型" prop="taskType">
-            <el-input v-model="searchInfo.taskType" placeholder="搜索条件" />
-
-          </el-form-item>
-
         </template>
 
         <el-form-item>
@@ -36,10 +34,16 @@
       <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-        <el-table-column align="center" label="任务标题" prop="commentTask.title" width="180" />
-        <el-table-column align="center" label="评论关键字" prop="commentTask.keyword" min-width="240" />
-        <el-table-column align="center" label="操作" fixed="right" width="240">
+
+        <el-table-column align="center" label="任务标题" prop="taskTitle" width="180" />
+        <el-table-column align="center" label="帖子链接" prop="postLink" width="120" />
+        <el-table-column align="center" label="评论关键字" prop="keyword" min-width="240" />
+        <el-table-column align="center" label="操作" fixed="right" min-width="240">
           <template #default="scope">
+            <el-button type="primary" link icon="Cellphone" class="table-button"
+              @click="openTaskManager(scope.row)">管理任务</el-button>
+            <el-button type="primary" link icon="edit" class="table-button"
+              @click="updateCmtTaskSetupFunc(scope.row)">修改</el-button>
             <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -62,14 +66,14 @@
       </template>
 
       <el-form :model="formData" label-position="top" ref="elFormRef" :rules="rule" label-width="80px">
-        <el-form-item label="App名称:" prop="appName">
-          <el-input v-model="formData.appName" :clearable="false" placeholder="请输入App名称" />
+        <el-form-item label="任务标题:" prop="taskTitle">
+          <el-input v-model="formData.taskTitle" :clearable="false" placeholder="请输入任务标题" />
         </el-form-item>
-        <el-form-item label="任务ID:" prop="taskID">
-          <el-input v-model.number="formData.taskID" :clearable="false" placeholder="请输入任务ID" />
+        <el-form-item label="帖子链接:" prop="postLink">
+          <el-input v-model="formData.postLink" :clearable="false" placeholder="请输入帖子链接" />
         </el-form-item>
-        <el-form-item label="任务类型:" prop="taskType">
-          <el-input v-model="formData.taskType" :clearable="false" placeholder="请输入任务类型" />
+        <el-form-item label="评论关键字:（以半角逗号分隔）" prop="keyword">
+          <el-input v-model="formData.keyword" :clearable="false" placeholder="请输入评论关键字" />
         </el-form-item>
       </el-form>
     </el-drawer>
@@ -78,22 +82,26 @@
 
 <script setup>
 import {
-  createConversation,
-  deleteConversation,
-  deleteConversationByIds,
-  updateConversation,
-  findConversation,
-  getConversationList
-} from '@/api/octopus/conversation'
+  createCmtTaskSetup,
+  deleteCmtTaskSetup,
+  deleteCmtTaskSetupByIds,
+  updateCmtTaskSetup,
+  findCmtTaskSetup,
+  getCmtTaskSetupList
+} from '@/api/octopus/cmtTaskSetup'
 
 // 全量引入格式化工具 请按需保留
 import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 defineOptions({
-  name: 'Conversation'
+  name: 'CmtTaskSetup'
 })
+
+const router = useRouter()
+const route = useRoute()
 
 // 控制更多查询条件显示/隐藏状态
 const showAllQuery = ref(false)
@@ -101,15 +109,30 @@ const showAllQuery = ref(false)
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
   appName: '',
-  taskID: 0,
-  taskType: '',
+  taskTitle: '',
+  postLink: '',
+  keyword: '',
+  findCommentScriptId: undefined,
+  writeCommentScriptId: undefined,
+  replyCommentScriptId: undefined,
 })
 
 
 
 // 验证规则
 const rule = reactive({
-  appName: [{
+  taskTitle: [{
+    required: true,
+    message: '任务标题不能为空',
+    trigger: ['input', 'blur'],
+  },
+  {
+    whitespace: true,
+    message: '不能只输入空格',
+    trigger: ['input', 'blur'],
+  }
+  ],
+  postLink: [{
     required: true,
     message: '',
     trigger: ['input', 'blur'],
@@ -119,24 +142,7 @@ const rule = reactive({
     message: '不能只输入空格',
     trigger: ['input', 'blur'],
   }
-  ],
-  taskID: [{
-    required: true,
-    message: '',
-    trigger: ['input', 'blur'],
-  },
-  ],
-  taskType: [{
-    required: true,
-    message: '',
-    trigger: ['input', 'blur'],
-  },
-  {
-    whitespace: true,
-    message: '不能只输入空格',
-    trigger: ['input', 'blur'],
-  }
-  ],
+  ]
 })
 
 const searchRule = reactive({
@@ -197,7 +203,7 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async () => {
-  const table = await getConversationList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+  const table = await getCmtTaskSetupList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -232,7 +238,7 @@ const deleteRow = (row) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    deleteConversationFunc(row)
+    deleteCmtTaskSetupFunc(row)
   })
 }
 
@@ -255,7 +261,7 @@ const onDelete = async () => {
       multipleSelection.value.map(item => {
         IDs.push(item.ID)
       })
-    const res = await deleteConversationByIds({ IDs })
+    const res = await deleteCmtTaskSetupByIds({ IDs })
     if (res.code === 0) {
       ElMessage({
         type: 'success',
@@ -273,8 +279,8 @@ const onDelete = async () => {
 const type = ref('')
 
 // 更新行
-const updateConversationFunc = async (row) => {
-  const res = await findConversation({ ID: row.ID })
+const updateCmtTaskSetupFunc = async (row) => {
+  const res = await findCmtTaskSetup({ ID: row.ID })
   type.value = 'update'
   if (res.code === 0) {
     formData.value = res.data
@@ -284,8 +290,8 @@ const updateConversationFunc = async (row) => {
 
 
 // 删除行
-const deleteConversationFunc = async (row) => {
-  const res = await deleteConversation({ ID: row.ID })
+const deleteCmtTaskSetupFunc = async (row) => {
+  const res = await deleteCmtTaskSetup({ ID: row.ID })
   if (res.code === 0) {
     ElMessage({
       type: 'success',
@@ -296,6 +302,10 @@ const deleteConversationFunc = async (row) => {
     }
     getTableData()
   }
+}
+
+const openTaskManager = (row) => {
+  router.push({ name: 'task', params: { appName: route.params.appName, taskType: 'comment' } })
 }
 
 // 弹窗控制标记
@@ -312,24 +322,34 @@ const closeDialog = () => {
   dialogFormVisible.value = false
   formData.value = {
     appName: '',
-    taskID: 0,
-    taskType: '',
+    taskTitle: '',
+    postLink: '',
+    keyword: '',
+    findCommentScriptId: undefined,
+    writeCommentScriptId: undefined,
+    replyCommentScriptId: undefined,
   }
 }
 // 弹窗确定
 const enterDialog = async () => {
   elFormRef.value?.validate(async (valid) => {
     if (!valid) return
+
+    formData.value.appName = route.params.appName
+    formData.value.findCommentScriptId = parseInt(route.params.findCommentScriptId, 10)
+    formData.value.writeCommentScriptId = parseInt(route.params.writeCommentScriptId, 10)
+    formData.value.replyCommentScriptId = parseInt(route.params.replyCommentScriptId, 10)
+
     let res
     switch (type.value) {
       case 'create':
-        res = await createConversation(formData.value)
+        res = await createCmtTaskSetup(formData.value)
         break
       case 'update':
-        res = await updateConversation(formData.value)
+        res = await updateCmtTaskSetup(formData.value)
         break
       default:
-        res = await createConversation(formData.value)
+        res = await createCmtTaskSetup(formData.value)
         break
     }
     if (res.code === 0) {

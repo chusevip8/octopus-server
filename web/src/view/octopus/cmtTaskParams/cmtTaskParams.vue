@@ -16,9 +16,8 @@
       <el-date-picker v-model="searchInfo.endCreatedAt" type="datetime" placeholder="结束日期" :disabled-date="time=> searchInfo.startCreatedAt ? time.getTime() < searchInfo.startCreatedAt.getTime() : false"></el-date-picker>
       </el-form-item>
       
-        <el-form-item label="消息状态" prop="status">
-            
-             <el-input v-model.number="searchInfo.status" placeholder="搜索条件" />
+        <el-form-item label="任务参数" prop="params">
+         <el-input v-model="searchInfo.params" placeholder="搜索条件" />
 
         </el-form-item>
 
@@ -53,11 +52,12 @@
             <template #default="scope">{{ formatDate(scope.row.CreatedAt) }}</template>
         </el-table-column>
         
-        <el-table-column align="left" label="消息组ID" prop="threadID" width="120" />
-        <el-table-column align="left" label="消息状态" prop="status" width="120" />
+        <el-table-column align="left" label="任务设置Id" prop="setupId" width="120" />
+        <el-table-column align="left" label="任务参数" prop="params" width="120" />
+        <el-table-column align="left" label="脚本Id" prop="scriptId" width="120" />
         <el-table-column align="left" label="操作" fixed="right" min-width="240">
             <template #default="scope">
-            <el-button type="primary" link icon="edit" class="table-button" @click="updateMessageFunc(scope.row)">变更</el-button>
+            <el-button type="primary" link icon="edit" class="table-button" @click="updateCmtTaskParamsFunc(scope.row)">变更</el-button>
             <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
             </template>
         </el-table-column>
@@ -86,11 +86,14 @@
             </template>
 
           <el-form :model="formData" label-position="top" ref="elFormRef" :rules="rule" label-width="80px">
-            <el-form-item label="消息组ID:"  prop="threadID" >
-              <el-input v-model.number="formData.threadID" :clearable="false" placeholder="请输入消息组ID" />
+            <el-form-item label="任务设置Id:"  prop="setupId" >
+              <el-input v-model.number="formData.setupId" :clearable="false" placeholder="请输入任务设置Id" />
             </el-form-item>
-            <el-form-item label="消息状态:"  prop="status" >
-              <el-input v-model.number="formData.status" :clearable="false" placeholder="请输入消息状态" />
+            <el-form-item label="任务参数:"  prop="params" >
+              <el-input v-model="formData.params" :clearable="false"  placeholder="请输入任务参数" />
+            </el-form-item>
+            <el-form-item label="脚本Id:"  prop="scriptId" >
+              <el-input v-model.number="formData.scriptId" :clearable="false" placeholder="请输入脚本Id" />
             </el-form-item>
           </el-form>
     </el-drawer>
@@ -99,13 +102,13 @@
 
 <script setup>
 import {
-  createMessage,
-  deleteMessage,
-  deleteMessageByIds,
-  updateMessage,
-  findMessage,
-  getMessageList
-} from '@/api/octopus/message'
+  createCmtTaskParams,
+  deleteCmtTaskParams,
+  deleteCmtTaskParamsByIds,
+  updateCmtTaskParams,
+  findCmtTaskParams,
+  getCmtTaskParamsList
+} from '@/api/octopus/cmtTaskParams'
 
 // 全量引入格式化工具 请按需保留
 import { getDictFunc, formatDate, formatBoolean, filterDict ,filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
@@ -113,7 +116,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
 
 defineOptions({
-    name: 'Message'
+    name: 'CmtTaskParams'
 })
 
 // 控制更多查询条件显示/隐藏状态
@@ -121,21 +124,33 @@ const showAllQuery = ref(false)
 
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
-        threadID: undefined,
-        status: undefined,
+        setupId: undefined,
+        params: '',
+        scriptId: undefined,
         })
 
 
 
 // 验证规则
 const rule = reactive({
-               threadID : [{
+               setupId : [{
                    required: true,
                    message: '',
                    trigger: ['input','blur'],
                },
               ],
-               status : [{
+               params : [{
+                   required: true,
+                   message: '',
+                   trigger: ['input','blur'],
+               },
+               {
+                   whitespace: true,
+                   message: '不能只输入空格',
+                   trigger: ['input', 'blur'],
+              }
+              ],
+               scriptId : [{
                    required: true,
                    message: '',
                    trigger: ['input','blur'],
@@ -199,7 +214,7 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async() => {
-  const table = await getMessageList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+  const table = await getCmtTaskParamsList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -234,7 +249,7 @@ const deleteRow = (row) => {
         cancelButtonText: '取消',
         type: 'warning'
     }).then(() => {
-            deleteMessageFunc(row)
+            deleteCmtTaskParamsFunc(row)
         })
     }
 
@@ -257,7 +272,7 @@ const onDelete = async() => {
         multipleSelection.value.map(item => {
           IDs.push(item.ID)
         })
-      const res = await deleteMessageByIds({ IDs })
+      const res = await deleteCmtTaskParamsByIds({ IDs })
       if (res.code === 0) {
         ElMessage({
           type: 'success',
@@ -275,8 +290,8 @@ const onDelete = async() => {
 const type = ref('')
 
 // 更新行
-const updateMessageFunc = async(row) => {
-    const res = await findMessage({ ID: row.ID })
+const updateCmtTaskParamsFunc = async(row) => {
+    const res = await findCmtTaskParams({ ID: row.ID })
     type.value = 'update'
     if (res.code === 0) {
         formData.value = res.data
@@ -286,8 +301,8 @@ const updateMessageFunc = async(row) => {
 
 
 // 删除行
-const deleteMessageFunc = async (row) => {
-    const res = await deleteMessage({ ID: row.ID })
+const deleteCmtTaskParamsFunc = async (row) => {
+    const res = await deleteCmtTaskParams({ ID: row.ID })
     if (res.code === 0) {
         ElMessage({
                 type: 'success',
@@ -313,8 +328,9 @@ const openDialog = () => {
 const closeDialog = () => {
     dialogFormVisible.value = false
     formData.value = {
-        threadID: undefined,
-        status: undefined,
+        setupId: undefined,
+        params: '',
+        scriptId: undefined,
         }
 }
 // 弹窗确定
@@ -324,13 +340,13 @@ const enterDialog = async () => {
               let res
               switch (type.value) {
                 case 'create':
-                  res = await createMessage(formData.value)
+                  res = await createCmtTaskParams(formData.value)
                   break
                 case 'update':
-                  res = await updateMessage(formData.value)
+                  res = await updateCmtTaskParams(formData.value)
                   break
                 default:
-                  res = await createMessage(formData.value)
+                  res = await createCmtTaskParams(formData.value)
                   break
               }
               if (res.code === 0) {

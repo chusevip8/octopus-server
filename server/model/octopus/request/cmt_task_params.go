@@ -5,10 +5,9 @@ import (
 	"time"
 )
 
-type ThreadSearch struct{
+type CmtTaskParamsSearch struct{
     StartCreatedAt *time.Time `json:"startCreatedAt" form:"startCreatedAt"`
     EndCreatedAt   *time.Time `json:"endCreatedAt" form:"endCreatedAt"`
-    Sender  string `json:"sender" form:"sender" `
-    Receiver  string `json:"receiver" form:"receiver" `
+    Params  string `json:"params" form:"params" `
     request.PageInfo
 }

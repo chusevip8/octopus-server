@@ -11,30 +11,30 @@ import (
     "github.com/flipped-aurora/gin-vue-admin/server/utils"
 )
 
-type CmtTaskOptionApi struct {}
+type CmtTaskParamsApi struct {}
 
-var cmtTaskOptionService = service.ServiceGroupApp.OctopusServiceGroup.CmtTaskOptionService
+var cmtTaskParamsService = service.ServiceGroupApp.OctopusServiceGroup.CmtTaskParamsService
 
 
-// CreateCmtTaskOption 创建评论任务参数
-// @Tags CmtTaskOption
+// CreateCmtTaskParams 创建评论任务参数
+// @Tags CmtTaskParams
 // @Summary 创建评论任务参数
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body octopus.CmtTaskOption true "创建评论任务参数"
+// @Param data body octopus.CmtTaskParams true "创建评论任务参数"
 // @Success 200 {object} response.Response{msg=string} "创建成功"
-// @Router /cmtTaskOption/createCmtTaskOption [post]
-func (cmtTaskOptionApi *CmtTaskOptionApi) CreateCmtTaskOption(c *gin.Context) {
-	var cmtTaskOption octopus.CmtTaskOption
-	err := c.ShouldBindJSON(&cmtTaskOption)
+// @Router /cmtTaskParams/createCmtTaskParams [post]
+func (cmtTaskParamsApi *CmtTaskParamsApi) CreateCmtTaskParams(c *gin.Context) {
+	var cmtTaskParams octopus.CmtTaskParams
+	err := c.ShouldBindJSON(&cmtTaskParams)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-    cmtTaskOption.CreatedBy = utils.GetUserID(c)
+    cmtTaskParams.CreatedBy = utils.GetUserID(c)
 
-	if err := cmtTaskOptionService.CreateCmtTaskOption(&cmtTaskOption); err != nil {
+	if err := cmtTaskParamsService.CreateCmtTaskParams(&cmtTaskParams); err != nil {
         global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("创建失败", c)
 	} else {
@@ -42,19 +42,19 @@ func (cmtTaskOptionApi *CmtTaskOptionApi) CreateCmtTaskOption(c *gin.Context) {
 	}
 }
 
-// DeleteCmtTaskOption 删除评论任务参数
-// @Tags CmtTaskOption
+// DeleteCmtTaskParams 删除评论任务参数
+// @Tags CmtTaskParams
 // @Summary 删除评论任务参数
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body octopus.CmtTaskOption true "删除评论任务参数"
+// @Param data body octopus.CmtTaskParams true "删除评论任务参数"
 // @Success 200 {object} response.Response{msg=string} "删除成功"
-// @Router /cmtTaskOption/deleteCmtTaskOption [delete]
-func (cmtTaskOptionApi *CmtTaskOptionApi) DeleteCmtTaskOption(c *gin.Context) {
+// @Router /cmtTaskParams/deleteCmtTaskParams [delete]
+func (cmtTaskParamsApi *CmtTaskParamsApi) DeleteCmtTaskParams(c *gin.Context) {
 	ID := c.Query("ID")
     	userID := utils.GetUserID(c)
-	if err := cmtTaskOptionService.DeleteCmtTaskOption(ID,userID); err != nil {
+	if err := cmtTaskParamsService.DeleteCmtTaskParams(ID,userID); err != nil {
         global.GVA_LOG.Error("删除失败!", zap.Error(err))
 		response.FailWithMessage("删除失败", c)
 	} else {
@@ -62,18 +62,18 @@ func (cmtTaskOptionApi *CmtTaskOptionApi) DeleteCmtTaskOption(c *gin.Context) {
 	}
 }
 
-// DeleteCmtTaskOptionByIds 批量删除评论任务参数
-// @Tags CmtTaskOption
+// DeleteCmtTaskParamsByIds 批量删除评论任务参数
+// @Tags CmtTaskParams
 // @Summary 批量删除评论任务参数
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response{msg=string} "批量删除成功"
-// @Router /cmtTaskOption/deleteCmtTaskOptionByIds [delete]
-func (cmtTaskOptionApi *CmtTaskOptionApi) DeleteCmtTaskOptionByIds(c *gin.Context) {
+// @Router /cmtTaskParams/deleteCmtTaskParamsByIds [delete]
+func (cmtTaskParamsApi *CmtTaskParamsApi) DeleteCmtTaskParamsByIds(c *gin.Context) {
 	IDs := c.QueryArray("IDs[]")
     userID := utils.GetUserID(c)
-	if err := cmtTaskOptionService.DeleteCmtTaskOptionByIds(IDs,userID); err != nil {
+	if err := cmtTaskParamsService.DeleteCmtTaskParamsByIds(IDs,userID); err != nil {
         global.GVA_LOG.Error("批量删除失败!", zap.Error(err))
 		response.FailWithMessage("批量删除失败", c)
 	} else {
@@ -81,25 +81,25 @@ func (cmtTaskOptionApi *CmtTaskOptionApi) DeleteCmtTaskOptionByIds(c *gin.Contex
 	}
 }
 
-// UpdateCmtTaskOption 更新评论任务参数
-// @Tags CmtTaskOption
+// UpdateCmtTaskParams 更新评论任务参数
+// @Tags CmtTaskParams
 // @Summary 更新评论任务参数
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body octopus.CmtTaskOption true "更新评论任务参数"
+// @Param data body octopus.CmtTaskParams true "更新评论任务参数"
 // @Success 200 {object} response.Response{msg=string} "更新成功"
-// @Router /cmtTaskOption/updateCmtTaskOption [put]
-func (cmtTaskOptionApi *CmtTaskOptionApi) UpdateCmtTaskOption(c *gin.Context) {
-	var cmtTaskOption octopus.CmtTaskOption
-	err := c.ShouldBindJSON(&cmtTaskOption)
+// @Router /cmtTaskParams/updateCmtTaskParams [put]
+func (cmtTaskParamsApi *CmtTaskParamsApi) UpdateCmtTaskParams(c *gin.Context) {
+	var cmtTaskParams octopus.CmtTaskParams
+	err := c.ShouldBindJSON(&cmtTaskParams)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-    cmtTaskOption.UpdatedBy = utils.GetUserID(c)
+    cmtTaskParams.UpdatedBy = utils.GetUserID(c)
 
-	if err := cmtTaskOptionService.UpdateCmtTaskOption(cmtTaskOption); err != nil {
+	if err := cmtTaskParamsService.UpdateCmtTaskParams(cmtTaskParams); err != nil {
         global.GVA_LOG.Error("更新失败!", zap.Error(err))
 		response.FailWithMessage("更新失败", c)
 	} else {
@@ -107,42 +107,42 @@ func (cmtTaskOptionApi *CmtTaskOptionApi) UpdateCmtTaskOption(c *gin.Context) {
 	}
 }
 
-// FindCmtTaskOption 用id查询评论任务参数
-// @Tags CmtTaskOption
+// FindCmtTaskParams 用id查询评论任务参数
+// @Tags CmtTaskParams
 // @Summary 用id查询评论任务参数
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data query octopus.CmtTaskOption true "用id查询评论任务参数"
-// @Success 200 {object} response.Response{data=object{recmtTaskOption=octopus.CmtTaskOption},msg=string} "查询成功"
-// @Router /cmtTaskOption/findCmtTaskOption [get]
-func (cmtTaskOptionApi *CmtTaskOptionApi) FindCmtTaskOption(c *gin.Context) {
+// @Param data query octopus.CmtTaskParams true "用id查询评论任务参数"
+// @Success 200 {object} response.Response{data=object{recmtTaskParams=octopus.CmtTaskParams},msg=string} "查询成功"
+// @Router /cmtTaskParams/findCmtTaskParams [get]
+func (cmtTaskParamsApi *CmtTaskParamsApi) FindCmtTaskParams(c *gin.Context) {
 	ID := c.Query("ID")
-	if recmtTaskOption, err := cmtTaskOptionService.GetCmtTaskOption(ID); err != nil {
+	if recmtTaskParams, err := cmtTaskParamsService.GetCmtTaskParams(ID); err != nil {
         global.GVA_LOG.Error("查询失败!", zap.Error(err))
 		response.FailWithMessage("查询失败", c)
 	} else {
-		response.OkWithData(recmtTaskOption, c)
+		response.OkWithData(recmtTaskParams, c)
 	}
 }
 
-// GetCmtTaskOptionList 分页获取评论任务参数列表
-// @Tags CmtTaskOption
+// GetCmtTaskParamsList 分页获取评论任务参数列表
+// @Tags CmtTaskParams
 // @Summary 分页获取评论任务参数列表
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data query octopusReq.CmtTaskOptionSearch true "分页获取评论任务参数列表"
+// @Param data query octopusReq.CmtTaskParamsSearch true "分页获取评论任务参数列表"
 // @Success 200 {object} response.Response{data=response.PageResult,msg=string} "获取成功"
-// @Router /cmtTaskOption/getCmtTaskOptionList [get]
-func (cmtTaskOptionApi *CmtTaskOptionApi) GetCmtTaskOptionList(c *gin.Context) {
-	var pageInfo octopusReq.CmtTaskOptionSearch
+// @Router /cmtTaskParams/getCmtTaskParamsList [get]
+func (cmtTaskParamsApi *CmtTaskParamsApi) GetCmtTaskParamsList(c *gin.Context) {
+	var pageInfo octopusReq.CmtTaskParamsSearch
 	err := c.ShouldBindQuery(&pageInfo)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if list, total, err := cmtTaskOptionService.GetCmtTaskOptionInfoList(pageInfo); err != nil {
+	if list, total, err := cmtTaskParamsService.GetCmtTaskParamsInfoList(pageInfo); err != nil {
 	    global.GVA_LOG.Error("获取失败!", zap.Error(err))
         response.FailWithMessage("获取失败", c)
     } else {
@@ -155,15 +155,15 @@ func (cmtTaskOptionApi *CmtTaskOptionApi) GetCmtTaskOptionList(c *gin.Context) {
     }
 }
 
-// GetCmtTaskOptionPublic 不需要鉴权的评论任务参数接口
-// @Tags CmtTaskOption
+// GetCmtTaskParamsPublic 不需要鉴权的评论任务参数接口
+// @Tags CmtTaskParams
 // @Summary 不需要鉴权的评论任务参数接口
 // @accept application/json
 // @Produce application/json
-// @Param data query octopusReq.CmtTaskOptionSearch true "分页获取评论任务参数列表"
+// @Param data query octopusReq.CmtTaskParamsSearch true "分页获取评论任务参数列表"
 // @Success 200 {object} response.Response{data=object,msg=string} "获取成功"
-// @Router /cmtTaskOption/getCmtTaskOptionPublic [get]
-func (cmtTaskOptionApi *CmtTaskOptionApi) GetCmtTaskOptionPublic(c *gin.Context) {
+// @Router /cmtTaskParams/getCmtTaskParamsPublic [get]
+func (cmtTaskParamsApi *CmtTaskParamsApi) GetCmtTaskParamsPublic(c *gin.Context) {
     // 此接口不需要鉴权
     // 示例为返回了一个固定的消息接口，一般本接口用于C端服务，需要自己实现业务逻辑
     response.OkWithDetailed(gin.H{

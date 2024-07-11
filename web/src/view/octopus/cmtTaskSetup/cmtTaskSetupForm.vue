@@ -2,26 +2,14 @@
   <div>
     <div class="gva-form-box">
       <el-form :model="formData" ref="elFormRef" label-position="right" :rules="rule" label-width="80px">
-        <el-form-item label="App名称:" prop="appName">
-          <el-input v-model="formData.appName" :clearable="false"  placeholder="请输入App名称" />
-       </el-form-item>
-        <el-form-item label="任务标题:" prop="taskTitle">
-          <el-input v-model="formData.taskTitle" :clearable="false"  placeholder="请输入任务标题" />
+        <el-form-item label="应用名称:" prop="appName">
+          <el-input v-model="formData.appName" :clearable="false"  placeholder="请输入应用名称" />
        </el-form-item>
         <el-form-item label="帖子链接:" prop="postLink">
           <el-input v-model="formData.postLink" :clearable="false"  placeholder="请输入帖子链接" />
        </el-form-item>
-        <el-form-item label="评论查找关键字:" prop="keyword">
-          <el-input v-model="formData.keyword" :clearable="false"  placeholder="请输入评论查找关键字" />
-       </el-form-item>
-        <el-form-item label="发评论者:" prop="commenter">
-          <el-input v-model="formData.commenter" :clearable="false"  placeholder="请输入发评论者" />
-       </el-form-item>
-        <el-form-item label="发评论者Id:" prop="commenterId">
-          <el-input v-model="formData.commenterId" :clearable="false"  placeholder="请输入发评论者Id" />
-       </el-form-item>
-        <el-form-item label="评论消息Id:" prop="commentId">
-          <el-input v-model.number="formData.commentId" :clearable="false" placeholder="请输入" />
+        <el-form-item label="评论关键字:" prop="keyword">
+          <el-input v-model="formData.keyword" :clearable="false"  placeholder="请输入评论关键字" />
        </el-form-item>
         <el-form-item label="查找评论脚本Id:" prop="findCommentScriptId">
           <el-input v-model.number="formData.findCommentScriptId" :clearable="false" placeholder="请输入" />
@@ -31,9 +19,6 @@
        </el-form-item>
         <el-form-item label="回复评论脚本id:" prop="replyCommentScriptId">
           <el-input v-model.number="formData.replyCommentScriptId" :clearable="false" placeholder="请输入" />
-       </el-form-item>
-        <el-form-item label="是否为查找评论任务:" prop="isFindCommentTask">
-          <el-switch v-model="formData.isFindCommentTask" active-color="#13ce66" inactive-color="#ff4949" active-text="是" inactive-text="否" clearable ></el-switch>
        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="save">保存</el-button>
@@ -46,13 +31,13 @@
 
 <script setup>
 import {
-  createCmtTaskOption,
-  updateCmtTaskOption,
-  findCmtTaskOption
-} from '@/api/octopus/cmtTaskOption'
+  createCmtTaskSetup,
+  updateCmtTaskSetup,
+  findCmtTaskSetup
+} from '@/api/octopus/cmtTaskSetup'
 
 defineOptions({
-    name: 'CmtTaskOptionForm'
+    name: 'CmtTaskSetupForm'
 })
 
 // 自动获取字典
@@ -67,16 +52,11 @@ const router = useRouter()
 const type = ref('')
 const formData = ref({
             appName: '',
-            taskTitle: '',
             postLink: '',
             keyword: '',
-            commenter: '',
-            commenterId: '',
-            commentId: undefined,
             findCommentScriptId: undefined,
             writeCommentScriptId: undefined,
             replyCommentScriptId: undefined,
-            isFindCommentTask: false,
         })
 // 验证规则
 const rule = reactive({
@@ -85,14 +65,24 @@ const rule = reactive({
                    message: '',
                    trigger: ['input','blur'],
                }],
-               taskTitle : [{
-                   required: true,
-                   message: '任务标题不能为空',
-                   trigger: ['input','blur'],
-               }],
                postLink : [{
                    required: true,
-                   message: '帖子链接不能为空',
+                   message: '',
+                   trigger: ['input','blur'],
+               }],
+               findCommentScriptId : [{
+                   required: true,
+                   message: '',
+                   trigger: ['input','blur'],
+               }],
+               writeCommentScriptId : [{
+                   required: true,
+                   message: '',
+                   trigger: ['input','blur'],
+               }],
+               replyCommentScriptId : [{
+                   required: true,
+                   message: '',
                    trigger: ['input','blur'],
                }],
 })
@@ -103,7 +93,7 @@ const elFormRef = ref()
 const init = async () => {
  // 建议通过url传参获取目标数据ID 调用 find方法进行查询数据操作 从而决定本页面是create还是update 以下为id作为url参数示例
     if (route.query.id) {
-      const res = await findCmtTaskOption({ ID: route.query.id })
+      const res = await findCmtTaskSetup({ ID: route.query.id })
       if (res.code === 0) {
         formData.value = res.data
         type.value = 'update'
@@ -121,13 +111,13 @@ const save = async() => {
             let res
            switch (type.value) {
              case 'create':
-               res = await createCmtTaskOption(formData.value)
+               res = await createCmtTaskSetup(formData.value)
                break
              case 'update':
-               res = await updateCmtTaskOption(formData.value)
+               res = await updateCmtTaskSetup(formData.value)
                break
              default:
-               res = await createCmtTaskOption(formData.value)
+               res = await createCmtTaskSetup(formData.value)
                break
            }
            if (res.code === 0) {
