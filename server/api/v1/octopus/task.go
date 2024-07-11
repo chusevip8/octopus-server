@@ -25,13 +25,13 @@ var taskService = service.ServiceGroupApp.OctopusServiceGroup.TaskService
 // @Success 200 {object} response.Response{msg=string} "创建成功"
 // @Router /task/createTask [post]
 func (taskApi *TaskApi) CreateTask(c *gin.Context) {
-	var taskCreate octopusReq.TaskCreate
-	err := c.ShouldBindJSON(&taskCreate)
+	var task octopus.Task
+	err := c.ShouldBindJSON(&task)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	taskCreate.CreatedBy = utils.GetUserID(c)
+	task.CreatedBy = utils.GetUserID(c)
 
 	if err := taskService.CreateTask(&task); err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
