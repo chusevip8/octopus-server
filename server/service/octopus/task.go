@@ -9,6 +9,8 @@ import (
 
 type TaskService struct{}
 
+var TaskServiceApp = new(TaskService)
+
 // CreateTask 创建任务记录
 // Author [piexlmax](https://github.com/piexlmax)
 func (taskService *TaskService) CreateTask(task *octopus.Task) (err error) {
@@ -71,7 +73,7 @@ func (taskService *TaskService) GetTaskInfoList(info octopusReq.TaskSearch) (lis
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
-	db := global.GVA_DB.Model(&octopus.Task{})
+	db := global.GVA_DB.Model(&octopus.Task{}).Preload("Device")
 	var tasks []octopus.Task
 	// 如果有条件搜索 下方会自动创建搜索语句
 

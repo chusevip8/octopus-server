@@ -71,8 +71,8 @@ func (cmtTaskSetupService *CmtTaskSetupService) GetCmtTaskSetupInfoList(info oct
 	db := global.GVA_DB.Model(&octopus.CmtTaskSetup{})
 	var cmtTaskSetups []octopus.CmtTaskSetup
 	// 如果有条件搜索 下方会自动创建搜索语句
-	if info.StartCreatedAt != nil && info.EndCreatedAt != nil {
-		db = db.Where("created_at BETWEEN ? AND ?", info.StartCreatedAt, info.EndCreatedAt)
+	if info.TaskTitle != "" {
+		db = db.Where("task_title LIKE ?", "%"+info.Keyword+"%")
 	}
 	if info.Keyword != "" {
 		db = db.Where("keyword LIKE ?", "%"+info.Keyword+"%")

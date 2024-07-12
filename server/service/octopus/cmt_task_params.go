@@ -9,6 +9,8 @@ import (
 
 type CmtTaskParamsService struct{}
 
+var CmtTaskParamsServiceApp = new(CmtTaskParamsService)
+
 // CreateCmtTaskParams 创建评论任务参数记录
 // Author [piexlmax](https://github.com/piexlmax)
 func (cmtTaskParamsService *CmtTaskParamsService) CreateCmtTaskParams(cmtTaskParams *octopus.CmtTaskParams) (err error) {

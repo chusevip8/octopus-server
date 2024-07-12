@@ -9,7 +9,7 @@ import (
 type CmtTaskRouter struct{}
 
 func (s *CmtTaskRouter) InitCmtTaskRouter(Router *gin.RouterGroup, PublicRouter *gin.RouterGroup) {
-	cmtTaskRouter := Router.Group("task").Use(middleware.OperationRecord())
+	cmtTaskRouter := Router.Group("cmtTask").Use(middleware.OperationRecord())
 
 	var cmtTaskApi = v1.ApiGroupApp.OctopusApiGroup.CmtTaskApi
 	{

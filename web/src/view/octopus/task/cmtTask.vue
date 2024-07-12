@@ -78,11 +78,8 @@
 
 <script setup>
 import {
-  createTask,
   deleteTask,
   deleteTaskByIds,
-  updateTask,
-  findTask,
   getTaskList,
   findTaskByDeviceId
 } from '@/api/octopus/task'
@@ -269,16 +266,6 @@ const onDelete = async () => {
 // 行为控制标记（弹窗内部需要增还是改）
 const type = ref('')
 
-// 更新行
-const updateTaskFunc = async (row) => {
-  const res = await findTask({ ID: row.ID })
-  type.value = 'update'
-  if (res.code === 0) {
-    formData.value = res.data
-    dialogFormVisible.value = true
-  }
-}
-
 // 停止任务
 const stopTask = async (row) => {
 
@@ -322,11 +309,11 @@ const closeDialog = () => {
   }
 }
 const saveTask = async (params) => {
+  formData.value.deviceId = params.deviceId
   formData.value.appName = route.params.appName
   formData.value.type = route.params.taskType
-  formData.value.deviceId = params.deviceId
-  formData.value.setupId = params.setupId
-  formData.value.scriptId = params.scriptId
+  formData.value.setupId = parseInt(route.params.setupId)
+  formData.value.scriptId = parseInt(route.params.scriptId)
   formData.value.status = 1
 
   const deviceStatus = params.deviceStatus
