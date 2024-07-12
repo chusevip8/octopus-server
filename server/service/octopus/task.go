@@ -68,7 +68,13 @@ func (taskService *TaskService) GetTaskInfoList(info octopusReq.TaskSearch) (lis
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
-	db := global.GVA_DB.Model(&octopus.Task{}).Preload("Device")
+	//db := global.GVA_DB.Model(&octopus.Task{}).Preload("TaskParams", "task_setup_id=?", info.TaskSetupId).Preload("Device")
+
+	db := global.GVA_DB.Model(&octopus.Task{}).
+		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
+		Where("oct_task_params.task_setup_id = ?", info.TaskSetupId).
+		Preload("TaskParams").
+		Preload("Device")
 	var tasks []octopus.Task
 	// 如果有条件搜索 下方会自动创建搜索语句
 

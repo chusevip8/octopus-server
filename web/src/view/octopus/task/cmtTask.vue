@@ -191,7 +191,7 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async () => {
-  const table = await getTaskList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+  const table = await getTaskList({ page: page.value, pageSize: pageSize.value, taskSetupId: route.params.setupId, ...searchInfo.value })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
