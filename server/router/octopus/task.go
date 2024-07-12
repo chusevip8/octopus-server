@@ -22,9 +22,8 @@ func (s *TaskRouter) InitTaskRouter(Router *gin.RouterGroup, PublicRouter *gin.R
 		taskRouter.PUT("updateTask", taskApi.UpdateTask)              // 更新任务
 	}
 	{
-		taskRouterWithoutRecord.GET("findTaskByDeviceId", taskApi.FindTaskByDeviceId) // 根据Device ID获取任务
-		taskRouterWithoutRecord.GET("findTask", taskApi.FindTask)                     // 根据ID获取任务
-		taskRouterWithoutRecord.GET("getTaskList", taskApi.GetTaskList)               // 获取任务列表
+		taskRouterWithoutRecord.GET("findTask", taskApi.FindTask)       // 根据ID获取任务
+		taskRouterWithoutRecord.GET("getTaskList", taskApi.GetTaskList) // 获取任务列表
 	}
 	{
 		taskRouterWithoutAuth.GET("getTaskPublic", taskApi.GetTaskPublic) // 获取任务列表

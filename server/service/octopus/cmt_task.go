@@ -2,6 +2,7 @@ package octopus
 
 import (
 	"fmt"
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
 	"strconv"
@@ -15,18 +16,18 @@ func (cmtTaskService *CmtTaskService) CreateFindCmtTask(findCmtTask *octopusReq.
 		return err
 	}
 
-	var cmtTaskParams octopus.CmtTaskParams
-	cmtTaskParams.SetupId = findCmtTask.SetupId
-	cmtTaskParams.ScriptId = findCmtTask.ScriptId
-	cmtTaskParams.CreatedBy = findCmtTask.CreatedBy
-	cmtTaskParams.Params = params
-	err = CmtTaskParamsServiceApp.CreateCmtTaskParams(&cmtTaskParams)
+	var taskParams octopus.TaskParams
+	taskParams.TaskSetupId = findCmtTask.SetupId
+	taskParams.ScriptId = findCmtTask.ScriptId
+	taskParams.CreatedBy = findCmtTask.CreatedBy
+	taskParams.Params = params
+	err = TaskParamsServiceApp.CreateTaskParams(&taskParams)
 	if err != nil {
 		return err
 	}
 
 	var task octopus.Task
-	task.TaskParamsId = cmtTaskParams.ID
+	task.TaskParamsId = taskParams.ID
 	task.AppName = findCmtTask.AppName
 	task.DeviceId = findCmtTask.DeviceId
 	task.CreatedBy = findCmtTask.CreatedBy
@@ -46,4 +47,10 @@ func (cmtTaskService *CmtTaskService) buildFindCmtTaskParams(setupId uint) (para
 		params = fmt.Sprintf(`{"postLink": "%s", "keyword": "%s"}`, postLink, keyword)
 		return params, nil
 	}
+}
+
+func (cmtTaskService *CmtTaskService) GetTaskByDeviceId(taskSetupId string, deviceId string) (task octopus.Task, err error) {
+	db := global.GVA_DB.Model(&octopus.Task{}).Preload("TaskParams", "task_setup_id=?", taskSetupId)
+	err = db.Where("device_id = ?", deviceId).First(&task).Error
+	return
 }

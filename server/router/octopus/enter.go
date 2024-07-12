@@ -7,7 +7,7 @@ type RouterGroup struct {
 	CmtConversationRouter
 	CommentRouter
 	TaskRouter
-	CmtTaskParamsRouter
 	CmtTaskSetupRouter
 	CmtTaskRouter
+	TaskParamsRouter
 }

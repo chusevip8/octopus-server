@@ -7,7 +7,7 @@ type ServiceGroup struct {
 	CmtConversationService
 	CommentService
 	TaskService
-	CmtTaskParamsService
 	CmtTaskSetupService
 	CmtTaskService
+	TaskParamsService
 }

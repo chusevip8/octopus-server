@@ -7,7 +7,7 @@ type ApiGroup struct {
 	CmtConversationApi
 	CommentApi
 	TaskApi
-	CmtTaskParamsApi
 	CmtTaskSetupApi
 	CmtTaskApi
+	TaskParamsApi
 }

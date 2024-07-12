@@ -95,11 +95,3 @@ export const getTaskList = (params) => {
     params
   })
 }
-
-export const findTaskByDeviceId = (params) => {
-  return service({
-    url: '/task/findTaskByDeviceId',
-    method: 'get',
-    params
-  })
-}

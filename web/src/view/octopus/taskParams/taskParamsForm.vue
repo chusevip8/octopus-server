@@ -2,8 +2,8 @@
   <div>
     <div class="gva-form-box">
       <el-form :model="formData" ref="elFormRef" label-position="right" :rules="rule" label-width="80px">
-        <el-form-item label="任务设置Id:" prop="setupId">
-          <el-input v-model.number="formData.setupId" :clearable="false" placeholder="请输入" />
+        <el-form-item label="任务设置Id:" prop="taskSetupId">
+          <el-input v-model.number="formData.taskSetupId" :clearable="false" placeholder="请输入" />
        </el-form-item>
         <el-form-item label="任务参数:" prop="params">
           <el-input v-model="formData.params" :clearable="false"  placeholder="请输入任务参数" />
@@ -22,13 +22,13 @@
 
 <script setup>
 import {
-  createCmtTaskParams,
-  updateCmtTaskParams,
-  findCmtTaskParams
-} from '@/api/octopus/cmtTaskParams'
+  createTaskParams,
+  updateTaskParams,
+  findTaskParams
+} from '@/api/octopus/taskParams'
 
 defineOptions({
-    name: 'CmtTaskParamsForm'
+    name: 'TaskParamsForm'
 })
 
 // 自动获取字典
@@ -42,13 +42,13 @@ const router = useRouter()
 
 const type = ref('')
 const formData = ref({
-            setupId: undefined,
+            taskSetupId: undefined,
             params: '',
             scriptId: undefined,
         })
 // 验证规则
 const rule = reactive({
-               setupId : [{
+               taskSetupId : [{
                    required: true,
                    message: '',
                    trigger: ['input','blur'],
@@ -71,7 +71,7 @@ const elFormRef = ref()
 const init = async () => {
  // 建议通过url传参获取目标数据ID 调用 find方法进行查询数据操作 从而决定本页面是create还是update 以下为id作为url参数示例
     if (route.query.id) {
-      const res = await findCmtTaskParams({ ID: route.query.id })
+      const res = await findTaskParams({ ID: route.query.id })
       if (res.code === 0) {
         formData.value = res.data
         type.value = 'update'
@@ -89,13 +89,13 @@ const save = async() => {
             let res
            switch (type.value) {
              case 'create':
-               res = await createCmtTaskParams(formData.value)
+               res = await createTaskParams(formData.value)
                break
              case 'update':
-               res = await updateCmtTaskParams(formData.value)
+               res = await updateTaskParams(formData.value)
                break
              default:
-               res = await createCmtTaskParams(formData.value)
+               res = await createTaskParams(formData.value)
                break
            }
            if (res.code === 0) {

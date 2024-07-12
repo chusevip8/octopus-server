@@ -80,12 +80,12 @@
 import {
   deleteTask,
   deleteTaskByIds,
-  getTaskList,
-  findTaskByDeviceId
+  getTaskList
 } from '@/api/octopus/task'
 
 import {
-  createFindCmtTask
+  createFindCmtTask,
+  findTaskByDeviceId
 } from '@/api/octopus/cmtTask'
 
 // 全量引入格式化工具 请按需保留
@@ -98,7 +98,7 @@ import { useRoute } from 'vue-router'
 import { deviceStatusOptions } from '@/view/octopus/utils/consts'
 
 defineOptions({
-  name: 'Task'
+  name: 'CmtTask'
 })
 
 const route = useRoute()
@@ -329,7 +329,7 @@ const saveTask = async (params) => {
       message: '不能添加禁用设备'
     })
   } else {
-    let res = await findTaskByDeviceId({ deviceId: params.deviceId })
+    let res = await findTaskByDeviceId({ taskSetupId: parseInt(route.params.setupId), deviceId: params.deviceId })
     if (res.data !== null) {
       ElMessage({
         type: 'error',

@@ -52,12 +52,11 @@
             <template #default="scope">{{ formatDate(scope.row.CreatedAt) }}</template>
         </el-table-column>
         
-        <el-table-column align="left" label="任务设置Id" prop="setupId" width="120" />
         <el-table-column align="left" label="任务参数" prop="params" width="120" />
         <el-table-column align="left" label="脚本Id" prop="scriptId" width="120" />
         <el-table-column align="left" label="操作" fixed="right" min-width="240">
             <template #default="scope">
-            <el-button type="primary" link icon="edit" class="table-button" @click="updateCmtTaskParamsFunc(scope.row)">变更</el-button>
+            <el-button type="primary" link icon="edit" class="table-button" @click="updateTaskParamsFunc(scope.row)">变更</el-button>
             <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
             </template>
         </el-table-column>
@@ -86,9 +85,6 @@
             </template>
 
           <el-form :model="formData" label-position="top" ref="elFormRef" :rules="rule" label-width="80px">
-            <el-form-item label="任务设置Id:"  prop="setupId" >
-              <el-input v-model.number="formData.setupId" :clearable="false" placeholder="请输入任务设置Id" />
-            </el-form-item>
             <el-form-item label="任务参数:"  prop="params" >
               <el-input v-model="formData.params" :clearable="false"  placeholder="请输入任务参数" />
             </el-form-item>
@@ -102,13 +98,13 @@
 
 <script setup>
 import {
-  createCmtTaskParams,
-  deleteCmtTaskParams,
-  deleteCmtTaskParamsByIds,
-  updateCmtTaskParams,
-  findCmtTaskParams,
-  getCmtTaskParamsList
-} from '@/api/octopus/cmtTaskParams'
+  createTaskParams,
+  deleteTaskParams,
+  deleteTaskParamsByIds,
+  updateTaskParams,
+  findTaskParams,
+  getTaskParamsList
+} from '@/api/octopus/taskParams'
 
 // 全量引入格式化工具 请按需保留
 import { getDictFunc, formatDate, formatBoolean, filterDict ,filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
@@ -116,7 +112,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
 
 defineOptions({
-    name: 'CmtTaskParams'
+    name: 'TaskParams'
 })
 
 // 控制更多查询条件显示/隐藏状态
@@ -124,7 +120,6 @@ const showAllQuery = ref(false)
 
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
-        setupId: undefined,
         params: '',
         scriptId: undefined,
         })
@@ -133,12 +128,6 @@ const formData = ref({
 
 // 验证规则
 const rule = reactive({
-               setupId : [{
-                   required: true,
-                   message: '',
-                   trigger: ['input','blur'],
-               },
-              ],
                params : [{
                    required: true,
                    message: '',
@@ -214,7 +203,7 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async() => {
-  const table = await getCmtTaskParamsList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+  const table = await getTaskParamsList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -249,7 +238,7 @@ const deleteRow = (row) => {
         cancelButtonText: '取消',
         type: 'warning'
     }).then(() => {
-            deleteCmtTaskParamsFunc(row)
+            deleteTaskParamsFunc(row)
         })
     }
 
@@ -272,7 +261,7 @@ const onDelete = async() => {
         multipleSelection.value.map(item => {
           IDs.push(item.ID)
         })
-      const res = await deleteCmtTaskParamsByIds({ IDs })
+      const res = await deleteTaskParamsByIds({ IDs })
       if (res.code === 0) {
         ElMessage({
           type: 'success',
@@ -290,8 +279,8 @@ const onDelete = async() => {
 const type = ref('')
 
 // 更新行
-const updateCmtTaskParamsFunc = async(row) => {
-    const res = await findCmtTaskParams({ ID: row.ID })
+const updateTaskParamsFunc = async(row) => {
+    const res = await findTaskParams({ ID: row.ID })
     type.value = 'update'
     if (res.code === 0) {
         formData.value = res.data
@@ -301,8 +290,8 @@ const updateCmtTaskParamsFunc = async(row) => {
 
 
 // 删除行
-const deleteCmtTaskParamsFunc = async (row) => {
-    const res = await deleteCmtTaskParams({ ID: row.ID })
+const deleteTaskParamsFunc = async (row) => {
+    const res = await deleteTaskParams({ ID: row.ID })
     if (res.code === 0) {
         ElMessage({
                 type: 'success',
@@ -328,7 +317,6 @@ const openDialog = () => {
 const closeDialog = () => {
     dialogFormVisible.value = false
     formData.value = {
-        setupId: undefined,
         params: '',
         scriptId: undefined,
         }
@@ -340,13 +328,13 @@ const enterDialog = async () => {
               let res
               switch (type.value) {
                 case 'create':
-                  res = await createCmtTaskParams(formData.value)
+                  res = await createTaskParams(formData.value)
                   break
                 case 'update':
-                  res = await updateCmtTaskParams(formData.value)
+                  res = await updateTaskParams(formData.value)
                   break
                 default:
-                  res = await createCmtTaskParams(formData.value)
+                  res = await createTaskParams(formData.value)
                   break
               }
               if (res.code === 0) {

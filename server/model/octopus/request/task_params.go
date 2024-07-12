@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type CmtTaskParamsSearch struct{
+type TaskParamsSearch struct{
     StartCreatedAt *time.Time `json:"startCreatedAt" form:"startCreatedAt"`
     EndCreatedAt   *time.Time `json:"endCreatedAt" form:"endCreatedAt"`
     Params  string `json:"params" form:"params" `
