@@ -57,10 +57,12 @@ func (cmtTaskApi *CmtTaskApi) UploadComment(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if err := cmtTaskService.UploadComment(&commentReq); err != nil {
+	errCode, err := cmtTaskService.UploadComment(&commentReq)
+	if err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
-		response.FailWithMessage("创建失败", c)
+		response.FailWithCode(errCode, "创建失败", c)
 	} else {
 		response.OkWithMessage("创建成功", c)
 	}
+
 }

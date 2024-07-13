@@ -49,6 +49,9 @@ func Fail(c *gin.Context) {
 func FailWithMessage(message string, c *gin.Context) {
 	Result(ERROR, map[string]interface{}{}, message, c)
 }
+func FailWithCode(code int, message string, c *gin.Context) {
+	Result(code, map[string]interface{}{}, message, c)
+}
 
 func NoAuth(message string, c *gin.Context) {
 	c.JSON(http.StatusUnauthorized, Response{

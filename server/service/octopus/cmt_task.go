@@ -1,6 +1,9 @@
 package octopus
 
 import (
+	"crypto/md5"
+	"encoding/hex"
+	"errors"
 	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
@@ -10,6 +13,13 @@ import (
 )
 
 type CmtTaskService struct{}
+
+const (
+	ErrorNoTask             = -1
+	ErrorCreateThread       = -2
+	ErrorCreateConversation = -3
+	ErrorCreateComment      = -4
+)
 
 var CmtTaskServiceApp = new(CmtTaskService)
 
@@ -113,6 +123,90 @@ func (cmtTaskService *CmtTaskService) DeleteCmtTask(id string, userId uint) (err
 	return err
 }
 
-func (cmtTaskService *CmtTaskService) UploadComment(commentReq *octopusReq.CommentReq) (err error) {
-	return err
+func (cmtTaskService *CmtTaskService) buildPostId(poster string, postTitle string, postDesc string) (postId string, err error) {
+	// 拼接字符串
+	data := poster + postTitle + postDesc
+
+	// 计算 MD5 哈希值
+	hash := md5.New()
+	_, err = hash.Write([]byte(data))
+	if err != nil {
+		return "", err
+	}
+
+	// 获取哈希值并编码为十六进制字符串
+	postId = hex.EncodeToString(hash.Sum(nil))
+	return postId, nil
+}
+
+func (cmtTaskService *CmtTaskService) buildCommenterId(commenter string) (commenterId string, err error) {
+	hash := md5.New()
+	_, err = hash.Write([]byte(commenter))
+	if err != nil {
+		return "", err
+	}
+	commenterId = hex.EncodeToString(hash.Sum(nil))
+	return commenterId, nil
+}
+
+func (cmtTaskService *CmtTaskService) UploadComment(commentReq *octopusReq.CommentReq) (errCode int, err error) {
+	var task octopus.Task
+	err = global.GVA_DB.Preload("TaskParams").First(&task, commentReq.TaskId).Error
+	if err != nil {
+		return ErrorNoTask, err
+	}
+	var cmtThread octopus.CmtThread
+	if errors.Is(global.GVA_DB.Model(&octopus.CmtThread{}).Where("task_setup_id=?", task.TaskParams.TaskSetupId).First(&cmtThread).Error, gorm.ErrRecordNotFound) {
+		var postId string
+		if postId, err = cmtTaskService.buildPostId(commentReq.Poster, commentReq.PostTitle, commentReq.PostDesc); err != nil {
+			postId = strconv.Itoa(int(task.TaskParams.TaskSetupId))
+		}
+		cmtThread.AppName = task.AppName
+		cmtThread.TaskSetupId = task.TaskParams.TaskSetupId
+		cmtThread.Poster = commentReq.Poster
+		cmtThread.PostTitle = commentReq.PostTitle
+		cmtThread.PostDesc = commentReq.PostDesc
+		cmtThread.CreatedBy = task.CreatedBy
+		cmtThread.PostId = postId
+		if err = global.GVA_DB.Create(cmtThread).Error; err != nil {
+			return ErrorCreateThread, err
+		}
+
+	}
+	commenterId := commentReq.CommenterId
+	commentReplierId := commentReq.CommentReplierId
+	if commenterId == "" {
+		commenterId, err = cmtTaskService.buildCommenterId(commentReq.Commenter)
+	}
+	if commentReplierId == "" {
+		commentReplierId, err = cmtTaskService.buildCommenterId(commentReq.CommentReplier)
+	}
+	var cmtConversation octopus.CmtConversation
+	err = global.GVA_DB.Model(&octopus.CmtConversation{}).
+		Where("thread_id=?", cmtThread.ID).
+		Where("commenter_id=?", commenterId).
+		Where("comment_replier_id=?", commentReplierId).First(&cmtConversation).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		cmtConversation.ThreadId = cmtThread.ID
+		cmtConversation.Commenter = commentReq.Commenter
+		cmtConversation.CommenterId = commenterId
+		cmtConversation.CommentReplier = commentReq.CommentReplier
+		cmtConversation.CommentReplierId = commentReplierId
+		cmtConversation.CreatedBy = cmtThread.CreatedBy
+		if err = global.GVA_DB.Create(cmtConversation).Error; err != nil {
+			return ErrorCreateConversation, err
+		}
+	}
+	var comment octopus.Comment
+	comment.ConversationId = cmtConversation.ID
+	comment.Commenter = commentReq.Commenter
+	comment.CommenterId = commenterId
+	comment.CommentReplier = commentReq.CommentReplier
+	comment.CommentReplierId = commentReplierId
+	comment.Content = commentReq.Content
+	comment.PostAt = commentReq.PostAt
+	if err = global.GVA_DB.Create(comment).Error; err != nil {
+		return ErrorCreateComment, err
+	}
+	return 0, nil
 }
