@@ -102,11 +102,14 @@ import {
 import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 defineOptions({
   name: 'CmtThread'
 })
 
+const router = useRouter()
+const route = useRoute()
 // 控制更多查询条件显示/隐藏状态
 const showAllQuery = ref(false)
 
@@ -205,7 +208,7 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async () => {
-  const table = await getCmtThreadList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+  const table = await getCmtThreadList({ page: page.value, pageSize: pageSize.value, appName: route.params.appName, ...searchInfo.value })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
