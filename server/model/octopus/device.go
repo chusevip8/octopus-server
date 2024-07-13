@@ -11,7 +11,7 @@ type Device struct {
 	Brand     string         `json:"brand" form:"brand" gorm:"column:brand;comment:品牌;size:50;"`
 	OS        string         `json:"os" form:"os" gorm:"column:os;comment:系统;size:50;"`
 	Note      string         `json:"note" form:"note" gorm:"column:note;comment:备注;size:64;"`
-	Status    int            `json:"status" gorm:"column:status;comment:状态;default:3;"`
+	Status    int            `json:"status" gorm:"column:status;comment:状态;default:2;"`
 	Username  string         `json:"userName" gorm:"index;column:username;comment:关联用户登录名;not null;"`
 	User      system.SysUser `json:"user" gorm:"foreignKey:Username;references:Username;comment:关联用户;"`
 	CreatedBy uint           `gorm:"column:created_by;comment:创建者"`

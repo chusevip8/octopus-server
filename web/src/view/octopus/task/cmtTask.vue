@@ -109,8 +109,9 @@ const showAllQuery = ref(false)
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
   appName: '',
-  setupId: undefined,
-  taskType: undefined,
+  taskSetupId: undefined,
+  mainTaskType: undefined,
+  subTaskType: undefined,
   scriptId: undefined,
   deviceId: undefined,
   status: undefined,
@@ -191,7 +192,7 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async () => {
-  const table = await getTaskList({ page: page.value, pageSize: pageSize.value, taskSetupId: route.params.setupId, ...searchInfo.value })
+  const table = await getTaskList({ page: page.value, pageSize: pageSize.value, taskSetupId: route.params.taskSetupId, ...searchInfo.value })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -300,8 +301,9 @@ const closeDialog = () => {
   dialogFormVisible.value = false
   formData.value = {
     appName: '',
-    setupId: undefined,
-    taskType: undefined,
+    taskSetupId: undefined,
+    mainTaskType: undefined,
+    subTaskType: undefined,
     scriptId: undefined,
     deviceId: undefined,
     status: undefined,
@@ -311,25 +313,26 @@ const closeDialog = () => {
 const saveTask = async (params) => {
   formData.value.deviceId = params.deviceId
   formData.value.appName = route.params.appName
-  formData.value.taskType = route.params.taskType
-  formData.value.setupId = parseInt(route.params.setupId)
+  formData.value.mainTaskType = route.params.mainTaskType
+  formData.value.subTaskType = route.params.subTaskType
+  formData.value.taskSetupId = parseInt(route.params.taskSetupId)
   formData.value.scriptId = parseInt(route.params.scriptId)
   formData.value.status = 1
 
   const deviceStatus = params.deviceStatus
 
-  if (deviceStatus === deviceStatusOptions.value[2].value) {
+  if (deviceStatus === deviceStatusOptions.value[1].value) {
     ElMessage({
       type: 'error',
       message: '不能添加离线设备'
     })
-  } else if (deviceStatus === deviceStatusOptions.value[3].value) {
+  } else if (deviceStatus === deviceStatusOptions.value[2].value) {
     ElMessage({
       type: 'error',
       message: '不能添加禁用设备'
     })
   } else {
-    let res = await findTaskByDeviceId({ taskSetupId: parseInt(route.params.setupId), deviceId: params.deviceId })
+    let res = await findTaskByDeviceId({ taskSetupId: parseInt(route.params.taskSetupId), deviceId: params.deviceId })
     if (res.data !== null) {
       ElMessage({
         type: 'error',

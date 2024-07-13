@@ -3,18 +3,14 @@ import { ref } from 'vue'
 export const deviceStatusOptions = ref([
     {
         value: 1,
-        label: '运行'
-    },
-    {
-        value: 2,
         label: '就绪'
     },
     {
-        value: 3,
+        value: 2,
         label: '离线'
     },
     {
-        value: 4,
+        value: 3,
         label: '禁用'
     }
 ])

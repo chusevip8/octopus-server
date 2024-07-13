@@ -11,16 +11,17 @@ import (
 type CmtTaskService struct{}
 
 func (cmtTaskService *CmtTaskService) CreateFindCmtTask(findCmtTask *octopusReq.FindCmtTask) (err error) {
-	params, err := cmtTaskService.buildFindCmtTaskParams(findCmtTask.SetupId)
+	params, err := cmtTaskService.buildFindCmtTaskParams(findCmtTask.TaskSetupId)
 	if err != nil {
 		return err
 	}
 
 	var taskParams octopus.TaskParams
-	taskParams.TaskSetupId = findCmtTask.SetupId
+	taskParams.TaskSetupId = findCmtTask.TaskSetupId
 	taskParams.ScriptId = findCmtTask.ScriptId
 	taskParams.CreatedBy = findCmtTask.CreatedBy
-	taskParams.TaskType = findCmtTask.TaskType
+	taskParams.MainTaskType = findCmtTask.MainTaskType
+	taskParams.SubTaskType = findCmtTask.SubTaskType
 	taskParams.Params = params
 	err = TaskParamsServiceApp.CreateTaskParams(&taskParams)
 	if err != nil {
