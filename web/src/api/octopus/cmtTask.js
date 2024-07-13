@@ -14,3 +14,11 @@ export const findTaskByDeviceId = (params) => {
         params
     })
 }
+
+export const deleteCmtTask = (params) => {
+    return service({
+        url: '/cmtTask/deleteCmtTask',
+        method: 'delete',
+        params
+    })
+}

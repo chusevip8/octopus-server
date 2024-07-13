@@ -30,8 +30,6 @@
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button type="primary" icon="plus" @click="openDialog">添加</el-button>
-        <el-button icon="delete" style="margin-left: 10px;" :disabled="!multipleSelection.length"
-          @click="onDelete">删除</el-button>
       </div>
       <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
         @selection-change="handleSelectionChange">
@@ -85,7 +83,8 @@ import {
 
 import {
   createFindCmtTask,
-  findTaskByDeviceId
+  findTaskByDeviceId,
+  deleteCmtTask
 } from '@/api/octopus/cmtTask'
 
 // 全量引入格式化工具 请按需保留
@@ -221,15 +220,15 @@ const handleSelectionChange = (val) => {
 }
 
 // 删除行
-const deleteRow = (row) => {
-  ElMessageBox.confirm('确定要删除吗?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    deleteTaskFunc(row)
-  })
-}
+// const deleteRow = (row) => {
+//   ElMessageBox.confirm('确定要删除吗?', '提示', {
+//     confirmButtonText: '确定',
+//     cancelButtonText: '取消',
+//     type: 'warning'
+//   }).then(() => {
+//     deleteTaskFunc(row)
+//   })
+// }
 
 // 多选删除
 const onDelete = async () => {
@@ -266,11 +265,6 @@ const onDelete = async () => {
 
 // 行为控制标记（弹窗内部需要增还是改）
 const type = ref('')
-
-// 停止任务
-const stopTask = async (row) => {
-
-}
 
 // 删除行
 const deleteTaskFunc = async (row) => {
@@ -352,6 +346,33 @@ const saveTask = async (params) => {
 
 }
 
+const deleteRow = (row) => {
+  ElMessageBox.confirm('确定要删除吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    deleteCmtTaskFunc(row)
+  })
+}
+
+const deleteCmtTaskFunc = async (row) => {
+  const res = await deleteCmtTask({ id: row.ID })
+  if (res.code === 0) {
+    ElMessage({
+      type: 'success',
+      message: '删除成功'
+    })
+    if (tableData.value.length === 1 && page.value > 1) {
+      page.value--
+    }
+    getTableData()
+  }
+}
+// 停止任务
+const stopTask = async (row) => {
+
+}
 </script>
 
 <style></style>

@@ -51,9 +51,9 @@ func (cmtTaskSetupService *CmtTaskSetupService) DeleteCmtTaskSetupByIds(IDs []st
 // UpdateCmtTaskSetup 更新评论任务设置记录
 // Author [piexlmax](https://github.com/piexlmax)
 func (cmtTaskSetupService *CmtTaskSetupService) UpdateCmtTaskSetup(cmtTaskSetup octopus.CmtTaskSetup) (err error) {
-	err = global.GVA_DB.Model(&octopus.CmtTaskSetup{}).Where("id = ?", cmtTaskSetup.ID).Updates(&cmtTaskSetup).Error
+	err = CmtTaskServiceApp.UpdateFindCmtTaskParams(cmtTaskSetup)
 	if err == nil {
-		err = CmtTaskServiceApp.UpdateFindCmtTaskParams(cmtTaskSetup)
+		err = global.GVA_DB.Model(&octopus.CmtTaskSetup{}).Where("id = ?", cmtTaskSetup.ID).Updates(&cmtTaskSetup).Error
 	}
 	return err
 }
