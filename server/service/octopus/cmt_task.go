@@ -10,6 +10,8 @@ import (
 
 type CmtTaskService struct{}
 
+var CmtTaskServiceApp = new(CmtTaskService)
+
 func (cmtTaskService *CmtTaskService) CreateFindCmtTask(findCmtTask *octopusReq.FindCmtTask) (err error) {
 	params, err := cmtTaskService.buildFindCmtTaskParams(findCmtTask.TaskSetupId)
 	if err != nil {
@@ -54,5 +56,15 @@ func (cmtTaskService *CmtTaskService) GetTaskByDeviceId(taskSetupId string, devi
 	err = global.GVA_DB.Model(&octopus.Task{}).
 		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
 		Where("oct_task_params.task_setup_id = ? AND oct_task.device_id = ?", taskSetupId, deviceId).First(&task).Error
+	return
+}
+
+func (cmtTaskService *CmtTaskService) UpdateFindCmtTaskParams(cmtTaskSetup octopus.CmtTaskSetup) (err error) {
+	params := fmt.Sprintf(`{"postLink": "%s", "keyword": "%s"}`, cmtTaskSetup.PostLink, cmtTaskSetup.Keyword)
+	err = global.GVA_DB.Model(&octopus.TaskParams{}).
+		Where("task_setup_id = ?", cmtTaskSetup.ID).
+		Where("main_task_type = ?", "cmt").
+		Where("sub_task_type = ?", "findCmt").
+		Update("params", params).Error
 	return
 }
