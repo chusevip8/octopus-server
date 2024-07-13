@@ -20,6 +20,7 @@ func (cmtTaskService *CmtTaskService) CreateFindCmtTask(findCmtTask *octopusReq.
 	taskParams.TaskSetupId = findCmtTask.SetupId
 	taskParams.ScriptId = findCmtTask.ScriptId
 	taskParams.CreatedBy = findCmtTask.CreatedBy
+	taskParams.TaskType = findCmtTask.TaskType
 	taskParams.Params = params
 	err = TaskParamsServiceApp.CreateTaskParams(&taskParams)
 	if err != nil {
@@ -31,7 +32,6 @@ func (cmtTaskService *CmtTaskService) CreateFindCmtTask(findCmtTask *octopusReq.
 	task.AppName = findCmtTask.AppName
 	task.DeviceId = findCmtTask.DeviceId
 	task.CreatedBy = findCmtTask.CreatedBy
-	task.Type = findCmtTask.Type
 	task.Status = findCmtTask.Status
 	task.Error = findCmtTask.Error
 	err = TaskServiceApp.CreateTask(&task)

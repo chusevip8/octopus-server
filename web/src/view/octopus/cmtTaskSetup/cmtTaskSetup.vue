@@ -203,7 +203,7 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async () => {
-  const table = await getCmtTaskSetupList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+  const table = await getCmtTaskSetupList({ page: page.value, pageSize: pageSize.value, appName: route.params.appName, ...searchInfo.value })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -305,7 +305,7 @@ const deleteCmtTaskSetupFunc = async (row) => {
 }
 
 const openTaskManager = (row) => {
-  router.push({ name: 'cmtTask', params: { appName: route.params.appName, taskType: 'cmt', setupId: row.ID, scriptId: parseInt(route.params.findCmtScriptId, 10) } })
+  router.push({ name: 'cmtTask', params: { appName: route.params.appName, taskType: 'cmtFindTask', setupId: row.ID, scriptId: parseInt(route.params.findCmtScriptId, 10) } })
 }
 
 // 弹窗控制标记

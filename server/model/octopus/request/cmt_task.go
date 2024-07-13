@@ -4,7 +4,7 @@ type FindCmtTask struct {
 	SetupId   uint   `json:"setupId" form:"setupId"`
 	ScriptId  uint   `json:"scriptId" form:"scriptId"`
 	AppName   string `json:"appName" form:"appName"`
-	Type      string `json:"type" form:"type"`
+	TaskType  string `json:"taskType" form:"taskType"`
 	DeviceId  uint   `json:"deviceId" form:"deviceId"`
 	Status    uint   `json:"status" form:"status"`
 	Error     string `json:"error" form:"error"`

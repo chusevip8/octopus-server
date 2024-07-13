@@ -71,6 +71,10 @@ func (cmtTaskSetupService *CmtTaskSetupService) GetCmtTaskSetupInfoList(info oct
 	db := global.GVA_DB.Model(&octopus.CmtTaskSetup{})
 	var cmtTaskSetups []octopus.CmtTaskSetup
 	// 如果有条件搜索 下方会自动创建搜索语句
+
+	if info.AppName != "" {
+		db = db.Where("app_name = ?", info.AppName)
+	}
 	if info.TaskTitle != "" {
 		db = db.Where("task_title LIKE ?", "%"+info.Keyword+"%")
 	}

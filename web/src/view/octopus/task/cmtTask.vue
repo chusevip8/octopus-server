@@ -51,7 +51,7 @@
         <el-table-column align="center" label="错误信息" prop="error" min-width="120" />
         <el-table-column align="center" label="操作" fixed="right" min-width="240">
           <template #default="scope">
-            <el-button type="primary" link icon="edit" class="table-button" @click="stopTask(scope.row)">停止</el-button>
+            <el-button type="primary" link icon="Close" class="table-button" @click="stopTask(scope.row)">停止</el-button>
             <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -110,7 +110,7 @@ const showAllQuery = ref(false)
 const formData = ref({
   appName: '',
   setupId: undefined,
-  type: undefined,
+  taskType: undefined,
   scriptId: undefined,
   deviceId: undefined,
   status: undefined,
@@ -301,7 +301,7 @@ const closeDialog = () => {
   formData.value = {
     appName: '',
     setupId: undefined,
-    type: undefined,
+    taskType: undefined,
     scriptId: undefined,
     deviceId: undefined,
     status: undefined,
@@ -311,7 +311,7 @@ const closeDialog = () => {
 const saveTask = async (params) => {
   formData.value.deviceId = params.deviceId
   formData.value.appName = route.params.appName
-  formData.value.type = route.params.taskType
+  formData.value.taskType = route.params.taskType
   formData.value.setupId = parseInt(route.params.setupId)
   formData.value.scriptId = parseInt(route.params.scriptId)
   formData.value.status = 1

@@ -9,6 +9,7 @@ import (
 type TaskParams struct {
 	global.GVA_MODEL
 	TaskSetupId uint   `json:"taskSetupId" form:"taskSetupId" gorm:"column:task_setup_id;comment:任务设置Id;" binding:"required"` //任务设置Id
+	TaskType    string `json:"taskType" form:"taskType" gorm:"column:task_type;comment:任务类型;" binding:"required"`             //任务类型
 	Params      string `json:"params" form:"params" gorm:"column:params;comment:任务参数;" binding:"required"`                    //任务参数
 	ScriptId    uint   `json:"scriptId" form:"scriptId" gorm:"column:script_id;comment:脚本Id;" binding:"required"`             //脚本Id
 	CreatedBy   uint   `gorm:"column:created_by;comment:创建者"`
