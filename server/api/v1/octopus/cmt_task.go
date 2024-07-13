@@ -49,3 +49,18 @@ func (cmtTaskApi *CmtTaskApi) DeleteCmtTask(c *gin.Context) {
 		response.OkWithMessage("删除成功", c)
 	}
 }
+
+func (cmtTaskApi *CmtTaskApi) UploadComment(c *gin.Context) {
+	var commentReq octopusReq.CommentReq
+	err := c.ShouldBindJSON(&commentReq)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if err := cmtTaskService.UploadComment(&commentReq); err != nil {
+		global.GVA_LOG.Error("创建失败!", zap.Error(err))
+		response.FailWithMessage("创建失败", c)
+	} else {
+		response.OkWithMessage("创建成功", c)
+	}
+}

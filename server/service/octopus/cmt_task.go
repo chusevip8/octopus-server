@@ -112,3 +112,7 @@ func (cmtTaskService *CmtTaskService) DeleteCmtTask(id string, userId uint) (err
 	})
 	return err
 }
+
+func (cmtTaskService *CmtTaskService) UploadComment(commentReq *octopusReq.CommentReq) (err error) {
+	return err
+}
