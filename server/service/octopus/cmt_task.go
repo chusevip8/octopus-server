@@ -168,7 +168,7 @@ func (cmtTaskService *CmtTaskService) UploadComment(commentReq *octopusReq.Comme
 		cmtThread.PostDesc = commentReq.PostDesc
 		cmtThread.CreatedBy = task.CreatedBy
 		cmtThread.PostId = postId
-		if err = global.GVA_DB.Create(cmtThread).Error; err != nil {
+		if err = global.GVA_DB.Create(&cmtThread).Error; err != nil {
 			return ErrorCreateThread, err
 		}
 
@@ -193,7 +193,7 @@ func (cmtTaskService *CmtTaskService) UploadComment(commentReq *octopusReq.Comme
 		cmtConversation.CommentReplier = commentReq.CommentReplier
 		cmtConversation.CommentReplierId = commentReplierId
 		cmtConversation.CreatedBy = cmtThread.CreatedBy
-		if err = global.GVA_DB.Create(cmtConversation).Error; err != nil {
+		if err = global.GVA_DB.Create(&cmtConversation).Error; err != nil {
 			return ErrorCreateConversation, err
 		}
 	}
@@ -205,7 +205,7 @@ func (cmtTaskService *CmtTaskService) UploadComment(commentReq *octopusReq.Comme
 	comment.CommentReplierId = commentReplierId
 	comment.Content = commentReq.Content
 	comment.PostAt = commentReq.PostAt
-	if err = global.GVA_DB.Create(comment).Error; err != nil {
+	if err = global.GVA_DB.Create(&comment).Error; err != nil {
 		return ErrorCreateComment, err
 	}
 	return 0, nil
