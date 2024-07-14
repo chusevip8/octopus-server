@@ -17,6 +17,9 @@ import { store } from '@/pinia'
 import App from './App.vue'
 import { initDom } from './utils/positionToCode'
 
+import JwChat from "jwchat"
+import "jwchat/lib/style.css"
+
 initDom()
 
 const app = createApp(App)
@@ -27,5 +30,6 @@ app
     .use(store)
     .use(auth)
     .use(router)
+    .use(JwChat)
     .mount('#app')
 export default app

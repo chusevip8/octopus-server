@@ -23,6 +23,7 @@
         "element-plus": "^2.7.0",
         "highlight.js": "^11.8.0",
         "js-cookie": "^3.0.5",
+        "jwchat": "^2.0.3",
         "marked": "4.3.0",
         "mitt": "^3.0.1",
         "nprogress": "^0.2.0",
