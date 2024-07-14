@@ -35,14 +35,12 @@
       <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-        <el-table-column align="center" label="发评论者" prop="commenter" width="120" />
-        <el-table-column align="center" label="发评论者Id" prop="commentId" width="120" />
-        <el-table-column align="center" label="评论回复者" prop="commentReplier" width="120" />
-        <el-table-column align="center" label="评论回复者Id" prop="commentReplierId" width="120" />
+        <el-table-column align="center" label="发评论者" prop="commenter" min-width="240" />
+        <el-table-column align="center" label="评论回复者" prop="commentReplier" min-width="240" />
         <el-table-column align="center" label="操作" fixed="right" min-width="240">
           <template #default="scope">
             <el-button type="primary" link icon="View" class="table-button"
-              @click="viewThread(scope.row)">查看</el-button>
+              @click="viewConversation(scope.row)">查看</el-button>
             <!-- <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button> -->
           </template>
         </el-table-column>
@@ -332,6 +330,10 @@ const enterDialog = async () => {
       getTableData()
     }
   })
+}
+
+const viewConversation = (row) => {
+
 }
 
 </script>
