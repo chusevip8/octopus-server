@@ -4,6 +4,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
+	octopusRes "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/response"
 )
 
 type CommentService struct{}
@@ -45,20 +46,13 @@ func (commentService *CommentService) GetComment(ID string) (comment octopus.Com
 
 // GetCommentInfoList 分页获取评论记录
 // Author [piexlmax](https://github.com/piexlmax)
-func (commentService *CommentService) GetCommentInfoList(info octopusReq.CommentSearch) (list []octopus.Comment, total int64, err error) {
+func (commentService *CommentService) GetCommentInfoList(info octopusReq.CommentSearch) (list []octopusRes.CommentRes, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
 	db := global.GVA_DB.Model(&octopus.Comment{})
 	var comments []octopus.Comment
-	// 如果有条件搜索 下方会自动创建搜索语句
 
-	if info.Content != "" {
-		db = db.Where("content LIKE ?", "%"+info.Content+"%")
-	}
-	if info.Status != nil {
-		db = db.Where("status = ?", info.Status)
-	}
 	err = db.Count(&total).Error
 	if err != nil {
 		return
@@ -69,5 +63,16 @@ func (commentService *CommentService) GetCommentInfoList(info octopusReq.Comment
 	}
 
 	err = db.Find(&comments).Error
-	return comments, total, err
+
+	var commentResList []octopusRes.CommentRes
+	for _, comment := range comments {
+		text := octopusRes.Text{Text: comment.Content}
+		commentRes := octopusRes.CommentRes{}
+		commentRes.Name = comment.Commenter
+		commentRes.Text = text
+		commentRes.Date = comment.PostAt
+		commentResList = append(commentResList, commentRes)
+	}
+
+	return commentResList, total, err
 }

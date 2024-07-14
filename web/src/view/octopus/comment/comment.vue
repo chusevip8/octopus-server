@@ -22,10 +22,6 @@
 </el-table> -->
       <JwChat :taleList="tableData" @enter="bindEnter" v-model="inputMsg" :showRightBox="false" scrollType="scroll"
         width="80%" height="750px" :toolConfig="chatTool" :config="chatConfig">
-
-        <!-- <template v-slot:enterBtn>
-          <button @click="customSend">发送</button>
-        </template> -->
       </JwChat>
       <!-- <div class="gva-pagination">
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :current-page="page" :page-size="pageSize"
@@ -64,6 +60,7 @@ const chatTool = ref({
 
 const chatConfig = ref({
   name: 'JwChat',
+  dept: '描述'
 })
 
 // 自动化生成的字典（可能为空）以及字段
