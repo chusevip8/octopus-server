@@ -205,6 +205,9 @@ func (cmtTaskService *CmtTaskService) UploadComment(commentReq *octopusReq.Comme
 	comment.CommentReplierId = commentReplierId
 	comment.Content = commentReq.Content
 	comment.PostAt = commentReq.PostAt
+	comment.TaskId = task.ID
+	comment.Unread = true
+	comment.Mine = false
 	if err = global.GVA_DB.Create(&comment).Error; err != nil {
 		return ErrorCreateComment, err
 	}

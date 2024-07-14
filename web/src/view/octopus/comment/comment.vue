@@ -20,7 +20,7 @@
           </template>
 </el-table-column>
 </el-table> -->
-      <JwChat :taleList="list" @enter="bindEnter" v-model="inputMsg" :showRightBox="false" scrollType="scroll"
+      <JwChat :taleList="tableData" @enter="bindEnter" v-model="inputMsg" :showRightBox="false" scrollType="scroll"
         width="80%" height="750px" :toolConfig="chatTool" :config="chatConfig">
 
         <!-- <template v-slot:enterBtn>
@@ -84,12 +84,13 @@ const tableData = ref([])
 
 // 查询
 const getTableData = async () => {
-  const table = await getCommentList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+  const table = await getCommentList({ page: page.value, pageSize: pageSize.value })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
     page.value = table.data.page
     pageSize.value = table.data.pageSize
+    console.log(tableData.value)
   }
 }
 
