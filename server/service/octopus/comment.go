@@ -1,6 +1,7 @@
 package octopus
 
 import (
+	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
@@ -50,7 +51,7 @@ func (commentService *CommentService) GetCommentInfoList(info octopusReq.Comment
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
-	db := global.GVA_DB.Model(&octopus.Comment{})
+	db := global.GVA_DB.Model(&octopus.Comment{}).Preload("Task")
 	var comments []octopus.Comment
 
 	err = db.Count(&total).Error
@@ -64,15 +65,42 @@ func (commentService *CommentService) GetCommentInfoList(info octopusReq.Comment
 
 	err = db.Find(&comments).Error
 
+	if err != nil {
+		return
+	}
+
 	var commentResList []octopusRes.CommentRes
 	for _, comment := range comments {
-		text := octopusRes.Text{Text: comment.Content}
+
 		commentRes := octopusRes.CommentRes{}
 		commentRes.Name = comment.Commenter
-		commentRes.Text = text
 		commentRes.Date = comment.PostAt
+		commentRes.Mine = comment.Mine
+		commentRes.Text = commentService.formatCommentText(comment)
 		commentResList = append(commentResList, commentRes)
 	}
 
 	return commentResList, total, err
+}
+func (commentService *CommentService) formatCommentText(comment octopus.Comment) octopusRes.Text {
+	if !comment.Mine {
+		return octopusRes.Text{Text: comment.Content}
+	}
+
+	var color, status, taskErr string
+	switch comment.Task.Status {
+	case 0:
+		color, status, taskErr = "red", "失败", "-任务已删除"
+	case 1:
+		color, status, taskErr = "yellow", "新建", ""
+	case 2:
+		color, status, taskErr = "yellow", "发布中", ""
+	case 3:
+		color, status, taskErr = "green", "已发布", ""
+	default:
+		color, status, taskErr = "red", "失败", "-"+comment.Task.Error
+	}
+
+	text := fmt.Sprintf(`%s<p style="color: %s;">%s%s</p>`, comment.Content, color, status, taskErr)
+	return octopusRes.Text{Text: text}
 }
