@@ -42,13 +42,13 @@
         <el-table-column align="center" label="发帖者" prop="poster" width="240" />
         <el-table-column align="center" label="帖子标题" prop="postTitle" min-width="120" />
         <el-table-column align="center" label="帖子描述" prop="postDesc" min-width="240" />
-        <!-- <el-table-column align="center" label="操作" fixed="right" min-width="240">
+        <el-table-column align="center" label="操作" fixed="right" min-width="240">
           <template #default="scope">
-            <el-button type="primary" link icon="edit" class="table-button"
-              @click="updateCmtThreadFunc(scope.row)">变更</el-button>
-            <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
+            <el-button type="primary" link icon="View" class="table-button"
+              @click="viewThread(scope.row)">查看</el-button>
+            <!-- <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button> -->
           </template>
-        </el-table-column> -->
+        </el-table-column>
       </el-table>
       <div class="gva-pagination">
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :current-page="page" :page-size="pageSize"
@@ -354,6 +354,10 @@ const enterDialog = async () => {
       getTableData()
     }
   })
+}
+
+const viewThread = (row) => {
+  router.push({ name: 'cmtConversation', params: { threadId: row.ID } })
 }
 
 </script>
