@@ -43,6 +43,10 @@ import {
   getCommentList
 } from '@/api/octopus/comment'
 
+import {
+  findCmtThread
+} from '@/api/octopus/cmtThread'
+
 // 全量引入格式化工具 请按需保留
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref } from 'vue'
@@ -59,9 +63,18 @@ const chatTool = ref({
 })
 
 const chatConfig = ref({
-  name: 'JwChat',
-  dept: '描述'
+  name: '',
+  dept: ''
 })
+
+const getPostInfo = async () => {
+  const cmtThread = await findCmtThread({ ID: route.params.threadId })
+  if (cmtThread.code == 0) {
+    chatConfig.value.name = cmtThread.data.poster
+    chatConfig.value.dept = cmtThread.data.postDesc
+  }
+}
+getPostInfo()
 
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
@@ -87,7 +100,6 @@ const getTableData = async () => {
     total.value = table.data.total
     page.value = table.data.page
     pageSize.value = table.data.pageSize
-    console.log(tableData.value)
   }
 }
 
