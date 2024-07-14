@@ -97,11 +97,15 @@ import {
 import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 defineOptions({
   name: 'CmtConversation'
 })
 
+
+const router = useRouter()
+const route = useRoute()
 // 控制更多查询条件显示/隐藏状态
 const showAllQuery = ref(false)
 
@@ -333,7 +337,7 @@ const enterDialog = async () => {
 }
 
 const viewConversation = (row) => {
-
+  router.push({ name: 'comment', params: { conversationId: row.ID } })
 }
 
 </script>
