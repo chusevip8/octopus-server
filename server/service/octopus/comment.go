@@ -54,6 +54,10 @@ func (commentService *CommentService) GetCommentInfoList(info octopusReq.Comment
 	db := global.GVA_DB.Model(&octopus.Comment{}).Preload("Task")
 	var comments []octopus.Comment
 
+	if info.ConversationId != "" {
+		db = db.Where("conversation_id=?", info.ConversationId)
+	}
+
 	err = db.Count(&total).Error
 	if err != nil {
 		return

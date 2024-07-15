@@ -94,7 +94,7 @@ const tableData = ref([])
 
 // 查询
 const getTableData = async () => {
-  const table = await getCommentList({ page: page.value, pageSize: pageSize.value })
+  const table = await getCommentList({ page: page.value, pageSize: pageSize.value, conversationId: route.params.conversationId })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total

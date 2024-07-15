@@ -5,7 +5,8 @@ import (
 )
 
 type CommentSearch struct {
-	Content string `json:"content" form:"content" `
-	Status  *int   `json:"status" form:"status" `
+	ConversationId string `json:"conversationId" form:"conversationId"`
+	Content        string `json:"content" form:"content" `
+	Status         uint   `json:"status" form:"status" `
 	request.PageInfo
 }
