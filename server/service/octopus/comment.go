@@ -73,6 +73,8 @@ func (commentService *CommentService) GetCommentInfoList(info octopusReq.Comment
 		return
 	}
 
+	err = commentService.markCommentsAsRead(comments)
+
 	var commentResList []octopusRes.CommentRes
 	for _, comment := range comments {
 
@@ -107,4 +109,18 @@ func (commentService *CommentService) formatCommentText(comment octopus.Comment)
 
 	text := fmt.Sprintf(`%s<p style="color: %s;">%s%s</p>`, comment.Content, color, status, taskErr)
 	return octopusRes.Text{Text: text}
+}
+
+func (commentService *CommentService) markCommentsAsRead(comments []octopus.Comment) error {
+	if len(comments) == 0 {
+		return nil
+	}
+
+	commentIds := make([]uint, len(comments))
+	for i, comment := range comments {
+		commentIds[i] = comment.ID
+	}
+
+	err := global.GVA_DB.Model(&octopus.Comment{}).Where("id IN (?) AND unread = ?", commentIds, true).Update("unread", false).Error
+	return err
 }
