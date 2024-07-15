@@ -188,7 +188,7 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async () => {
-  const table = await getCmtConversationList({ page: page.value, pageSize: pageSize.value, threadId: parseInt(route.params.threadId), ...searchInfo.value })
+  const table = await getCmtConversationList({ page: page.value, pageSize: pageSize.value, threadId: route.params.threadId, ...searchInfo.value })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total

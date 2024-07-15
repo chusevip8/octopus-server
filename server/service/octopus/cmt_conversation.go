@@ -69,7 +69,7 @@ func (cmtConversationService *CmtConversationService) GetCmtConversationInfoList
 	db := global.GVA_DB.Model(&octopus.CmtConversation{})
 	var cmtConversations []octopus.CmtConversation
 	// 如果有条件搜索 下方会自动创建搜索语句
-	if info.ThreadId != 0 {
+	if info.ThreadId != "" {
 		db = db.Where("thread_id = ?", info.ThreadId)
 	}
 	if info.Commenter != "" {

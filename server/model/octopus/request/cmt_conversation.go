@@ -5,7 +5,7 @@ import (
 )
 
 type CmtConversationSearch struct {
-	ThreadId       uint   `json:"threadId"`
+	ThreadId       string `json:"threadId" form:"threadId"`
 	Commenter      string `json:"commenter" form:"commenter" `
 	CommentReplier string `json:"commentReplier" form:"commentReplier" `
 	request.PageInfo
