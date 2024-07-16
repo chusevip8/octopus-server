@@ -89,7 +89,7 @@ const onSubmit = async () => {
   }).then(async () => {
     formData.value.conversationId = route.params.conversationId
     formData.value.threadId = route.params.threadId
-    res = await createWriteCmtTask(formData.value)
+    const res = await createWriteCmtTask(formData.value)
     if (res.code === 0) {
       formData.value = {
         conversationId: '',

@@ -40,7 +40,7 @@ func (cmtTaskService *CmtTaskService) CreateWriteCmtTask(writeCmtTask *octopusRe
 	var comment octopus.Comment
 	err = global.GVA_DB.Model(&octopus.Comment{}).Preload("Task").
 		Where("conversation_id=?", writeCmtTask.ConversationId).
-		Where("from=?", "find").First(&comment).Error
+		Where("cmt_from=?", "find").First(&comment).Error
 	if err != nil {
 		return err
 	}
@@ -80,8 +80,8 @@ func (cmtTaskService *CmtTaskService) CreateWriteCmtTask(writeCmtTask *octopusRe
 		CommentReplier:   comment.CommentReplier,
 		CommentReplierId: comment.CommentReplierId,
 		PostAt:           Today(),
-		From:             "write",
-		Mine:             true,
+		CmtFrom:          "write",
+		Content:          writeCmtTask.CmtContent,
 	}
 	_, err = cmtTaskService.CreateComment(&commentReq)
 	return err
@@ -285,9 +285,19 @@ func (cmtTaskService *CmtTaskService) CreateComment(commentReq *octopusReq.Comme
 	comment.Content = commentReq.Content
 	comment.PostAt = commentReq.PostAt
 	comment.TaskId = task.ID
-	comment.Unread = false
-	comment.Mine = false
-	comment.From = commentReq.From
+	comment.CmtFrom = commentReq.CmtFrom
+	switch commentReq.CmtFrom {
+	case "find", "reply":
+		comment.Mine = false
+		comment.Unread = true
+	case "write":
+		comment.Mine = true
+		comment.Unread = false
+	default:
+		comment.Mine = false
+		comment.Unread = false
+	}
+
 	if err = global.GVA_DB.Create(&comment).Error; err != nil {
 		return ErrorCreateComment, err
 	}

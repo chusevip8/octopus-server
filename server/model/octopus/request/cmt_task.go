@@ -32,6 +32,6 @@ type CommentReq struct {
 	CommentReplierId string `json:"commentReplierId" form:"commentReplierId" ` //评论回复者Id
 	Content          string `json:"content" form:"content" `                   //评论内容
 	PostAt           string `json:"postAt" form:"postAt" `
-	From             string `json:"from" form:"from" `
+	CmtFrom          string `json:"cmtFrom" form:"cmtFrom" `
 	Mine             bool   `json:"mine" form:"mine"`
 }
