@@ -82,6 +82,7 @@ const onSubmit = async () => {
   if (formData.value.cmtContent.trim() === '') {
     return
   }
+  const text = formData.value.cmtContent
   ElMessageBox.confirm('确定要提交吗?提交后评论不能修改和删除。', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -89,6 +90,7 @@ const onSubmit = async () => {
   }).then(async () => {
     formData.value.conversationId = route.params.conversationId
     formData.value.threadId = route.params.threadId
+    formData.value.cmtContent = text
     const res = await createWriteCmtTask(formData.value)
     if (res.code === 0) {
       formData.value = {
