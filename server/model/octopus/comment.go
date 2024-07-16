@@ -19,6 +19,7 @@ type Comment struct {
 	PostAt           string `json:"postAt" form:"postAt" gorm:"column:post_at;comment:评论时间;size:20;"`                                    //评论时间
 	Unread           bool   `json:"unread" form:"unread" gorm:"column:unread;comment:是否未读;default:false;"`
 	Mine             bool   `json:"mine" form:"mine" gorm:"column:mine;comment:是否自己回复;default:false;"`
+	From             string `json:"from" form:"from" gorm:"column:from;comment:评论来源;"`
 }
 
 // TableName 评论 Comment自定义表名 oct_comment

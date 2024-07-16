@@ -3,6 +3,7 @@ package octopus
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
@@ -22,6 +23,69 @@ const (
 )
 
 var CmtTaskServiceApp = new(CmtTaskService)
+
+func (cmtTaskService *CmtTaskService) CreateWriteCmtTask(writeCmtTask *octopusReq.WriteCmtTask) (err error) {
+
+	var cmtThread octopus.CmtThread
+	cmtThread, err = CmtThreadServiceApp.GetCmtThread(writeCmtTask.ThreadId)
+	if err != nil {
+		return err
+	}
+
+	var cmtTaskSetup octopus.CmtTaskSetup
+	cmtTaskSetup, err = CmtTaskSetupServiceApp.GetCmtTaskSetup(strconv.Itoa(int(cmtThread.TaskSetupId)))
+	if err != nil {
+		return err
+	}
+	var comment octopus.Comment
+	err = global.GVA_DB.Model(&octopus.Comment{}).Preload("Task").
+		Where("conversation_id=?", writeCmtTask.ConversationId).
+		Where("from=?", "find").First(&comment).Error
+	if err != nil {
+		return err
+	}
+	params, err := cmtTaskService.buildWriteCmtTaskParams(cmtTaskSetup, comment, writeCmtTask.CmtContent)
+	if err != nil {
+		return err
+	}
+	var taskParams octopus.TaskParams
+	taskParams.TaskSetupId = cmtTaskSetup.ID
+	taskParams.ScriptId = cmtTaskSetup.WriteCmtScriptId
+	taskParams.CreatedBy = cmtTaskSetup.CreatedBy
+	taskParams.MainTaskType = "cmt"
+	taskParams.SubTaskType = "writeCmt"
+	taskParams.Params = params
+	err = TaskParamsServiceApp.CreateTaskParams(&taskParams)
+	if err != nil {
+		return err
+	}
+	var task octopus.Task
+	task.TaskParamsId = taskParams.ID
+	task.AppName = cmtTaskSetup.AppName
+	task.DeviceId = comment.Task.DeviceId
+	task.CreatedBy = cmtTaskSetup.CreatedBy
+	task.Status = 1
+	task.Error = ""
+	err = TaskServiceApp.CreateTask(&task)
+	if err != nil {
+		return err
+	}
+
+	commentReq := octopusReq.CommentReq{TaskId: task.ID,
+		Poster:           cmtThread.Poster,
+		PostTitle:        cmtThread.PostTitle,
+		PostDesc:         cmtThread.PostDesc,
+		Commenter:        comment.Commenter,
+		CommenterId:      comment.CommenterId,
+		CommentReplier:   comment.CommentReplier,
+		CommentReplierId: comment.CommentReplierId,
+		PostAt:           Today(),
+		From:             "write",
+		Mine:             true,
+	}
+	_, err = cmtTaskService.CreateComment(&commentReq)
+	return err
+}
 
 func (cmtTaskService *CmtTaskService) CreateFindCmtTask(findCmtTask *octopusReq.FindCmtTask) (err error) {
 	params, err := cmtTaskService.buildFindCmtTaskParams(findCmtTask.TaskSetupId)
@@ -50,6 +114,21 @@ func (cmtTaskService *CmtTaskService) CreateFindCmtTask(findCmtTask *octopusReq.
 	task.Error = findCmtTask.Error
 	err = TaskServiceApp.CreateTask(&task)
 	return err
+}
+
+func (cmtTaskService *CmtTaskService) buildWriteCmtTaskParams(cmtTaskSetup octopus.CmtTaskSetup, comment octopus.Comment, cmtContent string) (params string, err error) {
+	paramsMap := map[string]string{
+		"postLink":    cmtTaskSetup.PostLink,
+		"keyword":     comment.Content,
+		"commenter":   comment.Commenter,
+		"commenterId": comment.CommenterId,
+		"inputText":   cmtContent,
+	}
+	jsonData, err := json.Marshal(paramsMap)
+	if err != nil {
+		return "", err
+	}
+	return string(jsonData), nil
 }
 
 func (cmtTaskService *CmtTaskService) buildFindCmtTaskParams(setupId uint) (params string, err error) {
@@ -149,7 +228,7 @@ func (cmtTaskService *CmtTaskService) buildCommenterId(commenter string) (commen
 	return commenterId, nil
 }
 
-func (cmtTaskService *CmtTaskService) UploadComment(commentReq *octopusReq.CommentReq) (errCode int, err error) {
+func (cmtTaskService *CmtTaskService) CreateComment(commentReq *octopusReq.CommentReq) (errCode int, err error) {
 	var task octopus.Task
 	err = global.GVA_DB.Preload("TaskParams").First(&task, commentReq.TaskId).Error
 	if err != nil {
@@ -208,6 +287,7 @@ func (cmtTaskService *CmtTaskService) UploadComment(commentReq *octopusReq.Comme
 	comment.TaskId = task.ID
 	comment.Unread = false
 	comment.Mine = false
+	comment.From = commentReq.From
 	if err = global.GVA_DB.Create(&comment).Error; err != nil {
 		return ErrorCreateComment, err
 	}

@@ -13,6 +13,9 @@ type FindCmtTask struct {
 }
 
 type WriteCmtTask struct {
+	ThreadId       string `json:"threadId" form:"threadId"`
+	ConversationId string `json:"conversationId" form:"conversationId"`
+	CmtContent     string `json:"cmtContent" form:"cmtContent"`
 }
 
 type ReplyCmtTask struct {
@@ -29,4 +32,6 @@ type CommentReq struct {
 	CommentReplierId string `json:"commentReplierId" form:"commentReplierId" ` //评论回复者Id
 	Content          string `json:"content" form:"content" `                   //评论内容
 	PostAt           string `json:"postAt" form:"postAt" `
+	From             string `json:"from" form:"from" `
+	Mine             bool   `json:"mine" form:"mine"`
 }

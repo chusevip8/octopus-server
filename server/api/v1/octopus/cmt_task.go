@@ -39,6 +39,22 @@ func (cmtTaskApi *CmtTaskApi) CreateFindCmtTask(c *gin.Context) {
 		response.OkWithMessage("创建成功", c)
 	}
 }
+
+func (cmtTaskApi *CmtTaskApi) CreateWriteCmtTask(c *gin.Context) {
+	var writeCmtTask octopusReq.WriteCmtTask
+	err := c.ShouldBindJSON(&writeCmtTask)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if err := cmtTaskService.CreateWriteCmtTask(&writeCmtTask); err != nil {
+		global.GVA_LOG.Error("创建失败!", zap.Error(err))
+		response.FailWithMessage("创建失败", c)
+	} else {
+		response.OkWithMessage("创建成功", c)
+	}
+}
+
 func (cmtTaskApi *CmtTaskApi) DeleteCmtTask(c *gin.Context) {
 	id := c.Query("Id")
 	userId := utils.GetUserID(c)
@@ -58,7 +74,7 @@ func (cmtTaskApi *CmtTaskApi) UploadComment(c *gin.Context) {
 		return
 	}
 	var errCode int
-	if errCode, err = cmtTaskService.UploadComment(&commentReq); err != nil {
+	if errCode, err = cmtTaskService.CreateComment(&commentReq); err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithCode(errCode, "创建失败", c)
 	} else {

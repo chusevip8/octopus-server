@@ -9,6 +9,8 @@ import (
 
 type CmtConversationService struct{}
 
+var CmtConversationServiceApp = new(CmtConversationService)
+
 // CreateCmtConversation 创建评论会话记录记录
 // Author [piexlmax](https://github.com/piexlmax)
 func (cmtConversationService *CmtConversationService) CreateCmtConversation(cmtConversation *octopus.CmtConversation) (err error) {

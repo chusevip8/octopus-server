@@ -9,6 +9,8 @@ import (
 
 type CmtThreadService struct{}
 
+var CmtThreadServiceApp = new(CmtThreadService)
+
 // CreateCmtThread 创建评论会话记录
 // Author [piexlmax](https://github.com/piexlmax)
 func (cmtThreadService *CmtThreadService) CreateCmtThread(cmtThread *octopus.CmtThread) (err error) {

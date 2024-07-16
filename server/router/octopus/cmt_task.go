@@ -15,8 +15,9 @@ func (s *CmtTaskRouter) InitCmtTaskRouter(Router *gin.RouterGroup, PublicRouter 
 	var cmtTaskApi = v1.ApiGroupApp.OctopusApiGroup.CmtTaskApi
 
 	{
-		cmtTaskRouter.POST("createFindCmtTask", cmtTaskApi.CreateFindCmtTask) // 新建任务
-		cmtTaskRouter.DELETE("deleteCmtTask", cmtTaskApi.DeleteCmtTask)       // 删除任务
+		cmtTaskRouter.POST("createFindCmtTask", cmtTaskApi.CreateFindCmtTask)   // 新建任务
+		cmtTaskRouter.POST("createWriteCmtTask", cmtTaskApi.CreateWriteCmtTask) // 新建任务
+		cmtTaskRouter.DELETE("deleteCmtTask", cmtTaskApi.DeleteCmtTask)         // 删除任务
 		//taskRouter.DELETE("deleteTaskByIds", taskApi.DeleteTaskByIds) // 批量删除任务
 	}
 	{
