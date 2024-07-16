@@ -7,6 +7,7 @@ export const createFindCmtTask = (data) => {
         data
     })
 }
+
 export const findTaskByDeviceId = (params) => {
     return service({
         url: '/cmtTask/findTaskByDeviceId',
@@ -20,5 +21,13 @@ export const deleteCmtTask = (params) => {
         url: '/cmtTask/deleteCmtTask',
         method: 'delete',
         params
+    })
+}
+
+export const createWriteCmtTask = (data) => {
+    return service({
+        url: '/cmtTask/createWriteCmtTask',
+        method: 'post',
+        data
     })
 }
