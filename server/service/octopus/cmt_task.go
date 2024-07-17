@@ -40,19 +40,24 @@ func (cmtTaskService *CmtTaskService) CreateWriteCmtTask(writeCmtTask *octopusRe
 	var comment octopus.Comment
 	err = global.GVA_DB.Model(&octopus.Comment{}).Preload("Task").
 		Where("conversation_id=?", writeCmtTask.ConversationId).
-		Where("cmt_from=?", "find").First(&comment).Error
+		Where("mine=?", 0).
+		Order("id desc").First(&comment).Error
 	if err != nil {
 		return err
 	}
-	params, err := cmtTaskService.buildWriteCmtTaskParams(cmtTaskSetup, comment, writeCmtTask.CmtContent)
+	params, err := cmtTaskService.buildWriteCmtTaskParams(cmtTaskSetup, cmtThread, comment, writeCmtTask.CmtContent)
 	if err != nil {
 		return err
 	}
 	var taskParams octopus.TaskParams
 	taskParams.TaskSetupId = cmtTaskSetup.ID
-	taskParams.ScriptId = cmtTaskSetup.WriteCmtScriptId
 	taskParams.CreatedBy = cmtTaskSetup.CreatedBy
 	taskParams.MainTaskType = "cmt"
+	scriptId := cmtTaskSetup.WriteCmtScriptId
+	if comment.CmtFrom == "reply" {
+		scriptId = cmtTaskSetup.ReplyCmtScriptId
+	}
+	taskParams.ScriptId = scriptId
 	taskParams.SubTaskType = "writeCmt"
 	taskParams.Params = params
 	err = TaskParamsServiceApp.CreateTaskParams(&taskParams)
@@ -116,13 +121,18 @@ func (cmtTaskService *CmtTaskService) CreateFindCmtTask(findCmtTask *octopusReq.
 	return err
 }
 
-func (cmtTaskService *CmtTaskService) buildWriteCmtTaskParams(cmtTaskSetup octopus.CmtTaskSetup, comment octopus.Comment, cmtContent string) (params string, err error) {
+func (cmtTaskService *CmtTaskService) buildWriteCmtTaskParams(cmtTaskSetup octopus.CmtTaskSetup, cmtThread octopus.CmtThread, comment octopus.Comment, cmtContent string) (params string, err error) {
 	paramsMap := map[string]string{
-		"postLink":    cmtTaskSetup.PostLink,
-		"keyword":     comment.Content,
-		"commenter":   comment.Commenter,
-		"commenterId": comment.CommenterId,
-		"inputText":   cmtContent,
+		"postLink":         cmtTaskSetup.PostLink,
+		"keyword":          cmtTaskSetup.Keyword,
+		"poster":           cmtThread.Poster,
+		"postTitle":        cmtThread.PostTitle,
+		"postDesc":         cmtThread.PostDesc,
+		"commenter":        comment.Commenter,
+		"commenterId":      comment.CommenterId,
+		"commentReplier":   comment.CommentReplier,
+		"commentReplierId": comment.CommentReplierId,
+		"inputText":        cmtContent,
 	}
 	jsonData, err := json.Marshal(paramsMap)
 	if err != nil {
