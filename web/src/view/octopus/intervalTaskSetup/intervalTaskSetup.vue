@@ -60,16 +60,18 @@
 
       <el-form :model="formData" label-position="top" ref="elFormRef" :rules="rule" label-width="80px">
         <el-form-item label="任务标题:" prop="taskTitle">
-          <el-input v-model="formData.taskTitle" :clearable="false" placeholder="请输入任务标题" />
+          <el-input v-model="formData.taskTitle" :clearable="false" placeholder="请输入任务标题"
+            :disabled="type === 'update'" />
         </el-form-item>
         <el-form-item label="脚本Id:" prop="scriptId">
-          <el-input v-model.number="formData.scriptId" :clearable="false" placeholder="请输入脚本Id" />
+          <el-input v-model.number="formData.scriptId" :clearable="false" placeholder="请输入脚本Id"
+            :disabled="type === 'update'" />
         </el-form-item>
         <el-form-item label="间隔时间（分）:" prop="intervalMin">
           <el-input v-model.number="formData.intervalMin" :clearable="false" placeholder="请输入间隔时间" />
         </el-form-item>
         <el-form-item label="脚本参数:" prop="params">
-          <el-input v-model="formData.params" :rows="20" type="textarea" />
+          <el-input v-model="formData.params" :rows="20" type="textarea" :disabled="type === 'update'" />
         </el-form-item>
       </el-form>
     </el-drawer>
