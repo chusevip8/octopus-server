@@ -59,6 +59,9 @@
       </template>
 
       <el-form :model="formData" label-position="top" ref="elFormRef" :rules="rule" label-width="80px">
+        <el-form-item label="应用名称:" prop="appName">
+          <el-input v-model="formData.appName" :clearable="false" placeholder="应用名称" :disabled="type === 'update'" />
+        </el-form-item>
         <el-form-item label="任务标题:" prop="taskTitle">
           <el-input v-model="formData.taskTitle" :clearable="false" placeholder="请输入任务标题"
             :disabled="type === 'update'" />
@@ -115,6 +118,27 @@ const formData = ref({
 
 // 验证规则
 const rule = reactive({
+  appName: [{
+    required: true,
+    message: '应用名称不能为空',
+    trigger: ['input', 'blur'],
+  },
+  {
+    whitespace: true,
+    message: '不能只输入空格',
+    trigger: ['input', 'blur'],
+  },
+  {
+    validator: (rule, value, callback) => {
+      if (!/^[a-zA-Z]+$/.test(value)) {
+        callback(new Error('只能输入字母'));
+      } else {
+        callback();
+      }
+    },
+    trigger: ['input', 'blur'],
+  }
+  ],
   taskTitle: [{
     required: true,
     message: '',
@@ -333,9 +357,6 @@ const closeDialog = () => {
 const enterDialog = async () => {
   elFormRef.value?.validate(async (valid) => {
     if (!valid) return
-
-    formData.value.appName = 'douyin'
-
     let res
     switch (type.value) {
       case 'create':
