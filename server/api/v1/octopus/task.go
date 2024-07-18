@@ -50,10 +50,21 @@ func (taskApi *TaskApi) CreateTask(c *gin.Context) {
 // @Param data body octopus.Task true "删除任务"
 // @Success 200 {object} response.Response{msg=string} "删除成功"
 // @Router /task/deleteTask [delete]
+//
+//	func (taskApi *TaskApi) DeleteTask(c *gin.Context) {
+//		ID := c.Query("ID")
+//		userID := utils.GetUserID(c)
+//		if err := taskService.DeleteTask(ID, userID); err != nil {
+//			global.GVA_LOG.Error("删除失败!", zap.Error(err))
+//			response.FailWithMessage("删除失败", c)
+//		} else {
+//			response.OkWithMessage("删除成功", c)
+//		}
+//	}
 func (taskApi *TaskApi) DeleteTask(c *gin.Context) {
-	ID := c.Query("ID")
-	userID := utils.GetUserID(c)
-	if err := taskService.DeleteTask(ID, userID); err != nil {
+	id := c.Query("id")
+	userId := utils.GetUserID(c)
+	if err := taskService.DeleteTask(id, userId); err != nil {
 		global.GVA_LOG.Error("删除失败!", zap.Error(err))
 		response.FailWithMessage("删除失败", c)
 	} else {

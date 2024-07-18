@@ -7,10 +7,3 @@ export const createIntervalTask = (data) => {
         data
     })
 }
-export const deleteIntervalTask = (params) => {
-    return service({
-        url: '/intervalTask/deleteIntervalTask',
-        method: 'delete',
-        params
-    })
-}

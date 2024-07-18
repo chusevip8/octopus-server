@@ -20,14 +20,57 @@ func (taskService *TaskService) CreateTask(task *octopus.Task) (err error) {
 
 // DeleteTask 删除任务记录
 // Author [piexlmax](https://github.com/piexlmax)
-func (taskService *TaskService) DeleteTask(ID string, userID uint) (err error) {
+//
+//	func (taskService *TaskService) DeleteTask(ID string, userID uint) (err error) {
+//		err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+//			if err := tx.Model(&octopus.Task{}).Where("id = ?", ID).Update("deleted_by", userID).Error; err != nil {
+//				return err
+//			}
+//			if err = tx.Delete(&octopus.Task{}, "id = ?", ID).Error; err != nil {
+//				return err
+//			}
+//			return nil
+//		})
+//		return err
+//	}
+func (taskService *TaskService) DeleteTask(id string, userId uint) (err error) {
+	var task octopus.Task
+	err = global.GVA_DB.Preload("TaskParams").First(&task, id).Error
+	if err != nil {
+		return
+	}
+	var taskIds []uint
+	err = global.GVA_DB.Model(&octopus.Task{}).
+		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
+		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ? AND oct_task.device_id = ?", task.TaskParams.TaskSetupId, task.TaskParams.MainTaskType, task.DeviceId).
+		Pluck("oct_task.id", &taskIds).Error
+	if err != nil {
+		return
+	}
+
+	var taskParamsIds []uint
+	err = global.GVA_DB.Model(&octopus.Task{}).
+		Where("id in ?", taskIds).
+		Pluck("oct_task.task_params_id", &taskParamsIds).Error
+	if err != nil {
+		return
+	}
+
 	err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Model(&octopus.Task{}).Where("id = ?", ID).Update("deleted_by", userID).Error; err != nil {
+		if err := tx.Model(&octopus.Task{}).Where("id in ?", taskIds).Update("deleted_by", userId).Error; err != nil {
 			return err
 		}
-		if err = tx.Delete(&octopus.Task{}, "id = ?", ID).Error; err != nil {
+		if err := tx.Where("id in ?", taskIds).Delete(&octopus.Task{}).Error; err != nil {
 			return err
 		}
+
+		if err := tx.Model(&octopus.TaskParams{}).Where("id in ?", taskParamsIds).Update("deleted_by", userId).Error; err != nil {
+			return err
+		}
+		if err := tx.Where("id in ?", taskParamsIds).Delete(&octopus.TaskParams{}).Error; err != nil {
+			return err
+		}
+
 		return nil
 	})
 	return err

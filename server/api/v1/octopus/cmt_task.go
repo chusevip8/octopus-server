@@ -45,16 +45,16 @@ func (cmtTaskApi *CmtTaskApi) CreateWriteCmtTask(c *gin.Context) {
 	}
 }
 
-func (cmtTaskApi *CmtTaskApi) DeleteCmtTask(c *gin.Context) {
-	id := c.Query("Id")
-	userId := utils.GetUserID(c)
-	if err := cmtTaskService.DeleteCmtTask(id, userId); err != nil {
-		global.GVA_LOG.Error("删除失败!", zap.Error(err))
-		response.FailWithMessage("删除失败", c)
-	} else {
-		response.OkWithMessage("删除成功", c)
-	}
-}
+//func (cmtTaskApi *CmtTaskApi) DeleteCmtTask(c *gin.Context) {
+//	id := c.Query("Id")
+//	userId := utils.GetUserID(c)
+//	if err := cmtTaskService.DeleteCmtTask(id, userId); err != nil {
+//		global.GVA_LOG.Error("删除失败!", zap.Error(err))
+//		response.FailWithMessage("删除失败", c)
+//	} else {
+//		response.OkWithMessage("删除成功", c)
+//	}
+//}
 
 func (cmtTaskApi *CmtTaskApi) UploadComment(c *gin.Context) {
 	var commentReq octopusReq.CommentReq

@@ -13,8 +13,7 @@ func (s *IntervalTaskRouter) InitIntervalTaskRouter(Router *gin.RouterGroup, Pub
 	var intervalTaskApi = v1.ApiGroupApp.OctopusApiGroup.IntervalTaskApi
 
 	{
-		intervalTaskRouter.POST("createIntervalTask", intervalTaskApi.CreateIntervalTask)   // 新建任务
-		intervalTaskRouter.DELETE("deleteIntervalTask", intervalTaskApi.DeleteIntervalTask) // 删除任务
+		intervalTaskRouter.POST("createIntervalTask", intervalTaskApi.CreateIntervalTask) // 新建任务
 	}
 
 }

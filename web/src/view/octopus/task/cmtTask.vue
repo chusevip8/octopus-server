@@ -83,8 +83,7 @@ import {
 } from '@/api/octopus/task'
 
 import {
-  createFindCmtTask,
-  deleteCmtTask
+  createFindCmtTask
 } from '@/api/octopus/cmtTask'
 
 // 全量引入格式化工具 请按需保留
@@ -266,21 +265,6 @@ const onDelete = async () => {
 // 行为控制标记（弹窗内部需要增还是改）
 const type = ref('')
 
-// 删除行
-const deleteTaskFunc = async (row) => {
-  const res = await deleteTask({ ID: row.ID })
-  if (res.code === 0) {
-    ElMessage({
-      type: 'success',
-      message: '删除成功'
-    })
-    if (tableData.value.length === 1 && page.value > 1) {
-      page.value--
-    }
-    getTableData()
-  }
-}
-
 // 弹窗控制标记
 const dialogFormVisible = ref(false)
 
@@ -352,12 +336,12 @@ const deleteRow = (row) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    deleteCmtTaskFunc(row)
+    deleteTaskFunc(row)
   })
 }
 
-const deleteCmtTaskFunc = async (row) => {
-  const res = await deleteCmtTask({ id: row.ID })
+const deleteTaskFunc = async (row) => {
+  const res = await deleteTask({ id: row.ID })
   if (res.code === 0) {
     ElMessage({
       type: 'success',

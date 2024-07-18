@@ -8,14 +8,6 @@ export const createFindCmtTask = (data) => {
     })
 }
 
-export const deleteCmtTask = (params) => {
-    return service({
-        url: '/cmtTask/deleteCmtTask',
-        method: 'delete',
-        params
-    })
-}
-
 export const createWriteCmtTask = (data) => {
     return service({
         url: '/cmtTask/createWriteCmtTask',

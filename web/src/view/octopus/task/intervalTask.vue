@@ -85,8 +85,7 @@ import {
 } from '@/api/octopus/task'
 
 import {
-    createIntervalTask,
-    deleteIntervalTask
+    createIntervalTask
 } from '@/api/octopus/intervalTask'
 
 // 全量引入格式化工具 请按需保留
@@ -109,11 +108,8 @@ const showAllQuery = ref(false)
 
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
-    appName: '',
     taskSetupId: undefined,
     mainTaskType: undefined,
-    subTaskType: undefined,
-    scriptId: undefined,
     deviceId: undefined,
     status: undefined,
     error: '',
@@ -268,21 +264,6 @@ const onDelete = async () => {
 // 行为控制标记（弹窗内部需要增还是改）
 const type = ref('')
 
-// 删除行
-const deleteTaskFunc = async (row) => {
-    const res = await deleteTask({ ID: row.ID })
-    if (res.code === 0) {
-        ElMessage({
-            type: 'success',
-            message: '删除成功'
-        })
-        if (tableData.value.length === 1 && page.value > 1) {
-            page.value--
-        }
-        getTableData()
-    }
-}
-
 // 弹窗控制标记
 const dialogFormVisible = ref(false)
 
@@ -296,11 +277,8 @@ const openDialog = () => {
 const closeDialog = () => {
     dialogFormVisible.value = false
     formData.value = {
-        appName: '',
         taskSetupId: undefined,
         mainTaskType: undefined,
-        subTaskType: undefined,
-        scriptId: undefined,
         deviceId: undefined,
         status: undefined,
         error: '',
@@ -308,11 +286,9 @@ const closeDialog = () => {
 }
 const saveTask = async (params) => {
     formData.value.deviceId = params.deviceId
-    formData.value.appName = route.params.appName
     formData.value.mainTaskType = route.params.mainTaskType
-    formData.value.subTaskType = route.params.subTaskType
     formData.value.taskSetupId = parseInt(route.params.taskSetupId)
-    formData.value.scriptId = parseInt(route.params.scriptId)
+
     formData.value.status = 1
 
     const deviceStatus = params.deviceStatus
@@ -354,12 +330,12 @@ const deleteRow = (row) => {
         cancelButtonText: '取消',
         type: 'warning'
     }).then(() => {
-        deleteIntervalTaskFunc(row)
+        deleteTaskFunc(row)
     })
 }
 
-const deleteIntervalTaskFunc = async (row) => {
-    const res = await deleteIntervalTask({ id: row.ID })
+const deleteTaskFunc = async (row) => {
+    const res = await deleteTask({ id: row.ID })
     if (res.code === 0) {
         ElMessage({
             type: 'success',
