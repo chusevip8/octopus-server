@@ -129,12 +129,22 @@ const rule = reactive({
     message: '',
     trigger: ['input', 'blur'],
   },
+  {
+    type: 'number',
+    message: '只能输入数字',
+    trigger: ['input', 'blur'],
+  }
   ],
   intervalMin: [{
     required: true,
     message: '',
     trigger: ['input', 'blur'],
   },
+  {
+    type: 'number',
+    message: '只能输入数字',
+    trigger: ['input', 'blur'],
+  }
   ],
 })
 
