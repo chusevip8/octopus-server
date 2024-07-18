@@ -193,7 +193,7 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async () => {
-    const table = await getTaskList({ page: page.value, pageSize: pageSize.value, taskSetupId: route.params.taskSetupId, ...searchInfo.value })
+    const table = await getTaskList({ page: page.value, pageSize: pageSize.value, taskSetupId: route.params.taskSetupId, mainTaskType: route.params.mainTaskType, ...searchInfo.value })
     if (table.code === 0) {
         tableData.value = table.data.list
         total.value = table.data.total
@@ -328,14 +328,14 @@ const saveTask = async (params) => {
             message: '不能添加禁用设备'
         })
     } else {
-        let res = await findTaskByDeviceId({ taskSetupId: parseInt(route.params.taskSetupId), deviceId: params.deviceId })
+        let res = await findTaskByDeviceId({ taskSetupId: parseInt(route.params.taskSetupId), deviceId: params.deviceId, mainTaskType: route.params.mainTaskType })
         if (res.data !== null) {
             ElMessage({
                 type: 'error',
                 message: '该设备已添加'
             })
         } else {
-            let res = await createFindCmtTask(formData.value)
+            let res = await createIntervalTask(formData.value)
             if (res.code === 0) {
                 ElMessage({
                     type: 'success',
@@ -354,12 +354,12 @@ const deleteRow = (row) => {
         cancelButtonText: '取消',
         type: 'warning'
     }).then(() => {
-        deleteCmtTaskFunc(row)
+        deleteIntervalTaskFunc(row)
     })
 }
 
-const deleteCmtTaskFunc = async (row) => {
-    const res = await deleteCmtTask({ id: row.ID })
+const deleteIntervalTaskFunc = async (row) => {
+    const res = await deleteIntervalTask({ id: row.ID })
     if (res.code === 0) {
         ElMessage({
             type: 'success',
