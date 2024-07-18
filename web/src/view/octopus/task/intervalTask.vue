@@ -80,14 +80,14 @@
 import {
     deleteTask,
     deleteTaskByIds,
+    findTaskByDeviceId,
     getTaskList
 } from '@/api/octopus/task'
 
 import {
-    createFindCmtTask,
-    findTaskByDeviceId,
-    deleteCmtTask
-} from '@/api/octopus/cmtTask'
+    createIntervalTask,
+    deleteIntervalTask
+} from '@/api/octopus/intervalTask'
 
 // 全量引入格式化工具 请按需保留
 import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'

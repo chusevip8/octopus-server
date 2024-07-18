@@ -14,16 +14,6 @@ type CmtTaskApi struct{}
 
 var cmtTaskService = service.ServiceGroupApp.OctopusServiceGroup.CmtTaskService
 
-func (cmtTaskApi *CmtTaskApi) FindTaskByDeviceId(c *gin.Context) {
-	deviceId := c.Query("deviceId")
-	taskSetupId := c.Query("taskSetupId")
-	if retask, err := cmtTaskService.GetTaskByDeviceId(taskSetupId, deviceId); err != nil {
-		response.OkWithData(nil, c)
-	} else {
-		response.OkWithData(retask, c)
-	}
-}
-
 func (cmtTaskApi *CmtTaskApi) CreateFindCmtTask(c *gin.Context) {
 	var findCmtTask octopusReq.FindCmtTask
 	err := c.ShouldBindJSON(&findCmtTask)

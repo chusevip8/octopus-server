@@ -8,14 +8,6 @@ export const createFindCmtTask = (data) => {
     })
 }
 
-export const findTaskByDeviceId = (params) => {
-    return service({
-        url: '/cmtTask/findTaskByDeviceId',
-        method: 'get',
-        params
-    })
-}
-
 export const deleteCmtTask = (params) => {
     return service({
         url: '/cmtTask/deleteCmtTask',

@@ -237,7 +237,7 @@ const onReset = () => {
 }
 
 const openTaskManager = (row) => {
-  router.push({ name: 'intervalTask' })
+  router.push({ name: 'intervalTask', params: { appName: row.appName, mainTaskType: 'interval', subTaskType: row.subTaskType, taskSetupId: row.ID, scriptId: row.scriptId } })
 }
 // 搜索
 const onSubmit = () => {

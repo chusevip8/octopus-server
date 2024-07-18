@@ -10,7 +10,7 @@ type CmtTaskRouter struct{}
 
 func (s *CmtTaskRouter) InitCmtTaskRouter(Router *gin.RouterGroup, PublicRouter *gin.RouterGroup) {
 	cmtTaskRouter := Router.Group("cmtTask").Use(middleware.OperationRecord())
-	cmtTaskRouterWithoutRecord := Router.Group("cmtTask")
+	//cmtTaskRouterWithoutRecord := Router.Group("cmtTask")
 	cmtTaskRouterWithoutAuth := PublicRouter.Group("cmtTask")
 	var cmtTaskApi = v1.ApiGroupApp.OctopusApiGroup.CmtTaskApi
 
@@ -19,9 +19,6 @@ func (s *CmtTaskRouter) InitCmtTaskRouter(Router *gin.RouterGroup, PublicRouter 
 		cmtTaskRouter.POST("createWriteCmtTask", cmtTaskApi.CreateWriteCmtTask) // 新建任务
 		cmtTaskRouter.DELETE("deleteCmtTask", cmtTaskApi.DeleteCmtTask)         // 删除任务
 		//taskRouter.DELETE("deleteTaskByIds", taskApi.DeleteTaskByIds) // 批量删除任务
-	}
-	{
-		cmtTaskRouterWithoutRecord.GET("findTaskByDeviceId", cmtTaskApi.FindTaskByDeviceId) // 根据设备ID获取任务
 	}
 	{
 		cmtTaskRouterWithoutAuth.POST("uploadComment", cmtTaskApi.UploadComment)

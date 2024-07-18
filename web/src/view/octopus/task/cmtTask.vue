@@ -78,12 +78,12 @@
 import {
   deleteTask,
   deleteTaskByIds,
+  findTaskByDeviceId,
   getTaskList
 } from '@/api/octopus/task'
 
 import {
   createFindCmtTask,
-  findTaskByDeviceId,
   deleteCmtTask
 } from '@/api/octopus/cmtTask'
 
@@ -326,7 +326,7 @@ const saveTask = async (params) => {
       message: '不能添加禁用设备'
     })
   } else {
-    let res = await findTaskByDeviceId({ taskSetupId: parseInt(route.params.taskSetupId), deviceId: params.deviceId })
+    let res = await findTaskByDeviceId({ taskSetupId: parseInt(route.params.taskSetupId), deviceId: params.deviceId, mainTaskType: route.params.mainTaskType })
     if (res.data !== null) {
       ElMessage({
         type: 'error',

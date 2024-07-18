@@ -169,3 +169,14 @@ func (taskApi *TaskApi) GetTaskPublic(c *gin.Context) {
 		"info": "不需要鉴权的任务接口信息",
 	}, "获取成功", c)
 }
+
+func (taskApi *TaskApi) FindTaskByDeviceId(c *gin.Context) {
+	deviceId := c.Query("deviceId")
+	taskSetupId := c.Query("taskSetupId")
+	mainTaskType := c.Query("mainTaskType")
+	if retask, err := taskService.GetTaskByDeviceId(taskSetupId, deviceId, mainTaskType); err != nil {
+		response.OkWithData(nil, c)
+	} else {
+		response.OkWithData(retask, c)
+	}
+}
