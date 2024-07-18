@@ -1,10 +1,8 @@
 <template>
   <div>
-    <div>
-      <JwChat :taleList="tableData" @enter="onSubmit" v-model="formData.cmtContent" :showRightBox="false"
-        scrollType="scroll" width="80%" height="750px" :toolConfig="chatTool" :config="chatConfig">
-      </JwChat>
-    </div>
+    <JwChat :taleList="tableData" @enter="onSubmit" v-model="formData.cmtContent" :showRightBox="false"
+      scrollType="scroll" width="80%" height="750px" :toolConfig="chatTool" :config="chatConfig">
+    </JwChat>
   </div>
 </template>
 

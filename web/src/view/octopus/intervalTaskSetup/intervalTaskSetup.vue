@@ -35,7 +35,8 @@
         <el-table-column align="center" label="间隔时间" prop="intervalMin" width="100" />
         <el-table-column align="center" label="操作" fixed="right" width="260">
           <template #default="scope">
-            <el-button type="primary" link icon="Cellphone" class="table-button" @click="">管理任务</el-button>
+            <el-button type="primary" link icon="Cellphone" class="table-button"
+              @click="openTaskManager(scope.row)">管理任务</el-button>
             <el-button type="primary" link icon="edit" class="table-button"
               @click="updateIntervalTaskSetupFunc(scope.row)">修改</el-button>
           </template>
@@ -98,10 +99,14 @@ import RichEdit from '@/components/richtext/rich-edit.vue'
 import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 defineOptions({
   name: 'IntervalTaskSetup'
 })
+
+const router = useRouter()
+const route = useRoute()
 
 // 控制更多查询条件显示/隐藏状态
 const showAllQuery = ref(false)
@@ -231,6 +236,9 @@ const onReset = () => {
   getTableData()
 }
 
+const openTaskManager = (row) => {
+  router.push({ name: 'intervalTask' })
+}
 // 搜索
 const onSubmit = () => {
   elSearchFormRef.value?.validate(async (valid) => {
