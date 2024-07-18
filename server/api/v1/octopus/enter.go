@@ -10,4 +10,5 @@ type ApiGroup struct {
 	CmtTaskSetupApi
 	CmtTaskApi
 	TaskParamsApi
+	IntervalTaskSetupApi
 }

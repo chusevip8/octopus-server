@@ -28,6 +28,7 @@ func initBizRouter(routers ...*gin.RouterGroup) {
 
 		octopusRouter.InitCmtTaskRouter(privateGroup, publicGroup)
 		octopusRouter.InitTaskParamsRouter(privateGroup, publicGroup)
+		octopusRouter.InitIntervalTaskSetupRouter(privateGroup, publicGroup)
 
 	}
 

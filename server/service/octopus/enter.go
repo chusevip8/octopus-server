@@ -10,4 +10,5 @@ type ServiceGroup struct {
 	CmtTaskSetupService
 	CmtTaskService
 	TaskParamsService
+	IntervalTaskSetupService
 }

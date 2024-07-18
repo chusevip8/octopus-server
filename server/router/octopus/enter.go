@@ -10,4 +10,5 @@ type RouterGroup struct {
 	CmtTaskSetupRouter
 	CmtTaskRouter
 	TaskParamsRouter
+	IntervalTaskSetupRouter
 }
