@@ -10,6 +10,7 @@ type IntervalTaskSetup struct {
 	global.GVA_MODEL
 	AppName     string `json:"appName" form:"appName" gorm:"column:app_name;comment:应用名称;size:20;" binding:"required"`        //应用名称
 	TaskTitle   string `json:"taskTitle" form:"taskTitle" gorm:"column:task_title;comment:任务标题;size:128;" binding:"required"` //任务标题
+	SubTaskType string `json:"subTaskType" form:"subTaskType" gorm:"column:sub_task_type;comment:子任务类型;" binding:"required"`  //子任务类型
 	ScriptId    uint   `json:"scriptId" form:"scriptId" gorm:"column:script_id;comment:脚本Id;" binding:"required"`             //脚本Id
 	Params      string `json:"params" form:"params" gorm:"column:params;comment:脚本参数;type:text;"`                             //脚本参数
 	IntervalMin uint   `json:"intervalMin" form:"intervalMin" gorm:"column:interval_min;comment:间隔时间;" binding:"required"`    //间隔时间
