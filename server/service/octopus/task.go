@@ -99,6 +99,6 @@ func (taskService *TaskService) GetTaskInfoList(info octopusReq.TaskSearch) (lis
 func (taskService *TaskService) GetTaskByDeviceId(taskSetupId string, deviceId string, mainTaskType string) (task octopus.Task, err error) {
 	err = global.GVA_DB.Model(&octopus.Task{}).
 		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
-		Where("oct_task_params.task_setup_id = ? AND oct_task.device_id = ?", taskSetupId, deviceId).First(&task).Error
+		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ? AND oct_task.device_id = ?", taskSetupId, mainTaskType, deviceId).First(&task).Error
 	return
 }
