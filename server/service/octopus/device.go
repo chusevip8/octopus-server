@@ -6,6 +6,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -20,6 +21,7 @@ func (deviceService *DeviceService) RegisterDevice(d octopus.Device) (deviceInte
 	var device octopus.Device
 	if errors.Is(global.GVA_DB.Model(&octopus.Device{}).Where("number = ? AND username = ?", d.Number, d.Username).First(&device).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
 		d.CreatedBy = user.ID
+		d.LoginToken = uuid.New().String()
 		if err := global.GVA_DB.Create(&d).Error; err != nil {
 			return deviceInter, err
 		}
@@ -28,8 +30,9 @@ func (deviceService *DeviceService) RegisterDevice(d octopus.Device) (deviceInte
 	device.Brand = d.Brand
 	device.OS = d.OS
 	device.Note = d.Note
-	device.Status = 4 //表示离线状态
+	device.Status = 2 //表示离线状态
 	device.CreatedBy = d.CreatedBy
+	device.LoginToken = uuid.New().String()
 	if err := global.GVA_DB.Save(&device).Error; err != nil {
 		return deviceInter, err
 	}
