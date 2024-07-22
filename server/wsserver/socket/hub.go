@@ -34,7 +34,7 @@ func (hub *Hub) checkClientLogin(client *Client) {
 	select {
 	case <-time.After(10 * time.Second):
 		if client != nil && client.Id == 0 {
-			client.SendMessage([]byte(protocol.CloseSignal))
+			client.Close()
 		}
 	}
 }
