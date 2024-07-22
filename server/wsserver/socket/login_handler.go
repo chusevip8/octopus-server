@@ -15,15 +15,23 @@ func LoginHandler(client *Client, data []byte) {
 		return
 	}
 
-	//service.DeviceService
 	var loginRes protocol.LoginRes
-	loginRes.Code = 1
-	loginRes.Error = ""
+
+	_, err := deviceService.GetDeviceByToken(loginReq.Token)
+	if err != nil {
+		loginRes.Code = -1
+		loginRes.Error = "未找到该设备"
+	} else {
+		loginRes.Code = 0
+		loginRes.Error = ""
+	}
 	message, err := json.Marshal(loginRes)
 	if err != nil {
 		fmt.Println("LoginHandler json Marshal", err)
 		return
 	}
 	client.SendMessage(message)
-	client.SendMessage([]byte(protocol.CloseSignal))
+	if loginRes.Code != 0 {
+		client.SendMessage([]byte(protocol.CloseSignal))
+	}
 }

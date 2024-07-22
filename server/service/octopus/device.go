@@ -65,6 +65,11 @@ func (deviceService *DeviceService) DeleteDeviceByIds(IDs []string, deletedBy ui
 	return err
 }
 
+func (deviceService *DeviceService) GetDeviceByToken(token string) (device octopus.Device, err error) {
+	err = global.GVA_DB.Where("login_token = ?", token).First(&device).Error
+	return
+}
+
 func (deviceService *DeviceService) GetDeviceInfoList(info octopusReq.DeviceSearch) (list []octopus.Device, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
