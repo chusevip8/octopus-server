@@ -9,6 +9,7 @@ import (
 const Login = 2
 
 func LoginHandler(client *Client, data []byte) {
+
 	loginReq := &protocol.LoginReq{}
 	if err := json.Unmarshal(data, loginReq); err != nil {
 		fmt.Println("LoginHandler json Unmarshal", err)
@@ -32,6 +33,6 @@ func LoginHandler(client *Client, data []byte) {
 	}
 	client.SendMessage(message)
 	if loginRes.Code != 0 {
-		client.SendMessage([]byte(protocol.CloseSignal))
+		client.Close()
 	}
 }

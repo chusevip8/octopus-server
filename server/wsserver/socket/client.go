@@ -1,6 +1,8 @@
 package socket
 
 import (
+	"fmt"
+	"github.com/flipped-aurora/gin-vue-admin/server/utils/octopus"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
 	"github.com/gorilla/websocket"
 	"log"
@@ -60,7 +62,12 @@ func (client *Client) Read() {
 			}
 			break
 		}
-		client.Hub.ReceiveMessage(client, message)
+		rawData, err := octopus.DataIn(message)
+		if err != nil {
+			fmt.Println("Receive data", err)
+		} else {
+			client.Hub.ReceiveMessage(client, rawData)
+		}
 	}
 }
 
@@ -88,5 +95,16 @@ func (client *Client) SendMessage(data []byte) {
 	if client == nil {
 		return
 	}
-	client.Send <- data
+	outData, err := octopus.DataOut(data)
+	if err != nil {
+		log.Printf("send data error: %v", err)
+		return
+	}
+	client.Send <- outData
+}
+func (client *Client) Close() {
+	if client == nil {
+		return
+	}
+	client.Send <- []byte(protocol.CloseSignal)
 }
