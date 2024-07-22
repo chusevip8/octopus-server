@@ -22,6 +22,10 @@ type LoginRes struct {
 	Error string `json:"error"`
 }
 
+type TaskRequest struct {
+	Device string `json:"device"`
+}
+
 type TaskFinishReq struct {
 	TaskId string `json:"taskId"`
 	Error  string `json:"error"`
