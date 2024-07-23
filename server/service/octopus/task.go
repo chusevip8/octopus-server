@@ -98,6 +98,11 @@ func (taskService *TaskService) UpdateTask(task octopus.Task) (err error) {
 	return err
 }
 
+func (taskService *TaskService) UpdateTaskStatusByDeviceId(id uint, status uint) (err error) {
+	err = global.GVA_DB.Model(&octopus.Task{}).Where("id = ?", id).Where("status = ?", 2).Update("status", status).Error
+	return
+}
+
 // GetTask 根据ID获取任务记录
 // Author [piexlmax](https://github.com/piexlmax)
 func (taskService *TaskService) GetTask(ID string) (task octopus.Task, err error) {

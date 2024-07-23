@@ -65,8 +65,13 @@ func (deviceService *DeviceService) DeleteDeviceByIds(IDs []string, deletedBy ui
 	return err
 }
 
+func (deviceService *DeviceService) UpdateDeviceStatusById(id uint, status uint) (err error) {
+	err = global.GVA_DB.Model(&octopus.Device{}).Where("id = ?", id).Where("status != ?", 3).Update("status", status).Error
+	return
+}
+
 func (deviceService *DeviceService) GetDeviceByToken(token string) (device octopus.Device, err error) {
-	err = global.GVA_DB.Where("login_token = ?", token).First(&device).Error
+	err = global.GVA_DB.Where("login_token = ?", token).Where("status != ?", 3).First(&device).Error
 	return
 }
 

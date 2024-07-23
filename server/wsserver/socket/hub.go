@@ -10,12 +10,14 @@ import (
 type Hub struct {
 	Connect    chan *Client
 	Disconnect chan *Client
+	Login      chan *Client
 }
 
 func NewHub() *Hub {
 	return &Hub{
 		Connect:    make(chan *Client),
 		Disconnect: make(chan *Client),
+		Login:      make(chan *Client),
 	}
 }
 
@@ -25,9 +27,23 @@ func (hub *Hub) Run(clientManager *ClientManager) {
 		case client := <-hub.Connect:
 			go hub.checkClientLogin(client)
 		case client := <-hub.Disconnect:
-			go hub.removeClient(client, clientManager)
+			go hub.disconnect(client, clientManager)
+		case client := <-hub.Login:
+			go hub.login(client, clientManager)
 		}
 	}
+}
+
+func (hub *Hub) disconnect(client *Client, clientManager *ClientManager) {
+	_ = deviceService.UpdateDeviceStatusById(client.Id, 2)
+	_ = taskService.UpdateTaskStatusByDeviceId(client.Id, 4)
+	clientManager.RemoveClient(client)
+	close(client.Send)
+
+}
+func (hub *Hub) login(client *Client, clientManager *ClientManager) {
+	_ = deviceService.UpdateDeviceStatusById(client.Id, 1)
+	clientManager.AddClient(client)
 }
 
 func (hub *Hub) checkClientLogin(client *Client) {
@@ -37,11 +53,6 @@ func (hub *Hub) checkClientLogin(client *Client) {
 			client.Close()
 		}
 	}
-}
-
-func (hub *Hub) removeClient(client *Client, clientManager *ClientManager) {
-	clientManager.RemoveClient(client)
-	close(client.Send)
 }
 
 func (hub *Hub) ReceiveMessage(client *Client, data []byte) {
