@@ -38,16 +38,18 @@ func findPushTask(deviceId string) (task octopus.Task, err error) {
 	return
 }
 
-func buildTaskPush(task octopus.Task) (taskPush protocol.TaskPush, err error) {
+func buildTaskPush(task octopus.Task, taskPush *protocol.TaskPush) (err error) {
 
 	var script octopus.Script
 	err = global.GVA_DB.Where("id = ?", task.TaskParams.ScriptId).First(&script).Error
 	if err != nil {
+		taskPush.Error = "Can't find task script"
 		return
 	}
 	var params map[string]string
 	err = json.Unmarshal([]byte(task.TaskParams.Params), &params)
 	if err != nil {
+		taskPush.Error = "Task params json unmarshal error"
 		return
 	}
 	scriptContent := script.Content
@@ -57,6 +59,17 @@ func buildTaskPush(task octopus.Task) (taskPush protocol.TaskPush, err error) {
 	}
 	taskPush.TaskId = strconv.Itoa(int(task.ID))
 	taskPush.Script = scriptContent
+	taskPush.Error = ""
+	return
+}
+
+func PushTask(deviceId string) (taskPush protocol.TaskPush, err error) {
+	task, err := findPushTask(deviceId)
+	if err != nil {
+		taskPush.Error = "No executable task found"
+		return
+	}
+	err = buildTaskPush(task, &taskPush)
 	return
 }
 

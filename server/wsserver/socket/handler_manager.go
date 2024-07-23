@@ -1,6 +1,7 @@
 package socket
 
 import (
+	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
 	"sync"
 )
 
@@ -25,6 +26,8 @@ func GetHandler(key uint) (handler Handler, ok bool) {
 }
 
 func RegisterAllHandlers() {
-	RegisterHandler(Heartbeat, HeartbeatHandler)
-	RegisterHandler(Login, LoginHandler)
+	RegisterHandler(protocol.CodeLogin, LoginHandler)
+	RegisterHandler(protocol.CodeTaskRequest, TaskRequestHandler)
+	RegisterHandler(protocol.CodeTaskStart, TaskStartHandler)
+	RegisterHandler(protocol.CodeTaskFinish, TaskFinishHandler)
 }

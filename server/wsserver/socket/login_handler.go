@@ -6,35 +6,33 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
 )
 
-const Login = 1
-
 func LoginHandler(client *Client, data []byte) {
 
-	loginReq := &protocol.LoginReq{}
-	if err := json.Unmarshal(data, loginReq); err != nil {
+	login := &protocol.Login{}
+	if err := json.Unmarshal(data, login); err != nil {
 		fmt.Println("LoginHandler json Unmarshal", err)
 		return
 	}
 
-	var loginRes protocol.LoginRes
+	var loginPush protocol.LoginPush
 
-	device, err := deviceService.GetDeviceByToken(loginReq.Token)
+	device, err := deviceService.GetDeviceByToken(login.Token)
 	if err != nil {
 		client.Id = 0
-		loginRes.Code = 1
-		loginRes.Error = "Device not found"
+		loginPush.Code = 1
+		loginPush.Error = "Device not found"
 	} else {
 		client.Id = device.ID
-		loginRes.Code = 0
-		loginRes.Error = "Device login"
+		loginPush.Code = 0
+		loginPush.Error = "Device login"
 	}
-	message, err := json.Marshal(loginRes)
+	message, err := json.Marshal(loginPush)
 	if err != nil {
 		fmt.Println("LoginHandler json Marshal", err)
 		return
 	}
 	client.SendMessage(message)
-	if loginRes.Code != 0 {
+	if loginPush.Code != 0 {
 		client.Close()
 	} else {
 		client.Hub.Login <- client

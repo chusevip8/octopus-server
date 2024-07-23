@@ -1,44 +1,49 @@
 package protocol
 
 const CloseSignal = "CLOSE_CONNECTION"
+const (
+	CodeLogin       = 1
+	CodeTaskRequest = 2
+	CodeTaskPush    = 3
+	CodeTaskStart   = 4
+	CodeTaskFinish  = 5
+	CodeTaskStop    = 6
+)
 
 type Message struct {
 	Code uint        `json:"code"`
 	Data interface{} `json:"data,omitempty"`
 }
 
-type LoginReq struct {
+type Login struct {
 	Token string `json:"token"`
 }
-type LoginRes struct {
+type LoginPush struct {
 	Code  uint   `json:"code"`
 	Error string `json:"error"`
 }
 
 type TaskRequest struct {
-	Device string `json:"device"`
+	Token string `json:"token"`
 }
 
-type TaskFinishReq struct {
+type TaskFinish struct {
 	TaskId string `json:"taskId"`
 	Error  string `json:"error"`
 }
-type TaskFinishRes struct {
-	TaskId string `json:"taskId"`
-}
 
-type TaskStartReq struct {
+type TaskStart struct {
 	TaskId string `json:"taskId"`
-}
-type TaskStartRes struct {
-	TaskId string `json:"taskId"`
+	Token  string `json:"token"`
 }
 
 type TaskPush struct {
 	TaskId string `json:"taskId"`
 	Script string `json:"script"`
+	Error  string `json:"error"`
 }
 
-type TaskStop struct {
+type TaskStopPush struct {
 	TaskId string `json:"taskId"`
+	Error  string `json:"error"`
 }

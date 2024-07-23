@@ -98,8 +98,20 @@ func (taskService *TaskService) UpdateTask(task octopus.Task) (err error) {
 	return err
 }
 
-func (taskService *TaskService) UpdateTaskStatusByDeviceId(id uint, status uint, error string) (err error) {
-	err = global.GVA_DB.Model(&octopus.Task{}).Where("id = ?", id).Where("status = ?", 2).Updates(map[string]interface{}{"status": status, "error": error}).Error
+func (taskService *TaskService) UpdateTaskStatusRunToFailByDeviceId(deviceId uint, error string) (err error) {
+	err = global.GVA_DB.Model(&octopus.Task{}).Where("device_id = ?", deviceId).Where("status = ?", 2).Updates(map[string]interface{}{"status": 4, "error": error}).Error
+	return
+}
+func (taskService *TaskService) UpdateTaskStatusToRun(id string) (err error) {
+	err = global.GVA_DB.Model(&octopus.Task{}).Where("id = ?", id).Updates(map[string]interface{}{"status": 2, "error": ""}).Error
+	return
+}
+func (taskService *TaskService) UpdateTaskStatusToFinish(id string) (err error) {
+	err = global.GVA_DB.Model(&octopus.Task{}).Where("id = ?", id).Updates(map[string]interface{}{"status": 3, "error": ""}).Error
+	return
+}
+func (taskService *TaskService) UpdateTaskStatusToFail(id string, error string) (err error) {
+	err = global.GVA_DB.Model(&octopus.Task{}).Where("id = ?", id).Updates(map[string]interface{}{"status": 4, "error": error}).Error
 	return
 }
 

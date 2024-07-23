@@ -36,7 +36,7 @@ func (hub *Hub) Run(clientManager *ClientManager) {
 
 func (hub *Hub) disconnect(client *Client, clientManager *ClientManager) {
 	_ = deviceService.UpdateDeviceStatusById(client.Id, 2)
-	_ = taskService.UpdateTaskStatusByDeviceId(client.Id, 4, "设备离线")
+	_ = taskService.UpdateTaskStatusRunToFailByDeviceId(client.Id, "设备离线")
 	clientManager.RemoveClient(client)
 	close(client.Send)
 

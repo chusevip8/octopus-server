@@ -8,18 +8,7 @@ import (
 	"strconv"
 )
 
-func TaskFinishHandler(client *Client, data []byte) {
-	taskFinish := &protocol.TaskFinish{}
-	if err := json.Unmarshal(data, taskFinish); err != nil {
-		fmt.Println("TaskFinishHandler json Unmarshal", err)
-		return
-	}
-	if taskFinish.Error == "" {
-		_ = taskService.UpdateTaskStatusToFinish(taskFinish.TaskId)
-	} else {
-		_ = taskService.UpdateTaskStatusToFail(taskFinish.TaskId, taskFinish.Error)
-	}
-
+func TaskRequestHandler(client *Client, data []byte) {
 	deviceId := strconv.Itoa(int(client.Id))
 	taskPush, _ := octopus.PushTask(deviceId)
 	message := map[string]interface{}{"code": protocol.CodeTaskPush, "data": taskPush}
@@ -29,4 +18,5 @@ func TaskFinishHandler(client *Client, data []byte) {
 	} else {
 		client.SendMessage(data)
 	}
+
 }
