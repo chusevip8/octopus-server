@@ -2,7 +2,9 @@
 package octopus
 
 import (
+	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	"gorm.io/gorm"
 )
 
 // 任务 结构体  Task
@@ -23,4 +25,9 @@ type Task struct {
 // TableName 任务 Task自定义表名 oct_task
 func (Task) TableName() string {
 	return "oct_task"
+}
+
+func (task *Task) AfterCreate(tx *gorm.DB) (err error) {
+	fmt.Printf("New user created:(ID: %d)\n", task.ID)
+	return
 }

@@ -20,7 +20,7 @@ func LoginHandler(client *Client, data []byte) {
 
 	_, err := deviceService.GetDeviceByToken(loginReq.Token)
 	if err != nil {
-		loginRes.Code = -1
+		loginRes.Code = 1
 		loginRes.Error = "未找到该设备"
 	} else {
 		loginRes.Code = 0
