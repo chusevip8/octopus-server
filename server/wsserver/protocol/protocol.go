@@ -7,13 +7,6 @@ type Message struct {
 	Data interface{} `json:"data,omitempty"`
 }
 
-type HeartbeatReq struct {
-	Ping string `json:"ping"`
-}
-type HeartbeatRes struct {
-	Pong string `json:"pong"`
-}
-
 type LoginReq struct {
 	Token string `json:"token"`
 }

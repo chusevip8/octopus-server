@@ -6,7 +6,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
 )
 
-const Login = 2
+const Login = 1
 
 func LoginHandler(client *Client, data []byte) {
 

@@ -1,6 +1,6 @@
 package socket
 
-const RequestTask = 3
+const RequestTask = 2
 
 func RequestTaskHandler(client *Client, data []byte) {
 

@@ -1,6 +1,6 @@
 package socket
 
-const TaskStart = 5
+const TaskStart = 4
 
 func TaskStartHandler(client *Client, data []byte) {
 
