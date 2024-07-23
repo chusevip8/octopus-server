@@ -19,7 +19,7 @@ type Login struct {
 	Token string `json:"token"`
 }
 type LoginPush struct {
-	Code  uint   `json:"code"`
+	Token string `json:"token"`
 	Error string `json:"error"`
 }
 

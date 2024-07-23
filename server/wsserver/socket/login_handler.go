@@ -19,12 +19,12 @@ func LoginHandler(client *Client, data []byte) {
 	device, err := deviceService.GetDeviceByToken(login.Token)
 	if err != nil {
 		client.Id = 0
-		loginPush.Code = 1
+		loginPush.Token = login.Token
 		loginPush.Error = "Device not found"
 	} else {
 		client.Id = device.ID
-		loginPush.Code = 0
-		loginPush.Error = "Device login"
+		loginPush.Token = login.Token
+		loginPush.Error = ""
 	}
 	message, err := json.Marshal(loginPush)
 	if err != nil {
@@ -32,7 +32,7 @@ func LoginHandler(client *Client, data []byte) {
 		return
 	}
 	client.SendMessage(message)
-	if loginPush.Code != 0 {
+	if loginPush.Error != "" {
 		client.Close()
 	} else {
 		client.Hub.Login <- client
