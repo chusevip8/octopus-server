@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func deviceIsReady(deviceId string) bool {
+func DeviceIsReady(deviceId string) bool {
 	var task octopus.Task
 	err := global.GVA_DB.Model(&octopus.Task{}).
 		Where("device_id = ?", deviceId).

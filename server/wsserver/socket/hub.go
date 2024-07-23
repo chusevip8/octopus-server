@@ -21,29 +21,29 @@ func NewHub() *Hub {
 	}
 }
 
-func (hub *Hub) Run(clientManager *ClientManager) {
+func (hub *Hub) Run() {
 	for {
 		select {
 		case client := <-hub.Connect:
 			go hub.checkClientLogin(client)
 		case client := <-hub.Disconnect:
-			go hub.disconnect(client, clientManager)
+			go hub.disconnect(client)
 		case client := <-hub.Login:
-			go hub.login(client, clientManager)
+			go hub.login(client)
 		}
 	}
 }
 
-func (hub *Hub) disconnect(client *Client, clientManager *ClientManager) {
+func (hub *Hub) disconnect(client *Client) {
 	_ = deviceService.UpdateDeviceStatusById(client.Id, 2)
 	_ = taskService.UpdateTaskStatusRunToFailByDeviceId(client.Id, "设备离线")
-	clientManager.RemoveClient(client)
+	RemoveClient(client)
 	close(client.Send)
 
 }
-func (hub *Hub) login(client *Client, clientManager *ClientManager) {
+func (hub *Hub) login(client *Client) {
 	_ = deviceService.UpdateDeviceStatusById(client.Id, 1)
-	clientManager.AddClient(client)
+	AddClient(client)
 }
 
 func (hub *Hub) checkClientLogin(client *Client) {

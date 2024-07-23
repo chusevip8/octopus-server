@@ -20,9 +20,8 @@ var upgrader = websocket.Upgrader{
 func run() {
 	addr := "127.0.0.1:8080"
 	socket.RegisterAllHandlers()
-	clientManager := socket.NewClientManager()
 	hub := socket.NewHub()
-	go hub.Run(clientManager)
+	go hub.Run()
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})

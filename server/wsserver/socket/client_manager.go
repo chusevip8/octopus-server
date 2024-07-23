@@ -2,32 +2,26 @@ package socket
 
 import "sync"
 
-type ClientManager struct {
-	Clients     map[uint]*Client
-	ClientsLock sync.RWMutex
+var (
+	clients     = make(map[uint]*Client)
+	clientsLock sync.RWMutex
+)
+
+func RemoveClient(client *Client) {
+	clientsLock.Lock()
+	defer clientsLock.Unlock()
+	delete(clients, client.Id)
 }
 
-func NewClientManager() *ClientManager {
-	return &ClientManager{
-		Clients: make(map[uint]*Client),
-	}
+func AddClient(client *Client) {
+	clientsLock.Lock()
+	defer clientsLock.Unlock()
+	clients[client.Id] = client
 }
 
-func (clientManger *ClientManager) RemoveClient(client *Client) {
-	clientManger.ClientsLock.Lock()
-	defer clientManger.ClientsLock.Unlock()
-	delete(clientManger.Clients, client.Id)
-}
-
-func (clientManger *ClientManager) AddClient(client *Client) {
-	clientManger.ClientsLock.Lock()
-	defer clientManger.ClientsLock.Unlock()
-	clientManger.Clients[client.Id] = client
-}
-
-func (clientManger *ClientManager) GetClient(clientId uint) (client *Client, ok bool) {
-	clientManger.ClientsLock.RLock()
-	defer clientManger.ClientsLock.RUnlock()
-	client, ok = clientManger.Clients[clientId]
+func GetClient(clientId uint) (client *Client, ok bool) {
+	clientsLock.RLock()
+	defer clientsLock.RUnlock()
+	client, ok = clients[clientId]
 	return
 }
