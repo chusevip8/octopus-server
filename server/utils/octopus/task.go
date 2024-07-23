@@ -33,7 +33,7 @@ func DeviceIsReady(deviceId string) bool {
 func findPushTask(deviceId string) (task octopus.Task, err error) {
 	err = global.GVA_DB.Model(&octopus.Task{}).
 		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
-		Where("oct_task_params.main_task_type != ? AND oct_task.device_id = ?", "interval", deviceId).
+		Where("oct_task_params.main_task_type != ? AND oct_task.device_id = ? AND oct_task.status = ?", "interval", deviceId, 1).
 		First(&task).Error
 	return
 }
