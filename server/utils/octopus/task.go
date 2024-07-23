@@ -59,3 +59,8 @@ func buildTaskPush(task octopus.Task) (taskPush protocol.TaskPush, err error) {
 	taskPush.Script = scriptContent
 	return
 }
+
+func UpdateAllTasks() {
+	_ = global.GVA_DB.Model(&octopus.Task{}).Where("status = ?", 2).Updates(map[string]interface{}{"status": 4, "error": "服务器重启"}).Error
+	return
+}

@@ -98,8 +98,8 @@ func (taskService *TaskService) UpdateTask(task octopus.Task) (err error) {
 	return err
 }
 
-func (taskService *TaskService) UpdateTaskStatusByDeviceId(id uint, status uint) (err error) {
-	err = global.GVA_DB.Model(&octopus.Task{}).Where("id = ?", id).Where("status = ?", 2).Update("status", status).Error
+func (taskService *TaskService) UpdateTaskStatusByDeviceId(id uint, status uint, error string) (err error) {
+	err = global.GVA_DB.Model(&octopus.Task{}).Where("id = ?", id).Where("status = ?", 2).Updates(map[string]interface{}{"status": status, "error": error}).Error
 	return
 }
 
