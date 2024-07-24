@@ -1,23 +1,28 @@
 package socket
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
+	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/octopus"
 	"time"
 )
 
-type Hub struct {
-	Connect    chan *Client
-	Disconnect chan *Client
-	Login      chan *Client
+type MessageReceiver interface {
+	HandleMessage(client *Client, data []byte)
 }
 
-func NewHub() *Hub {
+type Hub struct {
+	Connect        chan *Client
+	Disconnect     chan *Client
+	Login          chan *Client
+	MessageHandler MessageReceiver
+}
+
+func NewHub(handler MessageReceiver) *Hub {
 	return &Hub{
-		Connect:    make(chan *Client),
-		Disconnect: make(chan *Client),
-		Login:      make(chan *Client),
+		Connect:        make(chan *Client),
+		Disconnect:     make(chan *Client),
+		Login:          make(chan *Client),
+		MessageHandler: handler,
 	}
 }
 
@@ -35,14 +40,14 @@ func (hub *Hub) Run() {
 }
 
 func (hub *Hub) disconnect(client *Client) {
-	_ = deviceService.UpdateDeviceStatusById(client.Id, 2)
-	_ = taskService.UpdateTaskStatusRunToFailByDeviceId(client.Id, "设备离线")
+	_ = octopus.DeviceService.UpdateDeviceStatusById(client.Id, 2)
+	_ = octopus.TaskService.UpdateTaskStatusRunToFailByDeviceId(client.Id, "设备离线")
 	RemoveClient(client)
 	close(client.Send)
 
 }
 func (hub *Hub) login(client *Client) {
-	_ = deviceService.UpdateDeviceStatusById(client.Id, 1)
+	_ = octopus.DeviceService.UpdateDeviceStatusById(client.Id, 1)
 	AddClient(client)
 }
 
@@ -57,19 +62,7 @@ func (hub *Hub) checkClientLogin(client *Client) {
 
 func (hub *Hub) ReceiveMessage(client *Client, data []byte) {
 	fmt.Println("Receive Message", client.Addr, string(data))
-	message := &protocol.Message{}
-	if err := json.Unmarshal(data, message); err != nil {
-		fmt.Println("Receive Message json Unmarshal", err)
-		return
-	}
-	msgContent, err := json.Marshal(message.Data)
-	if err != nil {
-		fmt.Println("Receive Message json Marshal", err)
-		return
-	}
-	if handle, ok := GetHandler(message.Code); ok {
-		handle(client, msgContent)
-	} else {
-		fmt.Println("Handler not found", client.Addr, "Code", message.Code)
+	if hub.MessageHandler != nil {
+		hub.MessageHandler.HandleMessage(client, data)
 	}
 }

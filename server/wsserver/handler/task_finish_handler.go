@@ -1,26 +1,28 @@
-package socket
+package handler
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/octopus"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
+	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/socket"
 	"strconv"
 )
 
-func TaskFinishHandler(client *Client, data []byte) {
+func TaskFinishHandler(client *socket.Client, data []byte) {
 	taskFinish := &protocol.TaskFinish{}
 	if err := json.Unmarshal(data, taskFinish); err != nil {
 		fmt.Println("TaskFinishHandler json Unmarshal", err)
 		return
 	}
 	if taskFinish.Error == "" {
-		_ = taskService.UpdateTaskStatusToFinish(taskFinish.TaskId)
+		_ = octopus.TaskService.UpdateTaskStatusToFinish(taskFinish.TaskId)
 	} else {
-		_ = taskService.UpdateTaskStatusToFail(taskFinish.TaskId, taskFinish.Error)
+		_ = octopus.TaskService.UpdateTaskStatusToFail(taskFinish.TaskId, taskFinish.Error)
 	}
 
 	deviceId := strconv.Itoa(int(client.Id))
-	taskPush, _ := taskService.PushTask(deviceId)
+	taskPush, _ := octopus.TaskService.PushTask(deviceId)
 	message := map[string]interface{}{"code": protocol.CodeTaskPush, "data": taskPush}
 	data, err := json.Marshal(message)
 	if err != nil {

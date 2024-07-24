@@ -2,6 +2,7 @@ package wsserver
 
 import (
 	"fmt"
+	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/handler"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/socket"
 	"github.com/gorilla/websocket"
 	"log"
@@ -19,8 +20,9 @@ var upgrader = websocket.Upgrader{
 
 func run() {
 	addr := "127.0.0.1:8080"
-	socket.RegisterAllHandlers()
-	hub := socket.NewHub()
+	handlerManager := handler.NewHandlerManager()
+	handlerManager.RegisterAllHandlers()
+	hub := socket.NewHub(handlerManager)
 	go hub.Run()
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
