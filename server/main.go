@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/flipped-aurora/gin-vue-admin/server/service/octopus"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver"
+	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/octopus"
 	_ "go.uber.org/automaxprocs"
 	"go.uber.org/zap"
 
@@ -39,6 +39,7 @@ func main() {
 		defer db.Close()
 	}
 	octopus.ResetAllTasks()
+	go octopus.WaitNewTask()
 	wsserver.Start()
 	core.RunWindowsServer()
 }

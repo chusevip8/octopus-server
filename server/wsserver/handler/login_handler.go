@@ -3,8 +3,8 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/octopus"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
+	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/service"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/socket"
 )
 
@@ -18,7 +18,7 @@ func LoginHandler(client *socket.Client, data []byte) {
 
 	var loginPush protocol.LoginPush
 
-	device, err := octopus.DeviceService.GetDeviceByToken(login.Token)
+	device, err := service.DeviceService.GetDeviceByToken(login.Token)
 	if err != nil {
 		client.Id = 0
 		loginPush.Token = login.Token

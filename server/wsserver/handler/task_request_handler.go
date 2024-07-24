@@ -11,7 +11,7 @@ import (
 
 func TaskRequestHandler(client *socket.Client, data []byte) {
 	deviceId := strconv.Itoa(int(client.Id))
-	taskPush, _ := octopus.TaskService.PushTask(deviceId)
+	taskPush, _ := octopus.PushTask(deviceId)
 	message := map[string]interface{}{"code": protocol.CodeTaskPush, "data": taskPush}
 	data, err := json.Marshal(message)
 	if err != nil {

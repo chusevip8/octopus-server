@@ -1,25 +1,26 @@
 package octopus
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
-	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
 	"gorm.io/gorm"
-	"strconv"
-	"strings"
 )
 
 type TaskService struct{}
 
-var TaskServiceApp = new(TaskService)
+var (
+	NewTask        = make(chan *octopus.Task)
+	TaskServiceApp = new(TaskService)
+)
 
 // CreateTask 创建任务记录
 // Author [piexlmax](https://github.com/piexlmax)
 func (taskService *TaskService) CreateTask(task *octopus.Task) (err error) {
 	err = global.GVA_DB.Create(task).Error
+	if err == nil {
+		NewTask <- task
+	}
 	return err
 }
 
@@ -168,50 +169,15 @@ func (taskService *TaskService) GetTaskByDeviceId(taskSetupId string, deviceId s
 	return
 }
 
-func (taskService *TaskService) findPushTask(deviceId string) (task octopus.Task, err error) {
-	err = global.GVA_DB.Model(&octopus.Task{}).
+func (taskService *TaskService) FindPushTask(deviceId string) (task octopus.Task, err error) {
+	err = global.GVA_DB.Model(&octopus.Task{}).Preload("TaskParams").
 		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
 		Where("oct_task_params.main_task_type != ? AND oct_task.device_id = ? AND oct_task.status = ?", "interval", deviceId, 1).
 		First(&task).Error
 	return
 }
 
-func (taskService *TaskService) buildTaskPush(task octopus.Task, taskPush *protocol.TaskPush) (err error) {
-
-	var script octopus.Script
-	err = global.GVA_DB.Where("id = ?", task.TaskParams.ScriptId).First(&script).Error
-	if err != nil {
-		taskPush.Error = "Can't find task script"
-		return
-	}
-	var params map[string]string
-	err = json.Unmarshal([]byte(task.TaskParams.Params), &params)
-	if err != nil {
-		taskPush.Error = "Task params json unmarshal error"
-		return
-	}
-	scriptContent := script.Content
-	for key, value := range params {
-		placeholder := fmt.Sprintf("${%s}", key)
-		scriptContent = strings.ReplaceAll(scriptContent, placeholder, value)
-	}
-	taskPush.TaskId = strconv.Itoa(int(task.ID))
-	taskPush.Script = scriptContent
-	taskPush.Error = ""
-	return
-}
-
-func (taskService *TaskService) PushTask(deviceId string) (taskPush protocol.TaskPush, err error) {
-	task, err := taskService.findPushTask(deviceId)
-	if err != nil {
-		taskPush.Error = "No executable task found"
-		return
-	}
-	err = taskService.buildTaskPush(task, &taskPush)
-	return
-}
-
-func ResetAllTasks() {
+func (taskService *TaskService) UpdateTaskStatusRunToFail() {
 	_ = global.GVA_DB.Model(&octopus.Task{}).Where("status = ?", 2).Updates(map[string]interface{}{"status": 4, "error": "服务器重启"}).Error
 	return
 }

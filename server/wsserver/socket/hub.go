@@ -2,7 +2,7 @@ package socket
 
 import (
 	"fmt"
-	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/octopus"
+	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/service"
 	"time"
 )
 
@@ -40,14 +40,14 @@ func (hub *Hub) Run() {
 }
 
 func (hub *Hub) disconnect(client *Client) {
-	_ = octopus.DeviceService.UpdateDeviceStatusById(client.Id, 2)
-	_ = octopus.TaskService.UpdateTaskStatusRunToFailByDeviceId(client.Id, "设备离线")
+	_ = service.DeviceService.UpdateDeviceStatusById(client.Id, 2)
+	_ = service.TaskService.UpdateTaskStatusRunToFailByDeviceId(client.Id, "设备离线")
 	RemoveClient(client)
 	close(client.Send)
 
 }
 func (hub *Hub) login(client *Client) {
-	_ = octopus.DeviceService.UpdateDeviceStatusById(client.Id, 1)
+	_ = service.DeviceService.UpdateDeviceStatusById(client.Id, 1)
 	AddClient(client)
 }
 

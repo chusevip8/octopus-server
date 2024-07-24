@@ -13,6 +13,8 @@ import (
 type DeviceService struct {
 }
 
+var DeviceServiceApp = new(DeviceService)
+
 func (deviceService *DeviceService) RegisterDevice(d octopus.Device) (deviceInter octopus.Device, err error) {
 	var user system.SysUser
 	if errors.Is(global.GVA_DB.Model(&system.SysUser{}).Where("username = ?", d.Username).First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册

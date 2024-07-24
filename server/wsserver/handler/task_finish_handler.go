@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/octopus"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
+	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/service"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/socket"
 	"strconv"
 )
@@ -16,13 +17,13 @@ func TaskFinishHandler(client *socket.Client, data []byte) {
 		return
 	}
 	if taskFinish.Error == "" {
-		_ = octopus.TaskService.UpdateTaskStatusToFinish(taskFinish.TaskId)
+		_ = service.TaskService.UpdateTaskStatusToFinish(taskFinish.TaskId)
 	} else {
-		_ = octopus.TaskService.UpdateTaskStatusToFail(taskFinish.TaskId, taskFinish.Error)
+		_ = service.TaskService.UpdateTaskStatusToFail(taskFinish.TaskId, taskFinish.Error)
 	}
 
 	deviceId := strconv.Itoa(int(client.Id))
-	taskPush, _ := octopus.TaskService.PushTask(deviceId)
+	taskPush, _ := octopus.PushTask(deviceId)
 	message := map[string]interface{}{"code": protocol.CodeTaskPush, "data": taskPush}
 	data, err := json.Marshal(message)
 	if err != nil {
