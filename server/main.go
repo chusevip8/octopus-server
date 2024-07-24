@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/flipped-aurora/gin-vue-admin/server/utils/octopus"
+	"github.com/flipped-aurora/gin-vue-admin/server/service/octopus"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver"
 	_ "go.uber.org/automaxprocs"
 	"go.uber.org/zap"
@@ -29,8 +29,7 @@ func main() {
 	global.GVA_LOG = core.Zap() // 初始化zap日志库
 	zap.ReplaceGlobals(global.GVA_LOG)
 	global.GVA_DB = initialize.Gorm() // gorm连接数据库
-	octopus.UpdateAllTasks()
-	wsserver.Start()
+
 	initialize.Timer()
 	initialize.DBList()
 	if global.GVA_DB != nil {
@@ -39,5 +38,7 @@ func main() {
 		db, _ := global.GVA_DB.DB()
 		defer db.Close()
 	}
+	octopus.ResetAllTasks()
+	wsserver.Start()
 	core.RunWindowsServer()
 }

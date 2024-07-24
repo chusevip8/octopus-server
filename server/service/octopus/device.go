@@ -107,3 +107,23 @@ func (deviceService *DeviceService) GetDeviceInfoList(info octopusReq.DeviceSear
 	err = db.Find(&devices).Error
 	return devices, total, err
 }
+
+func (deviceService *DeviceService) DeviceIsFree(deviceId string) bool {
+	var task octopus.Task
+	err := global.GVA_DB.Model(&octopus.Task{}).
+		Where("device_id = ?", deviceId).
+		Where("status = ?", 2).
+		First(&task).Error
+	if err != nil {
+		var device *octopus.Device
+		err = global.GVA_DB.Model(&octopus.Device{}).
+			Where("id = ?", deviceId).
+			Where("status = ?", 1).
+			First(&device).Error
+		if err != nil {
+			return false
+		}
+		return true
+	}
+	return false
+}
