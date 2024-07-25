@@ -19,7 +19,7 @@ var upgrader = websocket.Upgrader{
 }
 
 func run() {
-	addr := "127.0.0.1:8080"
+	addr := "127.0.0.1:5555"
 	handlerManager := handler.NewHandlerManager()
 	handlerManager.RegisterAllHandlers()
 	hub := socket.NewHub(handlerManager)
