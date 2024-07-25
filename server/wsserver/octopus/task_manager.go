@@ -61,16 +61,18 @@ func buildTaskPush(task octopus.Task, taskPush *protocol.TaskPush) (err error) {
 		taskPush.Error = "Can't find task script"
 		return
 	}
-	var params map[string]string
-	err = json.Unmarshal([]byte(task.TaskParams.Params), &params)
-	if err != nil {
-		taskPush.Error = "Task params json unmarshal error"
-		return
-	}
 	scriptContent := script.Content
-	for key, value := range params {
-		placeholder := fmt.Sprintf("${%s}", key)
-		scriptContent = strings.ReplaceAll(scriptContent, placeholder, value)
+	if task.TaskParams.Params != "" {
+		var params map[string]string
+		err = json.Unmarshal([]byte(task.TaskParams.Params), &params)
+		if err != nil {
+			taskPush.Error = "Task params json unmarshal error"
+			return
+		}
+		for key, value := range params {
+			placeholder := fmt.Sprintf("${%s}", key)
+			scriptContent = strings.ReplaceAll(scriptContent, placeholder, value)
+		}
 	}
 	taskPush.TaskId = strconv.Itoa(int(task.ID))
 	taskPush.Script = scriptContent
