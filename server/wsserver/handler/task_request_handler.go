@@ -1,23 +1,26 @@
 package handler
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/octopus"
-	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
+	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/service"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/socket"
 	"strconv"
 )
 
 func TaskRequestHandler(client *socket.Client, data []byte) {
 	deviceId := strconv.Itoa(int(client.Id))
-	taskPush, _ := octopus.PushTask(deviceId)
-	message := map[string]interface{}{"code": protocol.CodeTaskPush, "data": taskPush}
-	data, err := json.Marshal(message)
+	client.ClientLock.Lock()
+	defer client.ClientLock.Unlock()
+	data, err := octopus.PushTaskMessage(deviceId)
 	if err != nil {
-		fmt.Println("RequestTaskHandler", err)
+		fmt.Println("Request task handler message", err)
 	} else {
-		client.SendMessage(data)
+		err = service.TaskService.UpdateTaskStatusToRun(deviceId)
+		if err != nil {
+			fmt.Println("Request task handler update task status", err)
+		} else {
+			client.SendMessage(data)
+		}
 	}
-
 }

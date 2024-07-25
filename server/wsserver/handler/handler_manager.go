@@ -42,7 +42,6 @@ func (hm *HandlerManager) getHandler(key uint) (handler Handler, ok bool) {
 func (hm *HandlerManager) RegisterAllHandlers() {
 	hm.registerHandler(protocol.CodeLogin, LoginHandler)
 	hm.registerHandler(protocol.CodeTaskRequest, TaskRequestHandler)
-	hm.registerHandler(protocol.CodeTaskStart, TaskStartHandler)
 	hm.registerHandler(protocol.CodeTaskFinish, TaskFinishHandler)
 }
 

@@ -2,12 +2,12 @@ package protocol
 
 const CloseSignal = "CLOSE_CONNECTION"
 const (
-	CodeLogin       = 1
-	CodeTaskRequest = 2
-	CodeTaskPush    = 3
-	CodeTaskStart   = 4
-	CodeTaskFinish  = 5
-	CodeTaskStop    = 6
+	CodeLogin          = 1
+	CodeTaskRequest    = 2
+	CodeTaskPush       = 3
+	CodeTaskFinish     = 4
+	CodeTaskFinishPush = 5
+	CodeTaskStopPush   = 6
 )
 
 type Message struct {
@@ -28,11 +28,12 @@ type TaskRequest struct {
 }
 
 type TaskFinish struct {
+	Token  string `json:"token"`
 	TaskId string `json:"taskId"`
 	Error  string `json:"error"`
 }
 
-type TaskStart struct {
+type TaskFinishPush struct {
 	TaskId string `json:"taskId"`
 	Token  string `json:"token"`
 }

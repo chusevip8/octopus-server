@@ -6,6 +6,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
 	"github.com/gorilla/websocket"
 	"log"
+	"sync"
 	"time"
 )
 
@@ -24,11 +25,12 @@ const (
 )
 
 type Client struct {
-	Hub  *Hub
-	Id   uint
-	Addr string
-	Conn *websocket.Conn
-	Send chan []byte
+	Hub        *Hub
+	Id         uint
+	Addr       string
+	Conn       *websocket.Conn
+	Send       chan []byte
+	ClientLock sync.Mutex
 }
 
 func NewClient(hub *Hub, addr string, conn *websocket.Conn) (client *Client) {

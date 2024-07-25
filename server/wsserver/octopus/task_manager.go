@@ -14,19 +14,20 @@ import (
 
 func tryPushTask(task *octopus.Task) {
 	fmt.Printf("New Task created:(ID: %d)\n", task.ID)
-	deviceId := strconv.Itoa(int(task.DeviceId))
-	ready := service.DeviceService.DeviceIsFree(deviceId)
-	if ready {
-		client, ok := socket.GetClient(task.DeviceId)
-		if ok {
-			taskPush, err := PushTask(deviceId)
+	client, ok := socket.GetClient(task.DeviceId)
+	if ok {
+		client.ClientLock.Lock()
+		defer client.ClientLock.Unlock()
+		deviceId := strconv.Itoa(int(task.DeviceId))
+		ready := service.DeviceService.DeviceIsFree(deviceId)
+		if ready {
+			data, err := PushTaskMessage(deviceId)
 			if err != nil {
-				fmt.Println("After task create", err)
+				fmt.Println("Try push task message", err)
 			} else {
-				message := map[string]interface{}{"code": protocol.CodeTaskPush, "data": taskPush}
-				data, err := json.Marshal(message)
+				err = service.TaskService.UpdateTaskStatusToRun(deviceId)
 				if err != nil {
-					fmt.Println("After task create marshal", err)
+					fmt.Println("Try push task update task status", err)
 				} else {
 					client.SendMessage(data)
 				}
@@ -39,13 +40,18 @@ func ResetAllTasks() {
 	service.TaskService.UpdateTaskStatusRunToFail()
 }
 
-func PushTask(deviceId string) (taskPush protocol.TaskPush, err error) {
+func PushTaskMessage(deviceId string) (data []byte, err error) {
+	var taskPush protocol.TaskPush
 	task, err := service.TaskService.FindPushTask(deviceId)
 	if err != nil {
-		taskPush.Error = "No executable task found"
 		return
 	}
 	err = buildTaskPush(task, &taskPush)
+	if err != nil {
+		return
+	}
+	message := map[string]interface{}{"code": protocol.CodeTaskPush, "data": taskPush}
+	data, err = json.Marshal(message)
 	return
 }
 
