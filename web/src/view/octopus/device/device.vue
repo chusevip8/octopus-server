@@ -36,7 +36,8 @@
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" />
                 <el-table-column align="center" label="编号" prop="number" width="120" />
-                <el-table-column align="center" label="分组" prop="group" width="240" />
+                <el-table-column align="center" label="分组" prop="group" width="180" />
+                <el-table-column align="center" label="Token" prop="loginToken" min-width="240" />
                 <el-table-column align="center" label="备注" prop="note" min-width="240" />
                 <el-table-column align="center" label="状态" width="120">
                     <template #default="scope">

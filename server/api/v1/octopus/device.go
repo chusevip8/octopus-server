@@ -23,11 +23,11 @@ func (deviceApi *DeviceApi) RegisterDevice(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if _, err := deviceService.RegisterDevice(device); err != nil {
+	if newDevice, err := deviceService.RegisterDevice(device); err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("设备注册失败--"+err.Error(), c)
 	} else {
-		response.OkWithMessage("设备注册成功", c)
+		response.OkWithDetailed(newDevice, "设备注册成功", c)
 	}
 }
 

@@ -13,31 +13,29 @@ import (
 type DeviceService struct {
 }
 
-var DeviceServiceApp = new(DeviceService)
-
-func (deviceService *DeviceService) RegisterDevice(d octopus.Device) (deviceInter octopus.Device, err error) {
+func (deviceService *DeviceService) RegisterDevice(d octopus.Device) (device octopus.Device, err error) {
 	var user system.SysUser
 	if errors.Is(global.GVA_DB.Model(&system.SysUser{}).Where("username = ?", d.Username).First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
-		return deviceInter, errors.New("用户未注册")
+		return device, errors.New("用户未注册")
 	}
-	var device octopus.Device
-	if errors.Is(global.GVA_DB.Model(&octopus.Device{}).Where("number = ? AND username = ?", d.Number, d.Username).First(&device).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
-		d.CreatedBy = user.ID
-		d.LoginToken = uuid.New().String()
-		if err := global.GVA_DB.Create(&d).Error; err != nil {
-			return deviceInter, err
-		}
-		return d, nil
-	}
+
+	device.Username = d.Username
+	device.Number = d.Number
 	device.Brand = d.Brand
 	device.OS = d.OS
 	device.Note = d.Note
 	device.Status = 2 //表示离线状态
-	device.CreatedBy = d.CreatedBy
+	device.Group = d.Group
+	device.CreatedBy = user.ID
 	device.LoginToken = uuid.New().String()
-	if err := global.GVA_DB.Save(&device).Error; err != nil {
-		return deviceInter, err
+
+	var deviceInter octopus.Device
+	if errors.Is(global.GVA_DB.Model(&octopus.Device{}).Where("number = ? AND username = ?", d.Number, d.Username).First(&deviceInter).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
+		err = global.GVA_DB.Create(&device).Error
+		return device, err
 	}
+	device.ID = deviceInter.ID
+	err = global.GVA_DB.Save(&device).Error
 	return device, nil
 }
 
