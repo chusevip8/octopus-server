@@ -9,5 +9,6 @@ type DeviceSearch struct {
 	Number   string `json:"number" form:"number" `
 	Note     string `json:"note" form:"note" `
 	Status   int    `json:"status" form:"status"`
+	Group    string `json:"group" form:"group"`
 	request.PageInfo
 }

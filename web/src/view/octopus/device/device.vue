@@ -6,6 +6,9 @@
                 <el-form-item label="编号" prop="number">
                     <el-input v-model="searchInfo.number" placeholder="搜索条件" />
                 </el-form-item>
+                <el-form-item label="分组" prop="group">
+                    <el-input v-model="searchInfo.group" placeholder="搜索条件" />
+                </el-form-item>
                 <el-form-item label="用户" prop="nickName">
                     <el-input v-model="searchInfo.nickName" placeholder="搜索条件" />
                 </el-form-item>
@@ -33,6 +36,7 @@
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" />
                 <el-table-column align="center" label="编号" prop="number" width="120" />
+                <el-table-column align="center" label="分组" prop="group" width="240" />
                 <el-table-column align="center" label="备注" prop="note" min-width="240" />
                 <el-table-column align="center" label="状态" width="120">
                     <template #default="scope">

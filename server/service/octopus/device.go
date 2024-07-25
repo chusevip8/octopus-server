@@ -87,6 +87,9 @@ func (deviceService *DeviceService) GetDeviceInfoList(info octopusReq.DeviceSear
 	if info.Number != "" {
 		db = db.Where("number = ?", info.Number)
 	}
+	if info.Group != "" {
+		db = db.Where("group = ?", info.Group)
+	}
 	if info.Note != "" {
 		db = db.Where("note LIKE ?", "%"+info.Note+"%")
 	}
