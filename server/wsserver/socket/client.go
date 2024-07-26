@@ -51,6 +51,7 @@ func (client *Client) Read() {
 	client.Conn.SetReadLimit(maxMessageSize)
 	_ = client.Conn.SetReadDeadline(time.Now().Add(pingWait))
 	client.Conn.SetPingHandler(func(string) error {
+		fmt.Println("Receive ping message", client.Conn.RemoteAddr())
 		_ = client.Conn.SetReadDeadline(time.Now().Add(pingWait))
 		_ = client.Conn.SetWriteDeadline(time.Now().Add(writeWait))
 		err := client.Conn.WriteMessage(websocket.PongMessage, nil)

@@ -40,6 +40,7 @@ func (hub *Hub) Run() {
 }
 
 func (hub *Hub) disconnect(client *Client) {
+	fmt.Println("Disconnected:", client.Conn.RemoteAddr().String())
 	_ = service.DeviceService.UpdateDeviceStatusById(client.Id, 2)
 	_ = service.TaskService.UpdateTaskStatusRunToFailByDeviceId(client.Id, "设备离线")
 	RemoveClient(client)
@@ -47,11 +48,13 @@ func (hub *Hub) disconnect(client *Client) {
 
 }
 func (hub *Hub) login(client *Client) {
+	fmt.Println("Logged in:", client.Conn.RemoteAddr().String())
 	_ = service.DeviceService.UpdateDeviceStatusById(client.Id, 1)
 	AddClient(client)
 }
 
 func (hub *Hub) checkClientLogin(client *Client) {
+	fmt.Println("Connected:", client.Conn.RemoteAddr().String())
 	select {
 	case <-time.After(10 * time.Second):
 		if client != nil && client.Id == 0 {
