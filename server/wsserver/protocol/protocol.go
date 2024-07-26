@@ -3,11 +3,12 @@ package protocol
 const CloseSignal = "CLOSE_CONNECTION"
 const (
 	CodeLogin          = 1
-	CodeTaskRequest    = 2
-	CodeTaskPush       = 3
-	CodeTaskFinish     = 4
-	CodeTaskFinishPush = 5
-	CodeTaskStopPush   = 6
+	CodeLoginPush      = 2
+	CodeTaskRequest    = 3
+	CodeTaskPush       = 4
+	CodeTaskFinish     = 5
+	CodeTaskFinishPush = 6
+	CodeTaskStopPush   = 7
 )
 
 type Message struct {

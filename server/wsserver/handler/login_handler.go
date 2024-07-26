@@ -10,25 +10,28 @@ import (
 
 func LoginHandler(client *socket.Client, data []byte) {
 
+	var loginPush protocol.LoginPush
 	login := &protocol.Login{}
 	if err := json.Unmarshal(data, login); err != nil {
 		fmt.Println("LoginHandler json Unmarshal", err)
-		return
-	}
-
-	var loginPush protocol.LoginPush
-
-	device, err := service.DeviceService.GetDeviceByToken(login.Token)
-	if err != nil {
 		client.Id = 0
 		loginPush.Token = login.Token
-		loginPush.Error = "Device not found"
+		loginPush.Error = err.Error()
 	} else {
-		client.Id = device.ID
-		loginPush.Token = login.Token
-		loginPush.Error = ""
+		device, err := service.DeviceService.GetDeviceByToken(login.Token)
+		if err != nil {
+			fmt.Println("LoginHandler device not found", err)
+			client.Id = 0
+			loginPush.Token = login.Token
+			loginPush.Error = err.Error()
+		} else {
+			client.Id = device.ID
+			loginPush.Token = login.Token
+			loginPush.Error = ""
+		}
 	}
-	message, err := json.Marshal(loginPush)
+
+	message, err := json.Marshal(protocol.Message{Code: protocol.CodeLoginPush, Data: loginPush})
 	if err != nil {
 		fmt.Println("LoginHandler json Marshal", err)
 		return

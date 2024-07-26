@@ -44,6 +44,7 @@ func serveWs(hub *socket.Hub, w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Failed to upgrade to WebSocket", err)
 		return
 	}
+	fmt.Println("webSocket connected:", conn.RemoteAddr().String())
 	client := socket.NewClient(hub, conn.RemoteAddr().String(), conn)
 	go client.Read()
 	go client.Write()
