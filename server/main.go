@@ -39,7 +39,7 @@ func main() {
 		defer db.Close()
 	}
 	octopus.ResetAllTasks()
-	go octopus.WaitNewTask()
+	octopus.WaitNewTask()
 	wsserver.Start()
 	core.RunWindowsServer()
 }
