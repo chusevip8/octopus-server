@@ -4,9 +4,9 @@
 import chalk from "chalk";
 
 const config = {
-  appName: 'Gin-Vue-Admin',
+  appName: '八爪鱼获客系统',
   appLogo: 'logo.png',
-  showViteLogo: true,
+  showViteLogo: false,
   logs: [],
 }
 
@@ -39,9 +39,9 @@ export const viteLogo = (env) => {
       )
     )
     console.log(
-        chalk.green(
-            `> GVA讨论社区:https://support.qq.com/products/371961`
-        )
+      chalk.green(
+        `> GVA讨论社区:https://support.qq.com/products/371961`
+      )
     )
     console.log(
       chalk.green(
@@ -55,21 +55,21 @@ export const viteLogo = (env) => {
     )
 
     console.log(
-        chalk.green(
-            `--------------------------------------版权声明--------------------------------------`
-        )
+      chalk.green(
+        `--------------------------------------版权声明--------------------------------------`
+      )
     )
 
     console.log(
-        chalk.green(
-            `** 版权所有方：flipped-aurora开源团队 **`
-        )
+      chalk.green(
+        `** 版权所有方：flipped-aurora开源团队 **`
+      )
     )
 
     console.log(
-        chalk.green(
-            `** 版权持有公司：北京翻转极光科技有限责任公司 **`
-        )
+      chalk.green(
+        `** 版权持有公司：北京翻转极光科技有限责任公司 **`
+      )
     )
 
     console.log(
