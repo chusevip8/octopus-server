@@ -31,8 +31,8 @@ func Viper(path ...string) *viper.Viper {
 					config = internal.ConfigDefaultFile
 					fmt.Printf("您正在使用gin模式的%s环境名称,config的路径为%s\n", gin.Mode(), internal.ConfigDefaultFile)
 				case gin.ReleaseMode:
-					config = internal.ConfigReleaseFile
-					fmt.Printf("您正在使用gin模式的%s环境名称,config的路径为%s\n", gin.Mode(), internal.ConfigReleaseFile)
+					config = internal.ConfigDefaultFile
+					fmt.Printf("您正在使用gin模式的%s环境名称,config的路径为%s\n", gin.Mode(), internal.ConfigDefaultFile)
 				case gin.TestMode:
 					config = internal.ConfigTestFile
 					fmt.Printf("您正在使用gin模式的%s环境名称,config的路径为%s\n", gin.Mode(), internal.ConfigTestFile)

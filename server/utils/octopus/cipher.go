@@ -5,70 +5,68 @@ import (
 	"compress/gzip"
 	"crypto/aes"
 	"crypto/cipher"
-	"crypto/rand"
 	"fmt"
 	"io"
 )
 
-const aesPassword = "9a1d2e3f4b5c6d7e8f9a0b1c2d3e4f5a"
+var (
+	aesKey = []byte("0123456789OCTOPU") // 16字节密钥
+	aesIv  = []byte("1234567890ABCDEF") // 16字节IV偏移量
+)
 
 func DataIn(inData []byte) (rawData []byte, err error) {
 	data, err := decompress(inData)
 	if err != nil {
 		return nil, err
 	}
-	rawData, err = decrypt(data, []byte(aesPassword))
+	rawData, err = decrypt(aesKey, aesIv, data)
 	return
 }
 
 func DataOut(rawData []byte) (outData []byte, err error) {
-	data, err := encrypt(rawData, []byte(aesPassword))
+	data, err := encrypt(aesKey, aesIv, rawData)
 	if err != nil {
 		return nil, err
 	}
 	outData, err = compress(data)
 	return
 }
-
-// 加密数据
-func encrypt(plaintext, key []byte) (ciphertext []byte, err error) {
+func encrypt(key, iv, plaintext []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+	paddedPlaintext := pkcs7Padding(plaintext, block.BlockSize())
+	ciphertext := make([]byte, len(paddedPlaintext))
+	mode := cipher.NewCBCEncrypter(block, iv)
+	mode.CryptBlocks(ciphertext, paddedPlaintext)
+	return ciphertext, nil
+}
+func decrypt(key, iv, ciphertext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
 
-	ciphertext = make([]byte, aes.BlockSize+len(plaintext))
-	iv := ciphertext[:aes.BlockSize]
-	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		return nil, err
-	}
-
-	stream := cipher.NewCFBEncrypter(block, iv)
-	stream.XORKeyStream(ciphertext[aes.BlockSize:], plaintext)
-
-	return ciphertext, nil
+	decryptedData := make([]byte, len(ciphertext))
+	mode := cipher.NewCBCDecrypter(block, iv)
+	mode.CryptBlocks(decryptedData, ciphertext)
+	return pkcs7Unpadding(decryptedData), nil
 }
 
-// 解密数据
-func decrypt(ciphertext, key []byte) (plaintext []byte, err error) {
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(ciphertext) < aes.BlockSize {
-		return nil, fmt.Errorf("ciphertext too short")
-	}
-
-	iv := ciphertext[:aes.BlockSize]
-	ciphertext = ciphertext[aes.BlockSize:]
-
-	stream := cipher.NewCFBDecrypter(block, iv)
-	stream.XORKeyStream(ciphertext, ciphertext)
-
-	return ciphertext, nil
+// 使用PKCS7填充方式对数据进行填充
+func pkcs7Padding(data []byte, blockSize int) []byte {
+	padding := blockSize - (len(data) % blockSize)
+	padText := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(data, padText...)
 }
 
+// 对使用PKCS7填充方式的数据进行去填充
+func pkcs7Unpadding(data []byte) []byte {
+	length := len(data)
+	unpadding := int(data[length-1])
+	return data[:(length - unpadding)]
+}
 func compress(data []byte) ([]byte, error) {
 	var b bytes.Buffer
 	w := gzip.NewWriter(&b)
