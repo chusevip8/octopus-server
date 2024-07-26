@@ -24,7 +24,7 @@ func run() {
 	handlerManager.RegisterAllHandlers()
 	hub := socket.NewHub(handlerManager)
 	go hub.Run()
-	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
 	fmt.Println("ws server running on", addr)
