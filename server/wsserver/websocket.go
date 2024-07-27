@@ -2,10 +2,11 @@ package wsserver
 
 import (
 	"fmt"
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/handler"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/socket"
 	"github.com/gorilla/websocket"
-	"log"
+	"go.uber.org/zap"
 	"net/http"
 )
 
@@ -27,10 +28,10 @@ func run() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
-	fmt.Println("ws server running on", addr)
+	global.GVA_LOG.Info("WS server is running on", zap.String("address", addr))
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
+		global.GVA_LOG.Error("WS server listenAndServe error", zap.String("error", err.Error()))
 	}
 }
 
@@ -41,7 +42,7 @@ func Start() {
 func serveWs(hub *socket.Hub, w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Fatal("Failed to upgrade to WebSocket", err)
+		global.GVA_LOG.Error("WS server upgrade error", zap.String("error", err.Error()))
 		return
 	}
 	client := socket.NewClient(hub, conn.RemoteAddr().String(), conn)

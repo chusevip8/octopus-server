@@ -90,7 +90,7 @@ func (client *Client) Write() {
 				return
 			}
 			_ = client.Conn.SetWriteDeadline(time.Now().Add(writeWait))
-			_ = client.Conn.WriteMessage(websocket.TextMessage, message)
+			_ = client.Conn.WriteMessage(websocket.BinaryMessage, message)
 		}
 	}
 }

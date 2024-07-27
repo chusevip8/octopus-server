@@ -2,7 +2,9 @@ package socket
 
 import (
 	"fmt"
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/service"
+	"go.uber.org/zap"
 	"time"
 )
 
@@ -54,7 +56,7 @@ func (hub *Hub) login(client *Client) {
 }
 
 func (hub *Hub) checkClientLogin(client *Client) {
-	fmt.Println("Connected:", client.Conn.RemoteAddr().String())
+	global.GVA_LOG.Info("Connected", zap.String("address", client.Conn.RemoteAddr().String()))
 	select {
 	case <-time.After(10 * time.Second):
 		if client != nil && client.Id == 0 {
