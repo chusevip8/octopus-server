@@ -1,7 +1,6 @@
 package socket
 
 import (
-	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/service"
 	"go.uber.org/zap"
@@ -42,7 +41,9 @@ func (hub *Hub) Run() {
 }
 
 func (hub *Hub) disconnect(client *Client) {
-	fmt.Println("Disconnected:", client.Conn.RemoteAddr().String())
+	global.GVA_LOG.Info("Disconnected", zap.String("clientUsername", client.UserName),
+		zap.String("clientNumber", client.Number),
+		zap.String("clientAddr", client.Addr))
 	_ = service.DeviceService.UpdateDeviceStatusById(client.Id, 2)
 	_ = service.TaskService.UpdateTaskStatusRunToFailByDeviceId(client.Id, "设备离线")
 	RemoveClient(client)
@@ -50,13 +51,15 @@ func (hub *Hub) disconnect(client *Client) {
 
 }
 func (hub *Hub) login(client *Client) {
-	fmt.Println("Logged in:", client.Conn.RemoteAddr().String())
+	global.GVA_LOG.Info("Logged in", zap.String("clientUsername", client.UserName),
+		zap.String("clientNumber", client.Number),
+		zap.String("clientAddr", client.Addr))
 	_ = service.DeviceService.UpdateDeviceStatusById(client.Id, 1)
 	AddClient(client)
 }
 
 func (hub *Hub) checkClientLogin(client *Client) {
-	global.GVA_LOG.Info("Connected", zap.String("address", client.Conn.RemoteAddr().String()))
+	global.GVA_LOG.Info("Connected", zap.String("clientAddr", client.Addr))
 	select {
 	case <-time.After(10 * time.Second):
 		if client != nil && client.Id == 0 {
@@ -66,7 +69,10 @@ func (hub *Hub) checkClientLogin(client *Client) {
 }
 
 func (hub *Hub) ReceiveMessage(client *Client, data []byte) {
-	fmt.Println("Receive Message", client.Addr, string(data))
+	global.GVA_LOG.Info("Receive message", zap.String("message", string(data)),
+		zap.String("clientUsername", client.UserName),
+		zap.String("clientNumber", client.Number),
+		zap.String("clientAddr", client.Addr))
 	if hub.MessageHandler != nil {
 		hub.MessageHandler.HandleMessage(client, data)
 	}
