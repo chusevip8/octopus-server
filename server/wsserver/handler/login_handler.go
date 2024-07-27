@@ -14,7 +14,7 @@ func LoginHandler(client *socket.Client, data []byte) {
 	var loginPush protocol.LoginPush
 	login := &protocol.Login{}
 	if err := json.Unmarshal(data, login); err != nil {
-		global.GVA_LOG.Info("Login Handler json Unmarshal", zap.String("error", err.Error()))
+		global.GVA_LOG.Error("Login Handler json Unmarshal", zap.String("error", err.Error()))
 		client.Id = 0
 		loginPush.Token = login.Token
 		loginPush.Error = err.Error()
@@ -36,7 +36,7 @@ func LoginHandler(client *socket.Client, data []byte) {
 
 	message, err := json.Marshal(protocol.Message{Code: protocol.CodeLoginPush, Data: loginPush})
 	if err != nil {
-		global.GVA_LOG.Info("Login Handler json Marshal", zap.String("error", err.Error()))
+		global.GVA_LOG.Error("Login Handler json Marshal", zap.String("error", err.Error()))
 		return
 	}
 	client.SendMessage(message)

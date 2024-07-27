@@ -106,7 +106,7 @@ func (client *Client) Write() {
 func (client *Client) SendMessage(data []byte) {
 	outData, err := octopus.DataOut(data)
 	if err != nil {
-		global.GVA_LOG.Info("Send message Error", zap.String("message", string(data)),
+		global.GVA_LOG.Error("Send message", zap.String("message", string(data)),
 			zap.String("clientUsername", client.UserName),
 			zap.String("clientNumber", client.Number),
 			zap.String("clientAddr", client.Addr),
