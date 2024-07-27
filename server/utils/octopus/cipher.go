@@ -15,20 +15,12 @@ var (
 )
 
 func DataIn(inData []byte) (rawData []byte, err error) {
-	data, err := decompress(inData)
-	if err != nil {
-		return nil, err
-	}
-	rawData, err = decrypt(aesKey, aesIv, data)
+	rawData, err = decrypt(aesKey, aesIv, inData)
 	return
 }
 
 func DataOut(rawData []byte) (outData []byte, err error) {
-	data, err := encrypt(aesKey, aesIv, rawData)
-	if err != nil {
-		return nil, err
-	}
-	outData, err = compress(data)
+	outData, err = encrypt(aesKey, aesIv, rawData)
 	return
 }
 func encrypt(key, iv, plaintext []byte) ([]byte, error) {
