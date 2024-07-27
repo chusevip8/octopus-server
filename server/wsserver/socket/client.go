@@ -113,7 +113,7 @@ func (client *Client) SendMessage(data []byte) {
 			zap.String("error", err.Error()))
 		return
 	}
-	if !client.IsClose {
+	if client.IsClose {
 		return
 	}
 	client.Send <- outData
