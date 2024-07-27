@@ -3,11 +3,13 @@ package octopus
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusService "github.com/flipped-aurora/gin-vue-admin/server/service/octopus"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/service"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/socket"
+	"go.uber.org/zap"
 	"strconv"
 	"strings"
 )
@@ -23,11 +25,11 @@ func tryPushTask(task *octopus.Task) {
 		if ready {
 			data, err := PushTaskMessage(deviceId)
 			if err != nil {
-				fmt.Println("Try push task message", err)
+				global.GVA_LOG.Error("Try push task message", zap.String("error", err.Error()))
 			} else {
 				err = service.TaskService.UpdateTaskStatusToRun(deviceId)
 				if err != nil {
-					fmt.Println("Try push task update task status", err)
+					global.GVA_LOG.Error("Try push task update task status", zap.String("error", err.Error()))
 				} else {
 					client.SendMessage(data)
 				}

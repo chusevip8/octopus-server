@@ -2,16 +2,17 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/service"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/socket"
+	"go.uber.org/zap"
 )
 
 func TaskFinishHandler(client *socket.Client, data []byte) {
 	taskFinish := &protocol.TaskFinish{}
 	if err := json.Unmarshal(data, taskFinish); err != nil {
-		fmt.Println("TaskFinishHandler json Unmarshal", err)
+		global.GVA_LOG.Error("TaskFinishHandler json Unmarshal", zap.String("error", err.Error()))
 		return
 	}
 	if taskFinish.Error == "" {
@@ -25,7 +26,7 @@ func TaskFinishHandler(client *socket.Client, data []byte) {
 	message := map[string]interface{}{"code": protocol.CodeTaskFinishPush, "data": taskFinishPush}
 	data, err := json.Marshal(message)
 	if err != nil {
-		fmt.Println("TaskFinishHandler", err)
+		global.GVA_LOG.Error("TaskFinishHandler json marshal", zap.String("error", err.Error()))
 	} else {
 		client.SendMessage(data)
 	}
