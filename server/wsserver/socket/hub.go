@@ -62,7 +62,7 @@ func (hub *Hub) checkClientLogin(client *Client) {
 	global.GVA_LOG.Info("Connected", zap.String("clientAddr", client.Addr))
 	select {
 	case <-time.After(10 * time.Second):
-		if client != nil && client.Id == 0 {
+		if client.Id == 0 {
 			client.Close()
 		}
 	}

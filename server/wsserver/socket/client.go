@@ -2,9 +2,11 @@ package socket
 
 import (
 	"fmt"
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/utils/octopus"
 	"github.com/flipped-aurora/gin-vue-admin/server/wsserver/protocol"
 	"github.com/gorilla/websocket"
+	"go.uber.org/zap"
 	"log"
 	"sync"
 	"time"
@@ -30,6 +32,7 @@ type Client struct {
 	UserName   string
 	Number     string
 	Addr       string
+	IsClose    bool
 	Conn       *websocket.Conn
 	Send       chan []byte
 	ClientLock sync.Mutex
@@ -42,6 +45,7 @@ func NewClient(hub *Hub, addr string, conn *websocket.Conn) (client *Client) {
 		UserName: "",
 		Number:   "",
 		Addr:     addr,
+		IsClose:  false,
 		Conn:     conn,
 		Send:     make(chan []byte, 256),
 	}
@@ -49,8 +53,9 @@ func NewClient(hub *Hub, addr string, conn *websocket.Conn) (client *Client) {
 }
 func (client *Client) Read() {
 	defer func() {
-		client.Hub.Disconnect <- client
 		_ = client.Conn.Close()
+		client.IsClose = true
+		client.Hub.Disconnect <- client
 	}()
 	client.Conn.SetReadLimit(maxMessageSize)
 	_ = client.Conn.SetReadDeadline(time.Now().Add(pingWait))
@@ -107,11 +112,23 @@ func (client *Client) SendMessage(data []byte) {
 		log.Printf("send data error: %v", err)
 		return
 	}
+	if !client.IsClose {
+		return
+	}
 	client.Send <- outData
+	global.GVA_LOG.Info("Send message", zap.String("message", string(data)),
+		zap.String("clientUsername", client.UserName),
+		zap.String("clientNumber", client.Number),
+		zap.String("clientAddr", client.Addr))
+
 }
 func (client *Client) Close() {
-	if client == nil {
+	if client.IsClose {
 		return
 	}
 	client.Send <- []byte(protocol.CloseSignal)
+	global.GVA_LOG.Info("Send Close signal",
+		zap.String("clientUsername", client.UserName),
+		zap.String("clientNumber", client.Number),
+		zap.String("clientAddr", client.Addr))
 }
