@@ -5,7 +5,7 @@
 
 <template>
   <div class="flex items-center mx-4 gap-4">
-    <el-tooltip
+    <!-- <el-tooltip
       class=""
       effect="dark"
       content="搜索"
@@ -25,33 +25,23 @@
       <el-icon class="w-8 h-8 shadow rounded-full border border-gray-200 dark:border-gray-600 cursor-pointer border-solid" @click="toggleSetting">
         <Setting />
       </el-icon>
-    </el-tooltip>
+    </el-tooltip> -->
 
-    <el-tooltip
-      class=""
-      effect="dark"
-      content="刷新"
-      placement="bottom"
-    >
+    <el-tooltip class="" effect="dark" content="刷新" placement="bottom">
       <el-icon
         class="w-8 h-8 shadow rounded-full border border-gray-200 dark:border-gray-600 cursor-pointer border-solid"
-        :class="showRefreshAnmite ? 'animate-spin' : ''"
-        @click="toggleRefresh"
-      >
+        :class="showRefreshAnmite ? 'animate-spin' : ''" @click="toggleRefresh">
         <Refresh />
       </el-icon>
     </el-tooltip>
-    <el-tooltip
-      class=""
-      effect="dark"
-      content="切换主题"
-      placement="bottom"
-      :disabled="appStore.theme === 'auto'"
-    >
-      <el-icon v-if="appStore.theme === 'dark'" class="w-8 h-8 shadow rounded-full border border-gray-600 cursor-pointer border-solid" @click="appStore.toggleTheme(false )">
+    <el-tooltip class="" effect="dark" content="切换主题" placement="bottom" :disabled="appStore.theme === 'auto'">
+      <el-icon v-if="appStore.theme === 'dark'"
+        class="w-8 h-8 shadow rounded-full border border-gray-600 cursor-pointer border-solid"
+        @click="appStore.toggleTheme(false)">
         <Sunny />
       </el-icon>
-      <el-icon v-else class="w-8 h-8 shadow rounded-full border border-gray-200 cursor-pointer border-solid" @click="appStore.toggleTheme(true)">
+      <el-icon v-else class="w-8 h-8 shadow rounded-full border border-gray-200 cursor-pointer border-solid"
+        @click="appStore.toggleTheme(true)">
         <Moon />
       </el-icon>
     </el-tooltip>
@@ -72,7 +62,7 @@ import CommandMenu from "@/components/commandMenu/index.vue";
 const appStore = useAppStore()
 const showSettingDrawer = ref(false)
 const showRefreshAnmite = ref(false)
-const toggleRefresh = () =>{
+const toggleRefresh = () => {
   showRefreshAnmite.value = true
   emitter.emit('reload')
   setTimeout(() => {
@@ -116,6 +106,4 @@ initPage();
 
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>
