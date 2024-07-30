@@ -101,7 +101,7 @@ import {
 // 全量引入格式化工具 请按需保留
 import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 defineOptions({
@@ -359,6 +359,13 @@ const enterDialog = async () => {
 const viewThread = (row) => {
   router.push({ name: 'cmtConversation', params: { threadId: row.ID } })
 }
+
+watch(() => route.path, (newPath, oldPath) => {
+  if (newPath !== oldPath) {
+    const title = route.meta.title;
+    router.push({ name: "Reload", params: { title } });
+  }
+})
 
 </script>
 
