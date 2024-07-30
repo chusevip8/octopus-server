@@ -11,7 +11,7 @@ type Device struct {
 	Brand      string         `json:"brand" form:"brand" gorm:"column:brand;comment:品牌;size:50;"`
 	OS         string         `json:"os" form:"os" gorm:"column:os;comment:系统;size:50;"`
 	Note       string         `json:"note" form:"note" gorm:"column:note;comment:备注;size:64;"`
-	Group      string         `json:"group"  form:"group" gorm:"column:group;comment:设备分组;size:10;"`
+	Group      string         `json:"group"  form:"group" gorm:"column:group_name;comment:设备分组;size:20;"`
 	Status     int            `json:"status" gorm:"column:status;comment:状态;default:2;"`
 	LoginToken string         `json:"loginToken" form:"loginToken" gorm:"column:login_token;comment:登录Token;size:128;"`
 	Username   string         `json:"userName" gorm:"index;column:username;comment:关联用户登录名;not null;"`
