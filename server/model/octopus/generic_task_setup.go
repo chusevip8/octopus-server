@@ -9,6 +9,7 @@ import (
 // 通用任务设置 结构体  GenericTaskSetup
 type GenericTaskSetup struct {
 	global.GVA_MODEL
+	AppName   string     `json:"appName" form:"appName" gorm:"column:app_name;comment:应用名称;size:20;" binding:"required"`        //应用名称
 	TaskTitle string     `json:"taskTitle" form:"taskTitle" gorm:"column:task_title;comment:任务标题;size:128;" binding:"required"` //任务标题
 	ScriptId  uint       `json:"scriptId" form:"scriptId" gorm:"column:script_id;comment:脚本Id;" binding:"required"`             //脚本Id
 	StartAt   *time.Time `json:"startAt" form:"startAt" gorm:"column:start_at;comment:启动时间;"`                                   //启动时间

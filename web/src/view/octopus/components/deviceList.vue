@@ -6,6 +6,9 @@
                 <el-form-item label="编号" prop="number">
                     <el-input v-model="searchInfo.number" placeholder="搜索条件" />
                 </el-form-item>
+                <el-form-item label="分组" prop="group">
+                    <el-input v-model="searchInfo.group" placeholder="搜索条件" />
+                </el-form-item>
                 <el-form-item label="备注" prop="note">
                     <el-input v-model="searchInfo.note" placeholder="搜索条件" />
                 </el-form-item>
@@ -26,12 +29,14 @@
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" />
                 <el-table-column align="center" label="编号" prop="number" width="120" />
-                <el-table-column align="center" label="备注" prop="note" min-width="240" />
+                <el-table-column align="center" label="分组" prop="group" width="160" />
                 <el-table-column align="center" label="状态" width="120">
                     <template #default="scope">
                         <span>{{ statusFilter(scope.row.status) }}</span>
                     </template>
                 </el-table-column>
+                <el-table-column align="center" label="备注" prop="note" min-width="200" />
+
                 <el-table-column align="center" label="操作" fixed="right" width="120">
                     <template #default="scope">
                         <el-button type="primary" link icon="Select" @click="rowSelected(scope.row)">选择</el-button>
