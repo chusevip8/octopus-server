@@ -12,4 +12,5 @@ type ApiGroup struct {
 	TaskParamsApi
 	IntervalTaskSetupApi
 	IntervalTaskApi
+	GenericTaskSetupApi
 }
