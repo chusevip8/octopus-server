@@ -4,7 +4,7 @@
       <el-form ref="elSearchFormRef" :inline="true" :model="searchInfo" class="demo-form-inline" :rules="searchRule"
         @keyup.enter="onSubmit">
         <el-form-item label="任务标题" prop="taskTitle">
-          <el-input v-model="searchInfo.title" placeholder="搜索条件" />
+          <el-input v-model="searchInfo.taskTitle" placeholder="搜索条件" />
         </el-form-item>
         <template v-if="showAllQuery">
           <!-- 将需要控制显示状态的查询条件添加到此范围内 -->
@@ -35,9 +35,11 @@
         </el-table-column>
         <el-table-column align="center" label="操作" fixed="right" width="240">
           <template #default="scope">
+            <el-button type="primary" link icon="Cellphone" class="table-button"
+              @click="openTaskManager(scope.row)">管理任务</el-button>
             <el-button type="primary" link icon="edit" class="table-button"
               @click="updateGenericTaskSetupFunc(scope.row)">修改</el-button>
-            <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
+
           </template>
         </el-table-column>
       </el-table>

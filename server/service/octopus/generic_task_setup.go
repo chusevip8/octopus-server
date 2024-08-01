@@ -70,7 +70,7 @@ func (genericTaskSetupService *GenericTaskSetupService) GetGenericTaskSetupInfoL
 	var genericTaskSetups []octopus.GenericTaskSetup
 	// 如果有条件搜索 下方会自动创建搜索语句
 	if info.TaskTitle != "" {
-		db = db.Where("task_title LIKE ?", "%"+info.Keyword+"%")
+		db = db.Where("task_title LIKE ?", "%"+info.TaskTitle+"%")
 	}
 	err = db.Count(&total).Error
 	if err != nil {
