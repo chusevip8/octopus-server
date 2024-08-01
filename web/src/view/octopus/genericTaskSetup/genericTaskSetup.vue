@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading.fullscreen.lock="fullscreenLoading">
     <div class="gva-search-box">
       <el-form ref="elSearchFormRef" :inline="true" :model="searchInfo" class="demo-form-inline" :rules="searchRule"
         @keyup.enter="onSubmit">
@@ -405,7 +405,9 @@ const uploadSuccess = (res) => {
       type: 'success',
       message: '上传成功'
     })
+    getTableData()
   }
+  fullscreenLoading.value = false
 }
 
 </script>
