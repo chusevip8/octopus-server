@@ -28,18 +28,24 @@
       <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-        <el-table-column align="center" label="任务标题" prop="taskTitle" min-width="180" />
+        <el-table-column align="center" label="任务标题" prop="taskTitle" width="240" />
         <el-table-column align="center" label="脚本Id" prop="scriptId" width="120" />
-        <el-table-column align="center" label="启动时间" prop="startAt" width="240">
+        <el-table-column align="center" label="数据文件" prop="dataFile" min-width="180" />
+        <el-table-column align="center" label="启动时间" prop="startAt" width="180">
           <template #default="scope">{{ formatDate(scope.row.startAt) }}</template>
         </el-table-column>
-        <el-table-column align="center" label="操作" fixed="right" width="240">
+        <el-table-column align="center" label="操作" fixed="right" min-width="200">
           <template #default="scope">
-            <el-button type="primary" link icon="Cellphone" class="table-button"
-              @click="openTaskManager(scope.row)">管理任务</el-button>
-            <el-button type="primary" link icon="edit" class="table-button"
-              @click="updateGenericTaskSetupFunc(scope.row)">修改</el-button>
-
+            <div style="display: flex;justify-content: center; align-items: center;">
+              <el-upload :action="`${getBaseUrl()}/fileUploadAndDownload/upload`" :before-upload="checkFile"
+                :on-error="uploadError" :on-success="uploadSuccess" :show-file-list="false" style="display: flex;">
+                <el-button type="primary" link icon="Upload" class="table-button">上传数据</el-button>
+              </el-upload>
+              <el-button type="primary" link icon="Cellphone" class="table-button"
+                @click="openTaskManager(scope.row)">管理任务</el-button>
+              <el-button type="primary" link icon="edit" class="table-button"
+                @click="updateGenericTaskSetupFunc(scope.row)">修改</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -89,7 +95,7 @@ import {
 } from '@/api/octopus/genericTaskSetup'
 
 // 全量引入格式化工具 请按需保留
-import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
+import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile, getBaseUrl } from '@/utils/format'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
@@ -191,6 +197,9 @@ const onReset = () => {
 }
 const openTaskManager = (row) => {
   router.push({ name: 'intervalTask', params: { appName: row.appName, mainTaskType: 'generic', taskSetupId: row.ID, scriptId: row.scriptId } })
+}
+const uploadData = (row) => {
+
 }
 // 搜索
 const onSubmit = () => {
