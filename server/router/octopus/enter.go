@@ -13,4 +13,5 @@ type RouterGroup struct {
 	IntervalTaskSetupRouter
 	IntervalTaskRouter
 	GenericTaskSetupRouter
+	DataFileRouter
 }

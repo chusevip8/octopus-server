@@ -31,6 +31,7 @@ func initBizRouter(routers ...*gin.RouterGroup) {
 		octopusRouter.InitIntervalTaskSetupRouter(privateGroup, publicGroup)
 		octopusRouter.InitIntervalTaskRouter(privateGroup, publicGroup)
 		octopusRouter.InitGenericTaskSetupRouter(privateGroup, publicGroup)
+		octopusRouter.InitDataFileRouter(privateGroup, publicGroup)
 
 	}
 

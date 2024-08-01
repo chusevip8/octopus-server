@@ -37,8 +37,9 @@
         <el-table-column align="center" label="操作" fixed="right" min-width="200">
           <template #default="scope">
             <div style="display: flex;justify-content: center; align-items: center;">
-              <el-upload :action="`${getBaseUrl()}/fileUploadAndDownload/upload`" :before-upload="checkFile"
-                :on-error="uploadError" :on-success="uploadSuccess" :show-file-list="false" style="display: flex;">
+              <el-upload :action="`${getBaseUrl()}/dataFile/upload`" :before-upload="checkFile" :on-error="uploadError"
+                :on-success="uploadSuccess" :show-file-list="false" :data="{ id: scope.row.ID }" class="upload-btn"
+                style="display: flex;">
                 <el-button type="primary" link icon="Upload" class="table-button">上传数据</el-button>
               </el-upload>
               <el-button type="primary" link icon="Cellphone" class="table-button"
@@ -370,6 +371,41 @@ const enterDialog = async () => {
       getTableData()
     }
   })
+}
+
+const fullscreenLoading = ref(false)
+const checkFile = (file) => {
+  fullscreenLoading.value = true
+  const isLt2M = file.size / 1024 / 1024 < 2 // 2MB, @todo 应支持项目中设置
+  let pass = true
+  if (file.type !== 'text/plain') {
+    ElMessage.error('只能上传txt格式的数据!')
+    fullscreenLoading.value = false
+    pass = false
+  }
+  if (!isLt2M) {
+    ElMessage.error('上传数据大小不能超过 2MB')
+    fullscreenLoading.value = false
+    pass = false
+  }
+  console.log('upload file check result: ', pass)
+  return pass
+}
+const uploadError = () => {
+  ElMessage({
+    type: 'error',
+    message: '上传失败'
+  })
+  fullscreenLoading.value = false
+}
+const uploadSuccess = (res) => {
+  const { data } = res
+  if (data.file) {
+    ElMessage({
+      type: 'success',
+      message: '上传成功'
+    })
+  }
 }
 
 </script>
