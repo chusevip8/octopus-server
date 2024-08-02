@@ -14,4 +14,5 @@ type ServiceGroup struct {
 	IntervalTaskService
 	GenericTaskSetupService
 	DataFileService
+	GenericTaskService
 }

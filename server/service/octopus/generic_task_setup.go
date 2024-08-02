@@ -9,6 +9,8 @@ import (
 
 type GenericTaskSetupService struct{}
 
+var GenericTaskSetupServiceApp = new(GenericTaskSetupService)
+
 // CreateGenericTaskSetup 创建通用任务设置记录
 // Author [piexlmax](https://github.com/piexlmax)
 func (genericTaskSetupService *GenericTaskSetupService) CreateGenericTaskSetup(genericTaskSetup *octopus.GenericTaskSetup) (err error) {

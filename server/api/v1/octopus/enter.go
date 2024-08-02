@@ -14,4 +14,5 @@ type ApiGroup struct {
 	IntervalTaskApi
 	GenericTaskSetupApi
 	DataFileApi
+	GenericTaskApi
 }
