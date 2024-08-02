@@ -13,6 +13,8 @@ import (
 type DeviceService struct {
 }
 
+var DeviceServiceApp = new(DeviceService)
+
 func (deviceService *DeviceService) RegisterDevice(d octopus.Device) (device octopus.Device, err error) {
 	var user system.SysUser
 	if errors.Is(global.GVA_DB.Model(&system.SysUser{}).Where("username = ?", d.Username).First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
@@ -75,8 +77,15 @@ func (deviceService *DeviceService) GetDeviceByToken(token string) (device octop
 	return
 }
 
-func (deviceService *DeviceService) GetReadyDeviceListByUserId(userID uint) (list []octopus.Device, err error) {
-
+func (deviceService *DeviceService) GetReadyDeviceListByUserId(userid uint, deviceGroup string) (list []octopus.Device, err error) {
+	var devices []octopus.Device
+	db := global.GVA_DB.Joins("JOIN sys_users ON sys_users.username = oct_device.username").
+		Where("sys_users.id = ? AND oct_device.status = ?", userid, 1)
+	if deviceGroup != "" {
+		db = db.Where("oct_device.group_name = ?", deviceGroup)
+	}
+	err = db.Find(&devices).Error
+	return devices, err
 }
 
 func (deviceService *DeviceService) GetDeviceInfoList(info octopusReq.DeviceSearch) (list []octopus.Device, total int64, err error) {

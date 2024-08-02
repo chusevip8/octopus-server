@@ -9,31 +9,65 @@ import (
 type GenericTaskService struct{}
 
 func (genericTaskService *GenericTaskService) CreateGenericTask(genericTask *octopusReq.GenericTask) (err error) {
-
 	var genericTaskSetup octopus.GenericTaskSetup
 
+	// 获取任务设置
 	genericTaskSetup, err = GenericTaskSetupServiceApp.GetGenericTaskSetup(strconv.Itoa(int(genericTask.TaskSetupId)))
 	if err != nil {
 		return err
 	}
-	var taskParams octopus.TaskParams
-	taskParams.TaskSetupId = genericTaskSetup.ID
-	taskParams.CreatedBy = genericTaskSetup.CreatedBy
-	taskParams.MainTaskType = genericTask.MainTaskType
-	taskParams.SubTaskType = genericTask.SubTaskType
-	taskParams.Params = genericTaskSetup.Params
-	taskParams.ScriptId = genericTaskSetup.ScriptId
-	err = TaskParamsServiceApp.CreateTaskParams(&taskParams)
-	if err != nil {
-		return err
+
+	// 任务参数通用部分填充
+	fillTaskParams := func() (octopus.TaskParams, error) {
+		taskParams := octopus.TaskParams{
+			TaskSetupId:  genericTaskSetup.ID,
+			CreatedBy:    genericTaskSetup.CreatedBy,
+			MainTaskType: genericTask.MainTaskType,
+			SubTaskType:  genericTask.SubTaskType,
+			Params:       genericTaskSetup.Params,
+			ScriptId:     genericTaskSetup.ScriptId,
+		}
+		err := TaskParamsServiceApp.CreateTaskParams(&taskParams)
+		return taskParams, err
 	}
-	var task octopus.Task
-	task.TaskParamsId = taskParams.ID
-	task.AppName = genericTaskSetup.AppName
-	task.DeviceId = genericTask.DeviceId
-	task.CreatedBy = genericTaskSetup.CreatedBy
-	task.Status = 1
-	task.Error = ""
-	err = TaskServiceApp.CreateTaskWithoutNotify(&task)
+
+	// 创建任务
+	createTask := func(deviceId uint, taskParamsId uint) error {
+		task := octopus.Task{
+			TaskParamsId: taskParamsId,
+			AppName:      genericTaskSetup.AppName,
+			DeviceId:     deviceId,
+			CreatedBy:    genericTaskSetup.CreatedBy,
+			Status:       1,
+			Error:        "",
+		}
+		return TaskServiceApp.CreateTaskWithoutNotify(&task)
+	}
+
+	if genericTask.Batch {
+		// 批量任务创建
+		devices, err := DeviceServiceApp.GetReadyDeviceListByUserId(genericTask.CreatedBy, genericTask.DeviceGroup)
+		if err != nil {
+			return err
+		}
+
+		for _, device := range devices {
+			taskParams, err := fillTaskParams()
+			if err != nil {
+				return err
+			}
+			if err = createTask(device.ID, taskParams.ID); err != nil {
+				return err
+			}
+		}
+	} else {
+		// 单个任务创建
+		taskParams, err := fillTaskParams()
+		if err != nil {
+			return err
+		}
+		err = createTask(genericTask.DeviceId, taskParams.ID)
+	}
+
 	return err
 }
