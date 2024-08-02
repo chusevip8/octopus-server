@@ -90,8 +90,8 @@ import {
 } from '@/api/octopus/task'
 
 import {
-    createIntervalTask
-} from '@/api/octopus/intervalTask'
+    createGenericTask
+} from '@/api/octopus/genericTask'
 
 // 全量引入格式化工具 请按需保留
 import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile, getBaseUrl } from '@/utils/format'
@@ -115,6 +115,7 @@ const showAllQuery = ref(false)
 const formData = ref({
     taskSetupId: undefined,
     mainTaskType: undefined,
+    subTaskType: undefined,
     deviceId: undefined,
     status: undefined,
     error: '',
@@ -284,6 +285,7 @@ const closeDialog = () => {
     formData.value = {
         taskSetupId: undefined,
         mainTaskType: undefined,
+        subTaskType: undefined,
         deviceId: undefined,
         status: undefined,
         error: '',
@@ -292,6 +294,7 @@ const closeDialog = () => {
 const saveTask = async (params) => {
     formData.value.deviceId = params.deviceId
     formData.value.mainTaskType = route.params.mainTaskType
+    formData.value.subTaskType = route.params.subTaskType
     formData.value.taskSetupId = parseInt(route.params.taskSetupId)
 
     formData.value.status = 1
@@ -316,7 +319,7 @@ const saveTask = async (params) => {
                 message: '该设备已添加'
             })
         } else {
-            let res = await createIntervalTask(formData.value)
+            let res = await createGenericTask(formData.value)
             if (res.code === 0) {
                 ElMessage({
                     type: 'success',

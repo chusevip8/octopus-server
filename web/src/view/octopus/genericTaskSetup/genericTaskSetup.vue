@@ -196,8 +196,7 @@ const onReset = () => {
 }
 const openTaskManager = (row) => {
   const subTaskType = row.startAt !== null ? 'timer' : 'standard'
-  console.log(subTaskType)
-  router.push({ name: 'genericTask', params: { subTaskType: subTaskType, taskSetupId: row.ID, scriptId: row.scriptId } })
+  router.push({ name: 'genericTask', params: { mainTaskType: 'generic', subTaskType: subTaskType, taskSetupId: row.ID, scriptId: row.scriptId } })
 }
 const uploadData = (row) => {
 
