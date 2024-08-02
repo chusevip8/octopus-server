@@ -16,7 +16,7 @@ var dataFileService = service.ServiceGroupApp.OctopusServiceGroup.DataFileServic
 
 func (dataFileApi *DataFileApi) UploadFile(c *gin.Context) {
 	var file example.ExaFileUploadAndDownload
-	setupId := c.Request.FormValue("id")
+	setupId := c.Request.FormValue("setupId")
 	_, header, err := c.Request.FormFile("file")
 	if err != nil {
 		global.GVA_LOG.Error("接收文件失败!", zap.Error(err))

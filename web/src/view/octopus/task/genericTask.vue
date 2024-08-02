@@ -29,13 +29,17 @@
         </div>
         <div class="gva-table-box">
             <div class="gva-btn-list">
-                <el-button type="primary" icon="plus" @click="openDialog">添加</el-button>
+                <el-button type="primary" icon="plus" @click="openDialog" style="margin-right: 50px;">添加</el-button>
+                <el-upload :action="`${getBaseUrl()}/dataFile/upload`" :before-upload="checkFile"
+                    :on-error="uploadError" :on-success="uploadSuccess" :show-file-list="false"
+                    :data="{ setupId: route.params.taskSetupId }" class="upload-btn" style="display: flex;">
+                    <el-button type="primary" icon="Upload">上传数据</el-button>
+                </el-upload>
             </div>
             <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" />
                 <el-table-column align="center" label="设备编号" prop="device.number" width="120" />
-                <el-table-column align="center" label="设备备注" prop="device.note" width="360" />
                 <el-table-column align="center" label="任务状态" width="120">
                     <template #default="scope">
                         <span>{{ taskStatusFilter(scope.row.status) }}</span>
@@ -46,6 +50,7 @@
                         <span>{{ deviceStatusFilter(scope.row.device.status) }}</span>
                     </template>
                 </el-table-column>
+                <el-table-column align="center" label="设备备注" prop="device.note" width="240" />
                 <el-table-column align="center" label="错误信息" prop="error" min-width="120" />
                 <el-table-column align="center" label="操作" fixed="right" min-width="240">
                     <template #default="scope">
@@ -89,7 +94,7 @@ import {
 } from '@/api/octopus/intervalTask'
 
 // 全量引入格式化工具 请按需保留
-import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
+import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile, getBaseUrl } from '@/utils/format'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
 import { DeviceList } from '@/view/octopus/components'

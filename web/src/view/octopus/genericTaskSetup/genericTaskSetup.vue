@@ -195,7 +195,7 @@ const onReset = () => {
   getTableData()
 }
 const openTaskManager = (row) => {
-  router.push({ name: 'intervalTask', params: { appName: row.appName, mainTaskType: 'generic', taskSetupId: row.ID, scriptId: row.scriptId } })
+  router.push({ name: 'genericTask', params: { appName: row.appName, mainTaskType: 'generic', taskSetupId: row.ID, scriptId: row.scriptId } })
 }
 const uploadData = (row) => {
 
