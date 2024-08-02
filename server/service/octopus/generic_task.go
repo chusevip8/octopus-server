@@ -34,6 +34,6 @@ func (genericTaskService *GenericTaskService) CreateGenericTask(genericTask *oct
 	task.CreatedBy = genericTaskSetup.CreatedBy
 	task.Status = 1
 	task.Error = ""
-	err = TaskServiceApp.CreateTask(&task)
+	err = TaskServiceApp.CreateTaskWithoutNotify(&task)
 	return err
 }

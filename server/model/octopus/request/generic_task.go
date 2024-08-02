@@ -1,6 +1,8 @@
 package request
 
 type GenericTask struct {
+	Batch        bool   `json:"batch" form:"batch"`
+	DeviceGroup  string `json:"deviceGroup" form:"deviceGroup"`
 	TaskSetupId  uint   `json:"taskSetupId" form:"taskSetupId"`
 	MainTaskType string `json:"mainTaskType" form:"mainTaskType"`
 	SubTaskType  string `json:"subTaskType" form:"subTaskType"`

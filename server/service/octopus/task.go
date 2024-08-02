@@ -24,6 +24,11 @@ func (taskService *TaskService) CreateTask(task *octopus.Task) (err error) {
 	return err
 }
 
+func (taskService *TaskService) CreateTaskWithoutNotify(task *octopus.Task) (err error) {
+	err = global.GVA_DB.Create(task).Error
+	return err
+}
+
 // DeleteTask 删除任务记录
 // Author [piexlmax](https://github.com/piexlmax)
 //

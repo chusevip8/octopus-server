@@ -79,7 +79,7 @@ const rowSelected = (row) => {
     emit('row-selected', { deviceId: row.ID, deviceStatus: row.status })
 }
 const groupSelected = (group) => {
-    emit('group-selected', { group: group })
+    emit('group-selected', group)
 }
 // 重置
 const onReset = () => {

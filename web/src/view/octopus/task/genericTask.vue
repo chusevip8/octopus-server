@@ -76,7 +76,7 @@
                     </div>
                 </div>
             </template>
-            <device-list @row-selected="saveTask" />
+            <device-list @row-selected="saveTask" @group-selected="batchSaveTask" />
         </el-drawer>
     </div>
 </template>
@@ -113,6 +113,8 @@ const showAllQuery = ref(false)
 
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
+    batch: undefined,
+    deviceGroup: undefined,
     taskSetupId: undefined,
     mainTaskType: undefined,
     subTaskType: undefined,
@@ -283,6 +285,8 @@ const openDialog = () => {
 const closeDialog = () => {
     dialogFormVisible.value = false
     formData.value = {
+        batch: undefined,
+        deviceGroup: undefined,
         taskSetupId: undefined,
         mainTaskType: undefined,
         subTaskType: undefined,
@@ -292,6 +296,7 @@ const closeDialog = () => {
     }
 }
 const saveTask = async (params) => {
+    formData.value.batch = false
     formData.value.deviceId = params.deviceId
     formData.value.mainTaskType = route.params.mainTaskType
     formData.value.subTaskType = route.params.subTaskType
@@ -312,24 +317,46 @@ const saveTask = async (params) => {
             message: '不能添加禁用设备'
         })
     } else {
-        let res = await findTaskByDeviceId({ taskSetupId: parseInt(route.params.taskSetupId), deviceId: params.deviceId, mainTaskType: route.params.mainTaskType })
-        if (res.data !== null) {
+        let res = await createGenericTask(formData.value)
+        if (res.code === 0) {
             ElMessage({
-                type: 'error',
-                message: '该设备已添加'
+                type: 'success',
+                message: '创建/更改成功'
             })
-        } else {
-            let res = await createGenericTask(formData.value)
-            if (res.code === 0) {
-                ElMessage({
-                    type: 'success',
-                    message: '创建/更改成功'
-                })
-                getTableData()
-            }
+            getTableData()
         }
     }
 
+}
+
+const batchSaveTask = (group) => {
+    const message = (typeof group === 'undefined' || group === null || group === '') ? '未选择分组，确定添加所有设备吗?' : '确定添加分组[' + group + ']所有设备吗？'
+    ElMessageBox.confirm(message, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        batchSaveTaskFunc(group)
+    })
+}
+const batchSaveTaskFunc = async (group) => {
+    formData.value.batch = true
+    formData.value.deviceGroup = group
+    formData.value.deviceId = 0
+    formData.value.mainTaskType = route.params.mainTaskType
+    formData.value.subTaskType = route.params.subTaskType
+    formData.value.taskSetupId = parseInt(route.params.taskSetupId)
+
+    formData.value.status = 1
+
+    let res = await createGenericTask(formData.value)
+    if (res.code === 0) {
+        ElMessage({
+            type: 'success',
+            message: '创建/更改成功'
+        })
+        getTableData()
+    }
 }
 
 const deleteRow = (row) => {
