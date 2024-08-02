@@ -69,7 +69,7 @@
           </div>
         </div>
       </template>
-      <device-list @row-selected="saveTask" />
+      <device-list @row-selected="saveTask" @group-selected="batchSaveTask" />
     </el-drawer>
   </div>
 </template>
@@ -328,6 +328,13 @@ const saveTask = async (params) => {
     }
   }
 
+}
+
+const batchSaveTask = (group) => {
+  ElMessage({
+    type: 'warning',
+    message: '暂不支持分组添加'
+  })
 }
 
 const deleteRow = (row) => {

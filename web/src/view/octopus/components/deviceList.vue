@@ -25,6 +25,9 @@
             </el-form>
         </div>
         <div class="gva-table-box">
+            <div class="gva-btn-list">
+                <el-button type="primary" icon="plus" @click="groupSelected(searchInfo.group)">添加分组</el-button>
+            </div>
             <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" />
@@ -60,7 +63,7 @@ import {
 import { ref } from 'vue'
 import { deviceStatusOptions } from '@/view/octopus/utils/consts'
 
-const emit = defineEmits(['row-selected'])
+const emit = defineEmits(['row-selected', 'group-selected'])
 
 const elSearchFormRef = ref()
 
@@ -75,7 +78,9 @@ const searchInfo = ref({})
 const rowSelected = (row) => {
     emit('row-selected', { deviceId: row.ID, deviceStatus: row.status })
 }
-
+const groupSelected = (group) => {
+    emit('group-selected', { group: group })
+}
 // 重置
 const onReset = () => {
     searchInfo.value = {}
