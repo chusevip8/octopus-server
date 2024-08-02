@@ -75,6 +75,10 @@ func (deviceService *DeviceService) GetDeviceByToken(token string) (device octop
 	return
 }
 
+func (deviceService *DeviceService) GetReadyDeviceListByUserId(userID uint) (list []octopus.Device, err error) {
+
+}
+
 func (deviceService *DeviceService) GetDeviceInfoList(info octopusReq.DeviceSearch) (list []octopus.Device, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
