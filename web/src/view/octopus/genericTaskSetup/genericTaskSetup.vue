@@ -1,5 +1,5 @@
 <template>
-  <div v-loading.fullscreen.lock="fullscreenLoading">
+  <div>
     <div class="gva-search-box">
       <el-form ref="elSearchFormRef" :inline="true" :model="searchInfo" class="demo-form-inline" :rules="searchRule"
         @keyup.enter="onSubmit">
@@ -30,23 +30,17 @@
         <el-table-column type="selection" width="55" />
         <el-table-column align="center" label="任务标题" prop="taskTitle" width="240" />
         <el-table-column align="center" label="脚本Id" prop="scriptId" width="120" />
-        <el-table-column align="center" label="数据文件" prop="dataFile" min-width="180" />
+        <el-table-column align="center" label="数据文件" prop="dataFile" width="180" />
+        <el-table-column align="center" label="脚本参数" prop="params" min-width="240" />
         <el-table-column align="center" label="启动时间" prop="startAt" width="180">
           <template #default="scope">{{ formatDate(scope.row.startAt) }}</template>
         </el-table-column>
         <el-table-column align="center" label="操作" fixed="right" min-width="200">
           <template #default="scope">
-            <div style="display: flex;justify-content: center; align-items: center;">
-              <el-upload :action="`${getBaseUrl()}/dataFile/upload`" :before-upload="checkFile" :on-error="uploadError"
-                :on-success="uploadSuccess" :show-file-list="false" :data="{ id: scope.row.ID }" class="upload-btn"
-                style="display: flex;">
-                <el-button type="primary" link icon="Upload" class="table-button">上传数据</el-button>
-              </el-upload>
-              <el-button type="primary" link icon="Cellphone" class="table-button"
-                @click="openTaskManager(scope.row)">管理任务</el-button>
-              <el-button type="primary" link icon="edit" class="table-button"
-                @click="updateGenericTaskSetupFunc(scope.row)">修改</el-button>
-            </div>
+            <el-button type="primary" link icon="Cellphone" class="table-button"
+              @click="openTaskManager(scope.row)">管理任务</el-button>
+            <el-button type="primary" link icon="edit" class="table-button"
+              @click="updateGenericTaskSetupFunc(scope.row)">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -79,6 +73,9 @@
         <el-form-item label="启动时间:" prop="startAt">
           <el-date-picker v-model="formData.startAt" type="datetime" style="width:100%" placeholder="选择日期"
             :clearable="true" />
+        </el-form-item>
+        <el-form-item label="脚本参数:" prop="params">
+          <el-input v-model="formData.params" :rows="20" type="textarea" />
         </el-form-item>
       </el-form>
     </el-drawer>
@@ -115,6 +112,7 @@ const showAllQuery = ref(false)
 const formData = ref({
   appName: '',
   taskTitle: '',
+  params: '',
   scriptId: undefined,
   startAt: new Date(),
 })
@@ -342,6 +340,7 @@ const closeDialog = () => {
   formData.value = {
     appName: '',
     taskTitle: '',
+    params: '',
     scriptId: undefined,
     startAt: new Date(),
   }

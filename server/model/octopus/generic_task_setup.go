@@ -15,6 +15,7 @@ type GenericTaskSetup struct {
 	StartAt      *time.Time `json:"startAt" form:"startAt" gorm:"column:start_at;comment:启动时间;"`                                   //启动时间
 	DataFile     string     `json:"dataFile" form:"dataFile" gorm:"column:data_file;comment:数据文件;size:128;"`                       //数据文件
 	DataFilePath string     `json:"dataFilePath" form:"dataFilePath" gorm:"column:data_file_path;comment:数据文件路径;"`                 //数据文件路径
+	Params       string     `json:"params" form:"params" gorm:"column:params;comment:脚本参数;type:text;"`                             //脚本参数
 	CreatedBy    uint       `gorm:"column:created_by;comment:创建者"`
 	UpdatedBy    uint       `gorm:"column:updated_by;comment:更新者"`
 	DeletedBy    uint       `gorm:"column:deleted_by;comment:删除者"`
