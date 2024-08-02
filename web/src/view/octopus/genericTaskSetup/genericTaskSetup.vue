@@ -74,7 +74,7 @@
           <el-date-picker v-model="formData.startAt" type="datetime" style="width:100%" placeholder="选择日期"
             :clearable="true" />
         </el-form-item>
-        <el-form-item label="脚本参数:" prop="params">
+        <el-form-item label="脚本参数:（绑定数据后修改参数不生效）" prop="params">
           <el-input v-model="formData.params" :rows="20" type="textarea" />
         </el-form-item>
       </el-form>
@@ -195,7 +195,9 @@ const onReset = () => {
   getTableData()
 }
 const openTaskManager = (row) => {
-  router.push({ name: 'genericTask', params: { appName: row.appName, mainTaskType: 'generic', taskSetupId: row.ID, scriptId: row.scriptId } })
+  const subTaskType = row.startAt !== null ? 'timer' : 'standard'
+  console.log(subTaskType)
+  router.push({ name: 'genericTask', params: { subTaskType: subTaskType, taskSetupId: row.ID, scriptId: row.scriptId } })
 }
 const uploadData = (row) => {
 
