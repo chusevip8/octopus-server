@@ -114,7 +114,7 @@ const formData = ref({
   taskTitle: '',
   params: '',
   scriptId: undefined,
-  startAt: new Date(),
+  startAt: undefined,
 })
 
 
@@ -343,7 +343,7 @@ const closeDialog = () => {
     taskTitle: '',
     params: '',
     scriptId: undefined,
-    startAt: new Date(),
+    startAt: undefined,
   }
 }
 // 弹窗确定
