@@ -32,7 +32,7 @@
         <el-table-column align="center" label="脚本Id" prop="scriptId" width="120" />
         <el-table-column align="center" label="数据文件" prop="dataFile" width="180">
           <template #default="scope">
-            <a style="color: blue; cursor: pointer;" @click="openDataFile(scope.row)">
+            <a style="color: blue; cursor: pointer;" @click="openBindDataDialog(scope.row)">
               {{ scope.row.dataFile }}
             </a>
           </template>
@@ -94,6 +94,18 @@
         </el-form-item>
       </el-form>
     </el-drawer>
+    <el-drawer destroy-on-close size="1000" v-model="bindDataDialogVisible" :show-close="false"
+      :before-close="closeBindDataDialog">
+      <template #header>
+        <div class="flex justify-between items-center">
+          <span class="text-lg">数据</span>
+          <div>
+            <el-button type="primary" @click="closeBindDataDialog">关 闭</el-button>
+          </div>
+        </div>
+      </template>
+      <bind-data-list></bind-data-list>
+    </el-drawer>
   </div>
 </template>
 
@@ -112,6 +124,8 @@ import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, R
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+
+import { BindDataList } from '@/view/octopus/taskBindData'
 
 defineOptions({
   name: 'GenericTaskSetup'
@@ -215,9 +229,7 @@ const openTaskManager = (row) => {
   const subTaskType = row.startAt !== null ? 'timer' : 'standard'
   router.push({ name: 'genericTask', params: { mainTaskType: 'generic', subTaskType: subTaskType, taskSetupId: row.ID, scriptId: row.scriptId } })
 }
-const uploadData = (row) => {
 
-}
 // 搜索
 const onSubmit = () => {
   elSearchFormRef.value?.validate(async (valid) => {
@@ -345,6 +357,16 @@ const deleteGenericTaskSetupFunc = async (row) => {
 
 // 弹窗控制标记
 const dialogFormVisible = ref(false)
+const bindDataDialogVisible = ref(false)
+
+
+const openBindDataDialog = (row) => {
+  bindDataDialogVisible.value = true
+}
+
+const closeBindDataDialog = () => {
+  bindDataDialogVisible.value = false
+}
 
 // 打开弹窗
 const openDialog = () => {
@@ -428,10 +450,6 @@ const uploadSuccess = (res) => {
     getTableData()
   }
   fullscreenLoading.value = false
-}
-
-const openDataFile = (row) => {
-  console.log(row)
 }
 
 </script>

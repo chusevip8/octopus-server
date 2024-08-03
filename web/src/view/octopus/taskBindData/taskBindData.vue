@@ -8,35 +8,32 @@
           <!-- 将需要控制显示状态的查询条件添加到此范围内 -->
         </template>
 
-        <el-form-item>
+        <!-- <el-form-item>
           <el-button type="primary" icon="search" @click="onSubmit">查询</el-button>
           <el-button icon="refresh" @click="onReset">重置</el-button>
           <el-button link type="primary" icon="arrow-down" @click="showAllQuery = true"
             v-if="!showAllQuery">展开</el-button>
           <el-button link type="primary" icon="arrow-up" @click="showAllQuery = false" v-else>收起</el-button>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
     </div>
     <div class="gva-table-box">
       <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-
-        <el-table-column align="left" label="日期" prop="createdAt" width="180">
-          <template #default="scope">{{ formatDate(scope.row.CreatedAt) }}</template>
-        </el-table-column>
-
-        <el-table-column align="left" label="任务设置Id" prop="taskSetupId" width="120" />
-        <el-table-column align="left" label="主任务类型" prop="mainTaskType" width="120" />
-        <el-table-column align="left" label="状态" prop="status" width="120" />
-        <el-table-column align="left" label="字段1" prop="item1" width="120" />
-        <el-table-column align="left" label="操作" fixed="right" min-width="240">
+        <el-table-column align="center" label="状态" prop="status" width="120" />
+        <el-table-column align="center" label="字段1" prop="item1" width="176" />
+        <el-table-column align="center" label="字段2" prop="item2" width="176" />
+        <el-table-column align="center" label="字段3" prop="item3" width="176" />
+        <el-table-column align="center" label="字段4" prop="item4" width="176" />
+        <el-table-column align="center" label="字段5" prop="item5" width="176" />
+        <!-- <el-table-column align="left" label="操作" fixed="right" min-width="240">
           <template #default="scope">
             <el-button type="primary" link icon="edit" class="table-button"
               @click="updateTaskBindDataFunc(scope.row)">变更</el-button>
             <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <div class="gva-pagination">
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :current-page="page" :page-size="pageSize"
@@ -88,9 +85,9 @@ import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, R
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
 
-defineOptions({
-  name: 'TaskBindData'
-})
+// defineOptions({
+//   name: 'TaskBindData'
+// })
 
 // 控制更多查询条件显示/隐藏状态
 const showAllQuery = ref(false)
