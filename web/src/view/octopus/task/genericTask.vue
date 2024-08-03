@@ -312,16 +312,23 @@ const saveTask = async (params) => {
             message: '不能添加禁用设备'
         })
     } else {
-        let res = await createGenericTask(formData.value)
-        if (res.code === 0) {
+        let res = await findTaskByDeviceId({ taskSetupId: parseInt(route.params.taskSetupId), deviceId: params.deviceId, mainTaskType: route.params.mainTaskType })
+        if (res.data !== null) {
             ElMessage({
-                type: 'success',
-                message: '创建/更改成功'
+                type: 'error',
+                message: '该设备已添加'
             })
-            getTableData()
+        } else {
+            let res = await createGenericTask(formData.value)
+            if (res.code === 0) {
+                ElMessage({
+                    type: 'success',
+                    message: '创建/更改成功'
+                })
+                getTableData()
+            }
         }
     }
-
 }
 
 const batchSaveTask = (group) => {
