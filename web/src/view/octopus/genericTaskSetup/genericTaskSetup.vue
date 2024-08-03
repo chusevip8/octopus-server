@@ -83,7 +83,7 @@
         <el-form-item label="脚本参数:（绑定数据后修改参数不生效）" prop="params">
           <el-input v-model="formData.params" :rows="10" type="textarea" />
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="type === 'update'">
           <div style="display: flex; align-items: center;">
             <span v-if="formData.dataFile" style="margin-right: 20px;">{{ formData.dataFile }}</span>
             <el-upload :action="`${getBaseUrl()}/dataFile/upload`" :before-upload="checkFile" :on-error="uploadError"
