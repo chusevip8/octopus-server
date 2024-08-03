@@ -30,11 +30,6 @@
         <div class="gva-table-box">
             <div class="gva-btn-list">
                 <el-button type="primary" icon="plus" @click="openDialog" style="margin-right: 50px;">添加</el-button>
-                <el-upload :action="`${getBaseUrl()}/dataFile/upload`" :before-upload="checkFile"
-                    :on-error="uploadError" :on-success="uploadSuccess" :show-file-list="false"
-                    :data="{ setupId: route.params.taskSetupId }" class="upload-btn" style="display: flex;">
-                    <el-button type="primary" icon="Upload">上传数据</el-button>
-                </el-upload>
             </div>
             <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
                 @selection-change="handleSelectionChange">

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading.fullscreen.lock="fullscreenLoading">
     <div class="gva-search-box">
       <el-form ref="elSearchFormRef" :inline="true" :model="searchInfo" class="demo-form-inline" :rules="searchRule"
         @keyup.enter="onSubmit">
@@ -75,7 +75,16 @@
             :clearable="true" />
         </el-form-item>
         <el-form-item label="脚本参数:（绑定数据后修改参数不生效）" prop="params">
-          <el-input v-model="formData.params" :rows="20" type="textarea" />
+          <el-input v-model="formData.params" :rows="10" type="textarea" />
+        </el-form-item>
+        <el-form-item>
+          <div style="display: flex; align-items: center;">
+            <span v-if="formData.dataFile" style="margin-right: 20px;">{{ formData.dataFile }}</span>
+            <el-upload :action="`${getBaseUrl()}/dataFile/upload`" :before-upload="checkFile" :on-error="uploadError"
+              :on-success="uploadSuccess" :show-file-list="false" class="upload-btn" :data="{ setupId: formData.ID }">
+              <el-button type="primary" icon="Upload">上传数据</el-button>
+            </el-upload>
+          </div>
         </el-form-item>
       </el-form>
     </el-drawer>
@@ -110,9 +119,11 @@ const showAllQuery = ref(false)
 
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
+  ID: undefined,
   appName: '',
   taskTitle: '',
   params: '',
+  dataFile: undefined,
   scriptId: undefined,
   startAt: undefined,
 })
@@ -339,9 +350,11 @@ const openDialog = () => {
 const closeDialog = () => {
   dialogFormVisible.value = false
   formData.value = {
+    ID: undefined,
     appName: '',
     taskTitle: '',
     params: '',
+    dataFile: undefined,
     scriptId: undefined,
     startAt: undefined,
   }
@@ -405,7 +418,7 @@ const uploadSuccess = (res) => {
       type: 'success',
       message: '上传成功'
     })
-    getTableData()
+    // getTableData()
   }
   fullscreenLoading.value = false
 }
