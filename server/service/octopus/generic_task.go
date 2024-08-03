@@ -24,7 +24,7 @@ func (genericTaskService *GenericTaskService) CreateGenericTask(genericTask *oct
 			CreatedBy:    genericTaskSetup.CreatedBy,
 			MainTaskType: genericTask.MainTaskType,
 			SubTaskType:  genericTask.SubTaskType,
-			Params:       genericTaskSetup.Params,
+			Params:       "",
 			ScriptId:     genericTaskSetup.ScriptId,
 		}
 		err := TaskParamsServiceApp.CreateTaskParams(&taskParams)

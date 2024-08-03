@@ -28,25 +28,33 @@
       <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-        <el-table-column align="center" label="任务标题" prop="taskTitle" width="240" />
+        <el-table-column align="center" label="任务标题" prop="taskTitle" width="280" />
         <el-table-column align="center" label="脚本Id" prop="scriptId" width="120" />
-        <el-table-column align="center" label="数据文件" prop="dataFile" width="180">
+        <el-table-column align="center" label="数据文件" prop="dataFile" min-width="120">
           <template #default="scope">
             <a style="color: blue; cursor: pointer;" @click="openBindDataDialog(scope.row)">
               {{ scope.row.dataFile }}
             </a>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="脚本参数" prop="params" min-width="240" />
-        <el-table-column align="center" label="启动时间" prop="startAt" width="180">
+        <!--<el-table-column align="center" label="启动时间" prop="startAt" width="180">
           <template #default="scope">{{ formatDate(scope.row.startAt) }}</template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column align="center" label="操作" fixed="right" min-width="200">
           <template #default="scope">
-            <el-button type="primary" link icon="Cellphone" class="table-button"
-              @click="openTaskManager(scope.row)">管理任务</el-button>
-            <el-button type="primary" link icon="edit" class="table-button"
-              @click="updateGenericTaskSetupFunc(scope.row)">修改</el-button>
+            <div style="display: flex;justify-content: center; align-items: center;">
+              <el-upload v-if="scope.row.dataFile === ''" :action="`${getBaseUrl()}/dataFile/upload`"
+                :before-upload="checkFile" :on-error="uploadError" :on-success="uploadSuccess" :show-file-list="false"
+                :data="{ setupId: scope.row.ID }" class="upload-btn" style="display: flex;">
+                <el-button type="primary" link icon="Upload" class="table-button">上传数据</el-button>
+              </el-upload>
+              <el-button v-else type="primary" link icon="Delete" class="table-button"
+                @click="openTaskManager(scope.row)">删除数据</el-button>
+              <el-button type="primary" link icon="Cellphone" class="table-button"
+                @click="openTaskManager(scope.row)">管理任务</el-button>
+              <!-- <el-button type="primary" link icon="edit" class="table-button"
+                @click="updateGenericTaskSetupFunc(scope.row)">修改</el-button> -->
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -74,24 +82,13 @@
           <el-input v-model="formData.taskTitle" :clearable="false" placeholder="请输入任务标题" />
         </el-form-item>
         <el-form-item label="脚本Id:" prop="scriptId">
-          <el-input v-model.number="formData.scriptId" :clearable="false" placeholder="请输入脚本Id" />
+          <el-input :disabled="type === 'update'" v-model.number="formData.scriptId" :clearable="false"
+            placeholder="请输入脚本Id" />
         </el-form-item>
-        <el-form-item label="启动时间:" prop="startAt">
+        <!-- <el-form-item label="启动时间:" prop="startAt">
           <el-date-picker v-model="formData.startAt" type="datetime" style="width:100%" placeholder="选择日期"
             :clearable="true" />
-        </el-form-item>
-        <el-form-item label="脚本参数:（绑定数据后修改参数不生效）" prop="params">
-          <el-input v-model="formData.params" :rows="10" type="textarea" />
-        </el-form-item>
-        <el-form-item v-if="type === 'update'">
-          <div style="display: flex; align-items: center;">
-            <span v-if="formData.dataFile" style="margin-right: 20px;">{{ formData.dataFile }}</span>
-            <el-upload :action="`${getBaseUrl()}/dataFile/upload`" :before-upload="checkFile" :on-error="uploadError"
-              :on-success="uploadSuccess" :show-file-list="false" class="upload-btn" :data="{ setupId: formData.ID }">
-              <el-button type="primary" icon="Upload">上传数据</el-button>
-            </el-upload>
-          </div>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
     </el-drawer>
     <el-drawer destroy-on-close size="1000" v-model="bindDataDialogVisible" :show-close="false"
@@ -139,11 +136,8 @@ const showAllQuery = ref(false)
 
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
-  ID: undefined,
   appName: '',
   taskTitle: '',
-  params: '',
-  dataFile: undefined,
   scriptId: undefined,
   startAt: undefined,
 })
@@ -378,11 +372,8 @@ const openDialog = () => {
 const closeDialog = () => {
   dialogFormVisible.value = false
   formData.value = {
-    ID: undefined,
     appName: '',
     taskTitle: '',
-    params: '',
-    dataFile: undefined,
     scriptId: undefined,
     startAt: undefined,
   }
@@ -429,7 +420,7 @@ const checkFile = (file) => {
     fullscreenLoading.value = false
     pass = false
   }
-  console.log('upload file check result: ', pass)
+  // console.log('upload file check result: ', pass)
   return pass
 }
 const uploadError = () => {
@@ -446,7 +437,6 @@ const uploadSuccess = (res) => {
       type: 'success',
       message: '上传成功'
     })
-    formData.value.dataFile = data.file.name
     getTableData()
   }
   fullscreenLoading.value = false
