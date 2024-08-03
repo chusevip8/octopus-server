@@ -50,7 +50,7 @@
               </el-upload>
               <el-button v-else type="primary" link icon="Delete" class="table-button"
                 @click="deleteData(scope.row)">删除数据</el-button>
-              <el-button type="primary" link icon="Cellphone" class="table-button"
+              <el-button v-if="scope.row.dataFile !== ''" type="primary" link icon="Cellphone" class="table-button"
                 @click="openTaskManager(scope.row)">管理任务</el-button>
               <!-- <el-button type="primary" link icon="edit" class="table-button"
                 @click="updateGenericTaskSetupFunc(scope.row)">修改</el-button> -->
