@@ -30,7 +30,13 @@
         <el-table-column type="selection" width="55" />
         <el-table-column align="center" label="任务标题" prop="taskTitle" width="240" />
         <el-table-column align="center" label="脚本Id" prop="scriptId" width="120" />
-        <el-table-column align="center" label="数据文件" prop="dataFile" width="180" />
+        <el-table-column align="center" label="数据文件" prop="dataFile" width="180">
+          <template #default="scope">
+            <a style="color: blue; cursor: pointer;" @click="openDataFile(scope.row)">
+              {{ scope.row.dataFile }}
+            </a>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="脚本参数" prop="params" min-width="240" />
         <el-table-column align="center" label="启动时间" prop="startAt" width="180">
           <template #default="scope">{{ formatDate(scope.row.startAt) }}</template>
@@ -422,6 +428,10 @@ const uploadSuccess = (res) => {
     getTableData()
   }
   fullscreenLoading.value = false
+}
+
+const openDataFile = (row) => {
+  console.log(row)
 }
 
 </script>
