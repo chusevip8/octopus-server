@@ -33,6 +33,10 @@ func (taskBindDataService *TaskBindDataService) DeleteTaskBindData(ID string, us
 	return err
 }
 
+func (taskBindDataService *TaskBindDataService) DeleteTaskBindDataBySetupId(setupId string, mainTaskType string) (err error) {
+	return global.GVA_DB.Delete(&octopus.TaskBindData{}, "task_setup_id= ? AND main_task_type= ?", setupId, mainTaskType).Error
+}
+
 // DeleteTaskBindDataByIds 批量删除任务数据记录
 // Author [piexlmax](https://github.com/piexlmax)
 func (taskBindDataService *TaskBindDataService) DeleteTaskBindDataByIds(IDs []string, deleted_by uint) (err error) {

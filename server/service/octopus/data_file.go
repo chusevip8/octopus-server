@@ -18,13 +18,17 @@ type DataFileService struct{}
 
 func (dataFileService *DataFileService) Upload(setupId string, file example.ExaFileUploadAndDownload) error {
 	err := dataFileService.saveToDB(setupId, file)
-	if err != nil {
-		return err
+	if err == nil {
+		err = global.GVA_DB.Model(&octopus.GenericTaskSetup{}).Where("id = ?", setupId).Updates(map[string]interface{}{
+			"data_file":      file.Name,
+			"data_file_path": file.Url,
+		}).Error
 	}
-	return global.GVA_DB.Model(&octopus.GenericTaskSetup{}).Where("id = ?", setupId).Updates(map[string]interface{}{
-		"data_file":      file.Name,
-		"data_file_path": file.Url,
-	}).Error
+	if err != nil {
+		_ = taskBindDataServiceApp.DeleteTaskBindDataBySetupId(setupId, "generic")
+		_ = os.Remove(file.Url)
+	}
+	return err
 }
 
 func (dataFileService *DataFileService) UploadFile(setupId string, header *multipart.FileHeader) (file example.ExaFileUploadAndDownload, err error) {
