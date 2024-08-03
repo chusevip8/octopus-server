@@ -418,7 +418,8 @@ const uploadSuccess = (res) => {
       type: 'success',
       message: '上传成功'
     })
-    // getTableData()
+    formData.value.dataFile = data.file.name
+    getTableData()
   }
   fullscreenLoading.value = false
 }
