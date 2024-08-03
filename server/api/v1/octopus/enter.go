@@ -15,4 +15,5 @@ type ApiGroup struct {
 	GenericTaskSetupApi
 	DataFileApi
 	GenericTaskApi
+	TaskBindDataApi
 }
