@@ -45,11 +45,11 @@
             <div style="display: flex;justify-content: center; align-items: center;">
               <el-upload v-if="scope.row.dataFile === ''" :action="`${getBaseUrl()}/dataFile/upload`"
                 :before-upload="checkFile" :on-error="uploadError" :on-success="uploadSuccess" :show-file-list="false"
-                :data="{ setupId: scope.row.ID }" class="upload-btn" style="display: flex;">
+                :data="{ setupId: scope.row.ID, mainTaskType: 'generic' }" class="upload-btn" style="display: flex;">
                 <el-button type="primary" link icon="Upload" class="table-button">上传数据</el-button>
               </el-upload>
               <el-button v-else type="primary" link icon="Delete" class="table-button"
-                @click="openTaskManager(scope.row)">删除数据</el-button>
+                @click="deleteData(scope.row)">删除数据</el-button>
               <el-button type="primary" link icon="Cellphone" class="table-button"
                 @click="openTaskManager(scope.row)">管理任务</el-button>
               <!-- <el-button type="primary" link icon="edit" class="table-button"
@@ -82,8 +82,7 @@
           <el-input v-model="formData.taskTitle" :clearable="false" placeholder="请输入任务标题" />
         </el-form-item>
         <el-form-item label="脚本Id:" prop="scriptId">
-          <el-input :disabled="type === 'update'" v-model.number="formData.scriptId" :clearable="false"
-            placeholder="请输入脚本Id" />
+          <el-input v-model.number="formData.scriptId" :clearable="false" placeholder="请输入脚本Id" />
         </el-form-item>
         <!-- <el-form-item label="启动时间:" prop="startAt">
           <el-date-picker v-model="formData.startAt" type="datetime" style="width:100%" placeholder="选择日期"
@@ -113,7 +112,8 @@ import {
   deleteGenericTaskSetupByIds,
   updateGenericTaskSetup,
   findGenericTaskSetup,
-  getGenericTaskSetupList
+  getGenericTaskSetupList,
+  deleteBindData
 } from '@/api/octopus/genericTaskSetup'
 
 // 全量引入格式化工具 请按需保留
@@ -441,7 +441,25 @@ const uploadSuccess = (res) => {
   }
   fullscreenLoading.value = false
 }
-
+const deleteData = (row) => {
+  ElMessageBox.confirm('确定要删除绑定数据吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    deleteBindDataFunc(row)
+  })
+}
+const deleteBindDataFunc = async (row) => {
+  let res = await deleteBindData({ setupId: row.ID, mainTaskType: 'generic' })
+  if (res.code === 0) {
+    ElMessage({
+      type: 'success',
+      message: '删除成功'
+    })
+    getTableData()
+  }
+}
 </script>
 
 <style></style>

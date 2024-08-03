@@ -95,3 +95,11 @@ export const getGenericTaskSetupList = (params) => {
     params
   })
 }
+
+export const deleteBindData = (params) => {
+  return service({
+    url: '/genericTaskSetup/deleteBindData',
+    method: 'delete',
+    params
+  })
+}

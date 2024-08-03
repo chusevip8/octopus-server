@@ -16,8 +16,8 @@ import (
 
 type DataFileService struct{}
 
-func (dataFileService *DataFileService) Upload(setupId string, file example.ExaFileUploadAndDownload) error {
-	err := dataFileService.saveToDB(setupId, file)
+func (dataFileService *DataFileService) Upload(setupId string, mainTaskType string, file example.ExaFileUploadAndDownload) error {
+	err := dataFileService.saveToDB(setupId, mainTaskType, file)
 	if err == nil {
 		err = global.GVA_DB.Model(&octopus.GenericTaskSetup{}).Where("id = ?", setupId).Updates(map[string]interface{}{
 			"data_file":      file.Name,
@@ -31,7 +31,7 @@ func (dataFileService *DataFileService) Upload(setupId string, file example.ExaF
 	return err
 }
 
-func (dataFileService *DataFileService) UploadFile(setupId string, header *multipart.FileHeader) (file example.ExaFileUploadAndDownload, err error) {
+func (dataFileService *DataFileService) UploadFile(setupId string, mainTaskType string, header *multipart.FileHeader) (file example.ExaFileUploadAndDownload, err error) {
 	oss := upload.NewOss()
 	filePath, key, uploadErr := oss.UploadFile(header)
 	if uploadErr != nil {
@@ -44,9 +44,9 @@ func (dataFileService *DataFileService) UploadFile(setupId string, header *multi
 		Tag:  s[len(s)-1],
 		Key:  key,
 	}
-	return f, dataFileService.Upload(setupId, f)
+	return f, dataFileService.Upload(setupId, mainTaskType, f)
 }
-func (dataFileService *DataFileService) saveToDB(setupId string, file example.ExaFileUploadAndDownload) (err error) {
+func (dataFileService *DataFileService) saveToDB(setupId string, mainTaskType string, file example.ExaFileUploadAndDownload) (err error) {
 	txt, err := os.Open(file.Url)
 	if err != nil {
 		return
@@ -57,7 +57,7 @@ func (dataFileService *DataFileService) saveToDB(setupId string, file example.Ex
 		line := scanner.Text()
 		words := strings.Fields(line)
 		bindData := octopus.TaskBindData{}
-		bindData.MainTaskType = "generic"
+		bindData.MainTaskType = mainTaskType
 		sId, err := strconv.ParseUint(setupId, 10, 0)
 		if err != nil {
 			return err

@@ -17,13 +17,14 @@ var dataFileService = service.ServiceGroupApp.OctopusServiceGroup.DataFileServic
 func (dataFileApi *DataFileApi) UploadFile(c *gin.Context) {
 	var file example.ExaFileUploadAndDownload
 	setupId := c.Request.FormValue("setupId")
+	mainTaskType := c.Request.FormValue("mainTaskType")
 	_, header, err := c.Request.FormFile("file")
 	if err != nil {
 		global.GVA_LOG.Error("接收文件失败!", zap.Error(err))
 		response.FailWithMessage("接收文件失败", c)
 		return
 	}
-	file, err = dataFileService.UploadFile(setupId, header) // 文件上传后拿到文件路径
+	file, err = dataFileService.UploadFile(setupId, mainTaskType, header) // 文件上传后拿到文件路径
 	if err != nil {
 		global.GVA_LOG.Error("修改数据库链接失败!", zap.Error(err))
 		response.FailWithMessage("修改数据库链接失败", c)

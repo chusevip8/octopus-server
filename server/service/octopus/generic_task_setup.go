@@ -5,6 +5,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
 	"gorm.io/gorm"
+	"os"
 )
 
 type GenericTaskSetupService struct{}
@@ -85,4 +86,23 @@ func (genericTaskSetupService *GenericTaskSetupService) GetGenericTaskSetupInfoL
 
 	err = db.Find(&genericTaskSetups).Error
 	return genericTaskSetups, total, err
+}
+
+func (genericTaskSetupService *GenericTaskSetupService) DeleteBindData(setupId string, mainTaskType string) (err error) {
+	taskSetup, err := genericTaskSetupService.GetGenericTaskSetup(setupId)
+	if err != nil {
+		return err
+	}
+	err = taskBindDataServiceApp.DeleteTaskBindDataBySetupId(setupId, mainTaskType)
+	if err != nil {
+		return err
+	}
+	err = os.Remove(taskSetup.DataFilePath)
+	if err != nil {
+		return err
+	}
+	taskSetup.DataFile = ""
+	taskSetup.DataFilePath = ""
+	err = genericTaskSetupService.UpdateGenericTaskSetup(taskSetup)
+	return err
 }
