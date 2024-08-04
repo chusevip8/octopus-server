@@ -31,7 +31,7 @@
             <div class="gva-btn-list">
                 <el-button type="primary" icon="plus" @click="openDialog" style="margin-right: 20px;">添加设备</el-button>
                 <el-button type="warning" icon="Switch" @click="bindData" style="margin-right: 20px;">绑定数据</el-button>
-                <el-button type="success" icon="CaretRight" @click="openDialog">开始运行</el-button>
+                <el-button type="success" icon="CaretRight" @click="startAllTasks">开始运行</el-button>
             </div>
             <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
                 @selection-change="handleSelectionChange">
@@ -399,6 +399,27 @@ const bindTaskDataFunc = async () => {
     fullscreenLoading.value = false
 }
 
+const startAllTasks = () => {
+    if (total.value == 0) {
+        ElMessage({
+            type: 'error',
+            message: '未添加设备，不能开始任务'
+        })
+        return
+    }
+
+    ElMessageBox.confirm('确定开始所有任务吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        startAllTasksFunc()
+    })
+}
+const startAllTasksFunc = async () => {
+
+}
+
 const deleteRow = (row) => {
     ElMessageBox.confirm('确定要删除吗?', '提示', {
         confirmButtonText: '确定',
@@ -422,6 +443,8 @@ const deleteTaskFunc = async (row) => {
         getTableData()
     }
 }
+
+
 // 停止任务
 const stopTask = async (row) => {
 
