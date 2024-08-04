@@ -174,6 +174,13 @@ func (taskService *TaskService) GetTaskByDeviceId(taskSetupId string, deviceId s
 	return
 }
 
+func (taskService *TaskService) GetTasksByTaskSetupId(taskSetupId string, mainTaskType string, subTaskType string) (tasks []octopus.Task, err error) {
+	err = global.GVA_DB.Model(&octopus.Task{}).
+		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
+		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ? AND oct_task_params.sub_task_type = ?", taskSetupId, mainTaskType, subTaskType).Find(&tasks).Error
+	return
+}
+
 func (taskService *TaskService) FindPushTask(deviceId string) (task octopus.Task, err error) {
 	err = global.GVA_DB.Model(&octopus.Task{}).Preload("TaskParams").
 		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").

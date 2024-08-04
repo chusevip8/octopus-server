@@ -15,3 +15,11 @@ export const bindTaskData = (data) => {
         data
     })
 }
+
+export const startAllTasks = (data) => {
+    return service({
+        url: '/genericTask/startAllTasks',
+        method: 'post',
+        data
+    })
+}

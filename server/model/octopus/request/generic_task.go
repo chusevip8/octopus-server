@@ -17,3 +17,9 @@ type BindTaskData struct {
 	MainTaskType string `json:"mainTaskType" form:"mainTaskType"`
 	SubTaskType  string `json:"subTaskType" form:"subTaskType"`
 }
+
+type StartAllTasks struct {
+	TaskSetupId  string `json:"taskSetupId" form:"taskSetupId"`
+	MainTaskType string `json:"mainTaskType" form:"mainTaskType"`
+	SubTaskType  string `json:"subTaskType" form:"subTaskType"`
+}

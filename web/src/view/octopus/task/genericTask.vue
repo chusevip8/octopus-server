@@ -31,7 +31,7 @@
             <div class="gva-btn-list">
                 <el-button type="primary" icon="plus" @click="openDialog" style="margin-right: 20px;">添加设备</el-button>
                 <el-button type="warning" icon="Switch" @click="bindData" style="margin-right: 20px;">绑定数据</el-button>
-                <el-button type="success" icon="CaretRight" @click="startAllTasks">开始运行</el-button>
+                <el-button type="success" icon="CaretRight" @click="startTasks">开始运行</el-button>
             </div>
             <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
                 @selection-change="handleSelectionChange">
@@ -399,7 +399,7 @@ const bindTaskDataFunc = async () => {
     fullscreenLoading.value = false
 }
 
-const startAllTasks = () => {
+const startTasks = () => {
     if (total.value == 0) {
         ElMessage({
             type: 'error',
@@ -413,10 +413,10 @@ const startAllTasks = () => {
         cancelButtonText: '取消',
         type: 'warning'
     }).then(() => {
-        startAllTasksFunc()
+        startTasksFunc()
     })
 }
-const startAllTasksFunc = async () => {
+const startTasksFunc = async () => {
 
 }
 

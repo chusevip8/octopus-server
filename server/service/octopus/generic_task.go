@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
 	"gorm.io/gorm"
@@ -145,10 +144,7 @@ func (genericTaskService *GenericTaskService) findScriptKeywords(scriptContent s
 }
 
 func (genericTaskService *GenericTaskService) BindTaskData(bindTaskData octopusReq.BindTaskData) (err error) {
-	var tasks []octopus.Task
-	err = global.GVA_DB.Model(&octopus.Task{}).
-		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
-		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ?", bindTaskData.TaskSetupId, bindTaskData.MainTaskType).Find(&tasks).Error
+	tasks, err := TaskServiceApp.GetTasksByTaskSetupId(bindTaskData.TaskSetupId, bindTaskData.MainTaskType, bindTaskData.SubTaskType)
 	if err != nil {
 		return err
 	} else if len(tasks) == 0 {
@@ -189,5 +185,17 @@ func (genericTaskService *GenericTaskService) BindTaskData(bindTaskData octopusR
 		}
 		taskIndex = (taskIndex + 1) % len(tasks)
 	}
+}
 
+func (genericTaskService *GenericTaskService) StartAllTasks(startAllTasks octopusReq.StartAllTasks) (err error) {
+	tasks, err := TaskServiceApp.GetTasksByTaskSetupId(startAllTasks.TaskSetupId, startAllTasks.MainTaskType, startAllTasks.SubTaskType)
+	if err != nil {
+		return err
+	} else if len(tasks) == 0 {
+		return fmt.Errorf("dvice not found task with id %s", startAllTasks.TaskSetupId)
+	}
+	for _, task := range tasks {
+		NewTask <- &task
+	}
+	return nil
 }

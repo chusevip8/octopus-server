@@ -45,3 +45,18 @@ func (genericTaskApi *GenericTaskApi) BindTaskData(c *gin.Context) {
 		response.OkWithMessage("绑定成功", c)
 	}
 }
+
+func (genericTaskApi *GenericTaskApi) StartAllTasks(c *gin.Context) {
+	var startAllTasks octopusReq.StartAllTasks
+	err := c.ShouldBindJSON(&startAllTasks)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if err := genericTaskService.StartAllTasks(startAllTasks); err != nil {
+		global.GVA_LOG.Error("运行任务失败!", zap.Error(err))
+		response.FailWithMessage("运行任务失败", c)
+	} else {
+		response.OkWithMessage("运行任务成功", c)
+	}
+}
