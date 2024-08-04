@@ -88,7 +88,8 @@ import {
 
 import {
     createGenericTask,
-    bindTaskData
+    bindTaskData,
+    startAllTasks
 } from '@/api/octopus/genericTask'
 
 // 全量引入格式化工具 请按需保留
@@ -97,13 +98,14 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
 import { DeviceList } from '@/view/octopus/components'
 import { taskStatusOptions } from '@/view/octopus/utils/consts'
-import { useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { deviceStatusOptions } from '@/view/octopus/utils/consts'
 
 defineOptions({
     name: 'GenericTask'
 })
 
+const router = useRouter()
 const route = useRoute()
 
 // 控制更多查询条件显示/隐藏状态
@@ -417,7 +419,15 @@ const startTasks = () => {
     })
 }
 const startTasksFunc = async () => {
-
+    let res = await startAllTasks({ taskSetupId: route.params.taskSetupId, mainTaskType: route.params.mainTaskType, subTaskType: route.params.subTaskType })
+    if (res.code === 0) {
+        ElMessage({
+            type: 'success',
+            message: '运行成功'
+        })
+        const title = route.meta.title;
+        router.push({ name: "Reload", params: { title } });
+    }
 }
 
 const deleteRow = (row) => {
