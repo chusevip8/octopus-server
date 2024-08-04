@@ -42,17 +42,18 @@ export const taskBindDataOptions = ref([
     {
         value: 2,
         label: '已绑定'
-    },
-    {
-        value: 3,
-        label: '执行中'
-    },
-    {
-        value: 4,
-        label: '完成'
-    },
-    {
-        value: 5,
-        label: '失败'
     }
+    // ,
+    // {
+    //     value: 3,
+    //     label: '执行中'
+    // },
+    // {
+    //     value: 4,
+    //     label: '完成'
+    // },
+    // {
+    //     value: 5,
+    //     label: '失败'
+    // }
 ])

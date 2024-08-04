@@ -90,3 +90,15 @@ func (taskBindDataService *TaskBindDataService) GetTaskBindDataInfoList(info oct
 	err = db.Find(&taskBindDatas).Error
 	return taskBindDatas, total, err
 }
+
+func (taskBindDataService *TaskBindDataService) GetNewBindData(setupId string, mainTaskType string) (bindData octopus.TaskBindData, err error) {
+	if err = global.GVA_DB.Model(&octopus.TaskBindData{}).
+		Where("task_setup_id = ?", setupId).
+		Where("main_task_type = ?", mainTaskType).
+		Where("status = ?", 1).
+		First(&bindData).
+		Update("status", 2).Error; err != nil {
+		return bindData, err
+	}
+	return bindData, nil
+}
