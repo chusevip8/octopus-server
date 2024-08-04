@@ -21,7 +21,11 @@
       <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-        <el-table-column align="center" label="状态" prop="status" width="120" />
+        <el-table-column align="center" label="状态" width="120">
+          <template #default="scope">
+            <span>{{ dataStatusFilter(scope.row.status) }}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="字段1" prop="item1" width="176" />
         <el-table-column align="center" label="字段2" prop="item2" width="176" />
         <el-table-column align="center" label="字段3" prop="item3" width="176" />
@@ -84,6 +88,7 @@ import {
 import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, ReturnArrImg, onDownloadFile } from '@/utils/format'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
+import { taskBindDataOptions } from '@/view/octopus/utils/consts'
 
 // defineOptions({
 //   name: 'TaskBindData'
@@ -326,6 +331,10 @@ const enterDialog = async () => {
       getTableData()
     }
   })
+}
+const dataStatusFilter = (value) => {
+  const target = taskBindDataOptions.value.filter(item => item.value === value)[0]
+  return target && `${target.label}`
 }
 
 </script>

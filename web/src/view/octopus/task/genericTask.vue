@@ -29,7 +29,9 @@
         </div>
         <div class="gva-table-box">
             <div class="gva-btn-list">
-                <el-button type="primary" icon="plus" @click="openDialog" style="margin-right: 50px;">添加</el-button>
+                <el-button type="primary" icon="plus" @click="openDialog" style="margin-right: 20px;">添加设备</el-button>
+                <el-button type="warning" icon="Switch" @click="openDialog" style="margin-right: 20px;">绑定数据</el-button>
+                <el-button type="success" icon="CaretRight" @click="openDialog">开始运行</el-button>
             </div>
             <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
                 @selection-change="handleSelectionChange">
