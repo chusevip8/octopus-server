@@ -168,6 +168,9 @@ func (genericTaskService *GenericTaskService) BindTaskData(bindTaskData octopusR
 	for {
 		bindData, err := taskBindDataServiceApp.GetNewBindData(strconv.Itoa(int(genericTaskSetup.ID)), bindTaskData.MainTaskType)
 		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return nil
+			}
 			return err
 		}
 		deviceId := tasks[taskIndex].DeviceId
