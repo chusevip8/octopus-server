@@ -47,7 +47,7 @@
                         <span>{{ deviceStatusFilter(scope.row.device.status) }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="设备备注" prop="device.note" width="240" />
+                <el-table-column align="center" label="参数" prop="taskParams.params" width="240" />
                 <el-table-column align="center" label="错误信息" prop="error" min-width="120" />
                 <el-table-column align="center" label="操作" fixed="right" min-width="240">
                     <template #default="scope">

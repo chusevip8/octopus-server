@@ -2,9 +2,11 @@ package octopus
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
+	"gorm.io/gorm"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -59,7 +61,17 @@ func (genericTaskService *GenericTaskService) CreateGenericTask(genericTask *oct
 		}
 
 		for _, device := range devices {
-			taskParams, err := genericTaskService.fillTaskParams(genericTaskSetup, genericTask)
+			bindData, err := taskBindDataServiceApp.GetNewBindData(strconv.Itoa(int(genericTaskSetup.ID)), "generic")
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return nil
+			} else if err != nil {
+				return err
+			}
+			params, err := genericTaskService.buildTaskParams(scriptKeywords, bindData)
+			if err != nil {
+				return err
+			}
+			taskParams, err := genericTaskService.fillTaskParams(genericTaskSetup, genericTask, params)
 			if err != nil {
 				return err
 			}
@@ -69,7 +81,17 @@ func (genericTaskService *GenericTaskService) CreateGenericTask(genericTask *oct
 		}
 	} else {
 		// 单个任务创建
-		taskParams, err := genericTaskService.fillTaskParams(genericTaskSetup, genericTask)
+		bindData, err := taskBindDataServiceApp.GetNewBindData(strconv.Itoa(int(genericTaskSetup.ID)), "generic")
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		} else if err != nil {
+			return err
+		}
+		params, err := genericTaskService.buildTaskParams(scriptKeywords, bindData)
+		if err != nil {
+			return err
+		}
+		taskParams, err := genericTaskService.fillTaskParams(genericTaskSetup, genericTask, params)
 		if err != nil {
 			return err
 		}
