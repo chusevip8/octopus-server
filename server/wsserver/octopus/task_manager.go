@@ -15,7 +15,7 @@ import (
 )
 
 func tryPushTask(task *octopus.Task) {
-	fmt.Printf("New Task created:(ID: %d)\n", task.ID)
+	global.GVA_LOG.Info("New Task created", zap.String("Id", strconv.Itoa(int(task.ID))))
 	client, ok := socket.GetClient(task.DeviceId)
 	if ok {
 		client.ClientLock.Lock()
