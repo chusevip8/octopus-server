@@ -32,10 +32,13 @@ func (genericTaskApi *GenericTaskApi) CreateGenericTask(c *gin.Context) {
 }
 
 func (genericTaskApi *GenericTaskApi) BindTaskData(c *gin.Context) {
-	setupId := c.Request.FormValue("setupId")
-	mainTaskType := c.Request.FormValue("mainTaskType")
-	subTaskType := c.Request.FormValue("subTaskType")
-	if err := genericTaskService.BindTaskData(setupId, mainTaskType, subTaskType); err != nil {
+	var bindTaskData octopusReq.BindTaskData
+	err := c.ShouldBindJSON(&bindTaskData)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if err := genericTaskService.BindTaskData(bindTaskData); err != nil {
 		global.GVA_LOG.Error("绑定失败!", zap.Error(err))
 		response.FailWithMessage("绑定失败", c)
 	} else {

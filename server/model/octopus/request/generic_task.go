@@ -11,3 +11,9 @@ type GenericTask struct {
 	Error        string `json:"error" form:"error"`
 	CreatedBy    uint   `json:"createdBy" form:"createdBy"`
 }
+
+type BindTaskData struct {
+	TaskSetupId  string `json:"taskSetupId" form:"taskSetupId"`
+	MainTaskType string `json:"mainTaskType" form:"mainTaskType"`
+	SubTaskType  string `json:"subTaskType" form:"subTaskType"`
+}

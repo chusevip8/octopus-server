@@ -99,7 +99,6 @@ import { DeviceList } from '@/view/octopus/components'
 import { taskStatusOptions } from '@/view/octopus/utils/consts'
 import { useRoute } from 'vue-router'
 import { deviceStatusOptions } from '@/view/octopus/utils/consts'
-import { fa } from 'element-plus/es/locale'
 
 defineOptions({
     name: 'GenericTask'
@@ -369,6 +368,15 @@ const batchSaveTaskFunc = async (group) => {
 }
 
 const bindData = () => {
+
+    if (total.value == 0) {
+        ElMessage({
+            type: 'error',
+            message: '未添加设备，不能绑定数据'
+        })
+        return
+    }
+
     ElMessageBox.confirm('把所有数据绑定到已添加设备吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -380,7 +388,7 @@ const bindData = () => {
 }
 
 const bindTaskDataFunc = async () => {
-    let res = await bindTaskData({ setupId: route.params.taskSetupId, mainTaskType: route.params.mainTaskType, subTaskType: route.params.subTaskType })
+    let res = await bindTaskData({ taskSetupId: route.params.taskSetupId, mainTaskType: route.params.mainTaskType, subTaskType: route.params.subTaskType })
     if (res.code === 0) {
         ElMessage({
             type: 'success',

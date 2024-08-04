@@ -144,18 +144,18 @@ func (genericTaskService *GenericTaskService) findScriptKeywords(scriptContent s
 	return keywords
 }
 
-func (genericTaskService *GenericTaskService) BindTaskData(setupId string, mainTaskType string, subTaskType string) (err error) {
+func (genericTaskService *GenericTaskService) BindTaskData(bindTaskData octopusReq.BindTaskData) (err error) {
 	var tasks []octopus.Task
 	err = global.GVA_DB.Model(&octopus.Task{}).
 		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
-		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ?", setupId, mainTaskType).Find(&tasks).Error
+		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ?", bindTaskData.TaskSetupId, bindTaskData.MainTaskType).Find(&tasks).Error
 	if err != nil {
 		return err
 	} else if len(tasks) == 0 {
-		return fmt.Errorf("dvice not found task with id %s", setupId)
+		return fmt.Errorf("dvice not found task with id %s", bindTaskData.TaskSetupId)
 	}
 	// 获取任务设置
-	genericTaskSetup, err := GenericTaskSetupServiceApp.GetGenericTaskSetup(setupId)
+	genericTaskSetup, err := GenericTaskSetupServiceApp.GetGenericTaskSetup(bindTaskData.TaskSetupId)
 	if err != nil {
 		return err
 	}
@@ -166,7 +166,7 @@ func (genericTaskService *GenericTaskService) BindTaskData(setupId string, mainT
 	scriptKeywords := genericTaskService.findScriptKeywords(script.Content)
 	taskIndex := 0
 	for {
-		bindData, err := taskBindDataServiceApp.GetNewBindData(strconv.Itoa(int(genericTaskSetup.ID)), mainTaskType)
+		bindData, err := taskBindDataServiceApp.GetNewBindData(strconv.Itoa(int(genericTaskSetup.ID)), bindTaskData.MainTaskType)
 		if err != nil {
 			return err
 		}
@@ -175,7 +175,7 @@ func (genericTaskService *GenericTaskService) BindTaskData(setupId string, mainT
 		if err != nil {
 			return err
 		}
-		genericTask := octopusReq.GenericTask{MainTaskType: mainTaskType, SubTaskType: subTaskType}
+		genericTask := octopusReq.GenericTask{MainTaskType: bindTaskData.MainTaskType, SubTaskType: bindTaskData.SubTaskType}
 		taskParams, err := genericTaskService.fillTaskParams(genericTaskSetup, genericTask, params)
 		if err != nil {
 			return err
