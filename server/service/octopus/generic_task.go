@@ -131,14 +131,15 @@ func (genericTaskService *GenericTaskService) buildTaskParams(scriptKeywords []s
 }
 
 func (genericTaskService *GenericTaskService) findScriptKeywords(scriptContent string) []string {
-	re := regexp.MustCompile(`\$\{[^}]*}`)
+	// 正则表达式，用于匹配 ${} 并捕获 {} 内的内容
+	re := regexp.MustCompile(`\$\{([^}]*)}`)
 	matches := re.FindAllStringSubmatch(scriptContent, -1)
+
 	var keywords []string
 	for _, match := range matches {
 		if len(match) > 1 {
 			keywords = append(keywords, match[1]) // match[1] 是捕获组中的内容
 		}
 	}
-
 	return keywords
 }
