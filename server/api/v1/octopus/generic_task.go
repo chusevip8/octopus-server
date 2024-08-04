@@ -23,10 +23,22 @@ func (genericTaskApi *GenericTaskApi) CreateGenericTask(c *gin.Context) {
 		return
 	}
 	genericTask.CreatedBy = utils.GetUserID(c)
-	if err := genericTaskService.CreateGenericTask(&genericTask); err != nil {
+	if err := genericTaskService.CreateGenericTask(genericTask); err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("创建失败", c)
 	} else {
 		response.OkWithMessage("创建成功", c)
+	}
+}
+
+func (genericTaskApi *GenericTaskApi) BindTaskData(c *gin.Context) {
+	setupId := c.Request.FormValue("setupId")
+	mainTaskType := c.Request.FormValue("mainTaskType")
+	subTaskType := c.Request.FormValue("subTaskType")
+	if err := genericTaskService.BindTaskData(setupId, mainTaskType, subTaskType); err != nil {
+		global.GVA_LOG.Error("绑定失败!", zap.Error(err))
+		response.FailWithMessage("绑定失败", c)
+	} else {
+		response.OkWithMessage("绑定成功", c)
 	}
 }

@@ -7,3 +7,11 @@ export const createGenericTask = (data) => {
         data
     })
 }
+
+export const bindTaskData = (data) => {
+    return service({
+        url: '/genericTask/bindTaskData',
+        method: 'post',
+        data
+    })
+}

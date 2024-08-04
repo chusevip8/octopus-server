@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-loading.fullscreen.lock="fullscreenLoading">
         <div class="gva-search-box">
             <el-form ref="elSearchFormRef" :inline="true" :model="searchInfo" class="demo-form-inline"
                 :rules="searchRule" @keyup.enter="onSubmit">
@@ -30,7 +30,7 @@
         <div class="gva-table-box">
             <div class="gva-btn-list">
                 <el-button type="primary" icon="plus" @click="openDialog" style="margin-right: 20px;">添加设备</el-button>
-                <el-button type="warning" icon="Switch" @click="openDialog" style="margin-right: 20px;">绑定数据</el-button>
+                <el-button type="warning" icon="Switch" @click="bindData" style="margin-right: 20px;">绑定数据</el-button>
                 <el-button type="success" icon="CaretRight" @click="openDialog">开始运行</el-button>
             </div>
             <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
@@ -87,7 +87,8 @@ import {
 } from '@/api/octopus/task'
 
 import {
-    createGenericTask
+    createGenericTask,
+    bindTaskData
 } from '@/api/octopus/genericTask'
 
 // 全量引入格式化工具 请按需保留
@@ -98,6 +99,7 @@ import { DeviceList } from '@/view/octopus/components'
 import { taskStatusOptions } from '@/view/octopus/utils/consts'
 import { useRoute } from 'vue-router'
 import { deviceStatusOptions } from '@/view/octopus/utils/consts'
+import { fa } from 'element-plus/es/locale'
 
 defineOptions({
     name: 'GenericTask'
@@ -154,6 +156,7 @@ const pageSize = ref(10)
 const tableData = ref([])
 const searchInfo = ref({})
 
+const fullscreenLoading = ref(false)
 // 重置
 const onReset = () => {
     searchInfo.value = {}
@@ -340,6 +343,7 @@ const batchSaveTask = (group) => {
         cancelButtonText: '取消',
         type: 'warning'
     }).then(() => {
+        fullscreenLoading.value = true
         batchSaveTaskFunc(group)
     })
 }
@@ -361,6 +365,30 @@ const batchSaveTaskFunc = async (group) => {
         })
         getTableData()
     }
+    fullscreenLoading.value = false
+}
+
+const bindData = () => {
+    ElMessageBox.confirm('把所有数据绑定到已添加设备吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        fullscreenLoading.value = true
+        bindTaskDataFunc()
+    })
+}
+
+const bindTaskDataFunc = async () => {
+    let res = await bindTaskData({ setupId: route.params.taskSetupId, mainTaskType: route.params.mainTaskType, subTaskType: route.params.subTaskType })
+    if (res.code === 0) {
+        ElMessage({
+            type: 'success',
+            message: '绑定成功'
+        })
+        getTableData()
+    }
+    fullscreenLoading.value = false
 }
 
 const deleteRow = (row) => {

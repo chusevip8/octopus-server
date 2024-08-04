@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
 	"gorm.io/gorm"
@@ -14,7 +15,7 @@ import (
 
 type GenericTaskService struct{}
 
-func (genericTaskService *GenericTaskService) fillTaskParams(genericTaskSetup octopus.GenericTaskSetup, genericTask *octopusReq.GenericTask, params string) (octopus.TaskParams, error) {
+func (genericTaskService *GenericTaskService) fillTaskParams(genericTaskSetup octopus.GenericTaskSetup, genericTask octopusReq.GenericTask, params string) (octopus.TaskParams, error) {
 	taskParams := octopus.TaskParams{
 		TaskSetupId:  genericTaskSetup.ID,
 		CreatedBy:    genericTaskSetup.CreatedBy,
@@ -39,11 +40,10 @@ func (genericTaskService *GenericTaskService) createTask(genericTaskSetup octopu
 	return TaskServiceApp.CreateTaskWithoutNotify(&task)
 }
 
-func (genericTaskService *GenericTaskService) CreateGenericTask(genericTask *octopusReq.GenericTask) (err error) {
-	var genericTaskSetup octopus.GenericTaskSetup
+func (genericTaskService *GenericTaskService) CreateGenericTask(genericTask octopusReq.GenericTask) (err error) {
 
 	// 获取任务设置
-	genericTaskSetup, err = GenericTaskSetupServiceApp.GetGenericTaskSetup(strconv.Itoa(int(genericTask.TaskSetupId)))
+	genericTaskSetup, err := GenericTaskSetupServiceApp.GetGenericTaskSetup(strconv.Itoa(int(genericTask.TaskSetupId)))
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func (genericTaskService *GenericTaskService) CreateGenericTask(genericTask *oct
 		}
 
 		for _, device := range devices {
-			bindData, err := taskBindDataServiceApp.GetNewBindData(strconv.Itoa(int(genericTaskSetup.ID)), "generic")
+			bindData, err := taskBindDataServiceApp.GetNewBindData(strconv.Itoa(int(genericTaskSetup.ID)), genericTask.MainTaskType)
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return nil
 			} else if err != nil {
@@ -81,7 +81,7 @@ func (genericTaskService *GenericTaskService) CreateGenericTask(genericTask *oct
 		}
 	} else {
 		// 单个任务创建
-		bindData, err := taskBindDataServiceApp.GetNewBindData(strconv.Itoa(int(genericTaskSetup.ID)), "generic")
+		bindData, err := taskBindDataServiceApp.GetNewBindData(strconv.Itoa(int(genericTaskSetup.ID)), genericTask.MainTaskType)
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil
 		} else if err != nil {
@@ -142,4 +142,49 @@ func (genericTaskService *GenericTaskService) findScriptKeywords(scriptContent s
 		}
 	}
 	return keywords
+}
+
+func (genericTaskService *GenericTaskService) BindTaskData(setupId string, mainTaskType string, subTaskType string) (err error) {
+	var tasks []octopus.Task
+	err = global.GVA_DB.Model(&octopus.Task{}).
+		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
+		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ?", setupId, mainTaskType).Find(&tasks).Error
+	if err != nil {
+		return err
+	} else if len(tasks) == 0 {
+		return fmt.Errorf("dvice not found task with id %s", setupId)
+	}
+	// 获取任务设置
+	genericTaskSetup, err := GenericTaskSetupServiceApp.GetGenericTaskSetup(setupId)
+	if err != nil {
+		return err
+	}
+	script, err := ScriptServiceApp.GetScript(strconv.Itoa(int(genericTaskSetup.ScriptId)))
+	if err != nil {
+		return err
+	}
+	scriptKeywords := genericTaskService.findScriptKeywords(script.Content)
+	taskIndex := 0
+	for {
+		bindData, err := taskBindDataServiceApp.GetNewBindData(strconv.Itoa(int(genericTaskSetup.ID)), mainTaskType)
+		if err != nil {
+			return err
+		}
+		deviceId := tasks[taskIndex].DeviceId
+		params, err := genericTaskService.buildTaskParams(scriptKeywords, bindData)
+		if err != nil {
+			return err
+		}
+		genericTask := octopusReq.GenericTask{MainTaskType: mainTaskType, SubTaskType: subTaskType}
+		taskParams, err := genericTaskService.fillTaskParams(genericTaskSetup, genericTask, params)
+		if err != nil {
+			return err
+		}
+		err = genericTaskService.createTask(genericTaskSetup, deviceId, taskParams.ID)
+		if err != nil {
+			return err
+		}
+		taskIndex = (taskIndex + 1) % len(tasks)
+	}
+
 }
