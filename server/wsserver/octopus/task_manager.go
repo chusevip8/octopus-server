@@ -83,7 +83,28 @@ func buildTaskPush(task octopus.Task, taskPush *protocol.TaskPush) (err error) {
 }
 
 func tryStopTask(task *octopus.Task) {
-
+	global.GVA_LOG.Info("Stop Task ", zap.String("Id", strconv.Itoa(int(task.ID))))
+	client, ok := socket.GetClient(task.DeviceId)
+	if ok {
+		client.ClientLock.Lock()
+		defer client.ClientLock.Unlock()
+		if task.Status == 1 {
+			_ = service.TaskService.UpdateTaskStatusToFail(strconv.Itoa(int(task.ID)), "服务器终止任务")
+		} else if task.Status == 2 {
+			taskStopPush := protocol.TaskStopPush{TaskId: strconv.Itoa(int(task.ID)), Error: "服务器终止任务"}
+			message := map[string]interface{}{"code": protocol.CodeTaskStopPush, "data": taskStopPush}
+			data, err := json.Marshal(message)
+			if err != nil {
+				global.GVA_LOG.Error("Try push stop task message ", zap.String("task", strconv.Itoa(int(task.ID))), zap.String("error", err.Error()))
+			} else {
+				client.SendMessage(data)
+			}
+		}
+	} else {
+		if task.Status == 1 || task.Status == 2 {
+			_ = service.TaskService.UpdateTaskStatusToFail(strconv.Itoa(int(task.ID)), "服务器终止任务")
+		}
+	}
 }
 
 func MonitorTask() {
