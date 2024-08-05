@@ -214,9 +214,9 @@ func (taskApi *TaskApi) StopTasks(c *gin.Context) {
 	}
 }
 func (taskApi *TaskApi) StartTasks(c *gin.Context) {
-	subTaskType := c.Query("subTaskType")
 	taskSetupId := c.Query("taskSetupId")
 	mainTaskType := c.Query("mainTaskType")
+	subTaskType := c.Query("subTaskType")
 	if err := taskService.StartTasks(taskSetupId, mainTaskType, subTaskType); err != nil {
 		global.GVA_LOG.Error("运行任务失败!", zap.Error(err))
 		response.FailWithMessage("运行任务失败", c)

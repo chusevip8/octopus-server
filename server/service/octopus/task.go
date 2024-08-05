@@ -206,7 +206,7 @@ func (taskService *TaskService) StopTask(taskId string) (err error) {
 }
 
 func (taskService *TaskService) StopTasks(taskSetupId string, mainTaskType string, subTaskType string) (err error) {
-	tasks, err := TaskServiceApp.GetTasksByTaskSetupId(taskSetupId, mainTaskType, subTaskType)
+	tasks, err := taskService.GetTasksByTaskSetupId(taskSetupId, mainTaskType, subTaskType)
 	if err != nil {
 		return err
 	} else if len(tasks) == 0 {
@@ -218,7 +218,7 @@ func (taskService *TaskService) StopTasks(taskSetupId string, mainTaskType strin
 	return nil
 }
 func (taskService *TaskService) StartTasks(taskSetupId string, mainTaskType string, subTaskType string) (err error) {
-	tasks, err := TaskServiceApp.GetTasksByTaskSetupId(taskSetupId, mainTaskType, subTaskType)
+	tasks, err := taskService.GetTasksByTaskSetupId(taskSetupId, mainTaskType, subTaskType)
 	if err != nil {
 		return err
 	} else if len(tasks) == 0 {
