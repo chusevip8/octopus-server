@@ -20,6 +20,9 @@ func (s *TaskRouter) InitTaskRouter(Router *gin.RouterGroup, PublicRouter *gin.R
 		taskRouter.DELETE("deleteTask", taskApi.DeleteTask)           // 删除任务
 		taskRouter.DELETE("deleteTaskByIds", taskApi.DeleteTaskByIds) // 批量删除任务
 		taskRouter.PUT("updateTask", taskApi.UpdateTask)              // 更新任务
+		taskRouter.POST("startTasks", taskApi.StartTasks)             // 运行所有任务
+		taskRouter.POST("stopTask", taskApi.StopTask)                 // 停止单个任务
+		taskRouter.POST("stopTasks", taskApi.StopTasks)               // 停止所有任务
 	}
 	{
 		taskRouterWithoutRecord.GET("findTask", taskApi.FindTask)                     // 根据ID获取任务

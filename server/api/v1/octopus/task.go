@@ -192,3 +192,35 @@ func (taskApi *TaskApi) FindTaskByDeviceId(c *gin.Context) {
 		response.OkWithData(retask, c)
 	}
 }
+
+func (taskApi *TaskApi) StopTask(c *gin.Context) {
+	taskId := c.Query("taskId")
+	if err := taskService.StopTask(taskId); err != nil {
+		global.GVA_LOG.Error("停止任务失败!", zap.Error(err))
+		response.FailWithMessage("停止任务失败", c)
+	} else {
+		response.OkWithMessage("停止任务成功", c)
+	}
+}
+func (taskApi *TaskApi) StopTasks(c *gin.Context) {
+	subTaskType := c.Query("subTaskType")
+	taskSetupId := c.Query("taskSetupId")
+	mainTaskType := c.Query("mainTaskType")
+	if err := taskService.StopTasks(taskSetupId, mainTaskType, subTaskType); err != nil {
+		global.GVA_LOG.Error("运行任务失败!", zap.Error(err))
+		response.FailWithMessage("停止任务失败", c)
+	} else {
+		response.OkWithMessage("停止任务成功", c)
+	}
+}
+func (taskApi *TaskApi) StartTasks(c *gin.Context) {
+	subTaskType := c.Query("subTaskType")
+	taskSetupId := c.Query("taskSetupId")
+	mainTaskType := c.Query("mainTaskType")
+	if err := taskService.StartTasks(taskSetupId, mainTaskType, subTaskType); err != nil {
+		global.GVA_LOG.Error("运行任务失败!", zap.Error(err))
+		response.FailWithMessage("运行任务失败", c)
+	} else {
+		response.OkWithMessage("运行任务成功", c)
+	}
+}

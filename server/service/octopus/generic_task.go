@@ -186,16 +186,3 @@ func (genericTaskService *GenericTaskService) BindTaskData(bindTaskData octopusR
 		taskIndex = (taskIndex + 1) % len(tasks)
 	}
 }
-
-func (genericTaskService *GenericTaskService) StartAllTasks(startAllTasks octopusReq.StartAllTasks) (err error) {
-	tasks, err := TaskServiceApp.GetTasksByTaskSetupId(startAllTasks.TaskSetupId, startAllTasks.MainTaskType, startAllTasks.SubTaskType)
-	if err != nil {
-		return err
-	} else if len(tasks) == 0 {
-		return fmt.Errorf("dvice not found task with id %s", startAllTasks.TaskSetupId)
-	}
-	for _, task := range tasks {
-		NewTask <- &task
-	}
-	return nil
-}
