@@ -11,6 +11,7 @@ type TaskService struct{}
 
 var (
 	NewTask        = make(chan *octopus.Task)
+	StopTask       = make(chan *octopus.Task)
 	TaskServiceApp = new(TaskService)
 )
 

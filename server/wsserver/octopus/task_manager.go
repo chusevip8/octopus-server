@@ -82,12 +82,18 @@ func buildTaskPush(task octopus.Task, taskPush *protocol.TaskPush) (err error) {
 	return
 }
 
-func WaitNewTask() {
+func tryStopTask(task *octopus.Task) {
+
+}
+
+func MonitorTask() {
 	go func() {
 		for {
 			select {
-			case task := <-octopusService.NewTask:
-				go tryPushTask(task)
+			case newTask := <-octopusService.NewTask:
+				go tryPushTask(newTask)
+			case stopTask := <-octopusService.StopTask:
+				go tryStopTask(stopTask)
 			}
 		}
 	}()
