@@ -31,7 +31,10 @@
             <div class="gva-btn-list">
                 <el-button type="primary" icon="plus" @click="openDialog" style="margin-right: 20px;">添加设备</el-button>
                 <el-button type="warning" icon="Switch" @click="bindData" style="margin-right: 20px;">绑定数据</el-button>
-                <el-button type="success" icon="CaretRight" @click="startTasks">开始运行</el-button>
+                <el-button type="success" icon="CaretRight" @click="startTasks"
+                    style="margin-right: 20px;">开始运行</el-button>
+                <el-button type="info" icon="Close" @click="stopTasks" style="margin-right: 20px;">停止运行</el-button>
+                <el-button type="danger" icon="Delete" @click="deleteTasks">删除任务</el-button>
             </div>
             <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
                 @selection-change="handleSelectionChange">
@@ -89,7 +92,9 @@ import {
 import {
     createGenericTask,
     bindTaskData,
-    startGenericTasks
+    startGenericTasks,
+    stopGenericTasks,
+    deleteGenericTasks,
 } from '@/api/octopus/genericTask'
 
 // 全量引入格式化工具 请按需保留
@@ -425,8 +430,62 @@ const startTasksFunc = async () => {
             type: 'success',
             message: '运行成功'
         })
-        const title = route.meta.title;
-        router.push({ name: "Reload", params: { title } });
+        getTableData()
+    }
+}
+
+const stopTasks = () => {
+    if (total.value == 0) {
+        ElMessage({
+            type: 'error',
+            message: '未添加设备，不能停止任务'
+        })
+        return
+    }
+
+    ElMessageBox.confirm('确定停止所有任务吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        stopTasksFunc()
+    })
+}
+const stopTasksFunc = async () => {
+    let res = await stopGenericTasks({ taskSetupId: route.params.taskSetupId, mainTaskType: route.params.mainTaskType, subTaskType: route.params.subTaskType })
+    if (res.code === 0) {
+        ElMessage({
+            type: 'success',
+            message: '停止成功'
+        })
+        getTableData()
+    }
+}
+const deleteTasks = () => {
+    if (total.value == 0) {
+        ElMessage({
+            type: 'error',
+            message: '未添加设备，不能删除任务'
+        })
+        return
+    }
+
+    ElMessageBox.confirm('确定删除所有任务吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        deleteTasksFunc()
+    })
+}
+const deleteTasksFunc = async () => {
+    let res = await deleteGenericTasks({ taskSetupId: route.params.taskSetupId, mainTaskType: route.params.mainTaskType, subTaskType: route.params.subTaskType })
+    if (res.code === 0) {
+        ElMessage({
+            type: 'success',
+            message: '删除成功'
+        })
+        getTableData()
     }
 }
 
