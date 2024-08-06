@@ -16,9 +16,32 @@ export const bindTaskData = (data) => {
     })
 }
 
-export const startAllTasks = (data) => {
+export const startGenericTasks = (data) => {
     return service({
-        url: '/genericTask/startAllTasks',
+        url: '/genericTask/startGenericTasks',
+        method: 'post',
+        data
+    })
+}
+
+export const stopGenericTask = (data) => {
+    return service({
+        url: '/genericTask/stopGenericTask',
+        method: 'post',
+        data
+    })
+}
+
+export const stopGenericTasks = (data) => {
+    return service({
+        url: '/genericTask/stopGenericTasks',
+        method: 'post',
+        data
+    })
+}
+export const deleteGenericTasks = (data) => {
+    return service({
+        url: '/genericTask/deleteGenericTasks',
         method: 'post',
         data
     })

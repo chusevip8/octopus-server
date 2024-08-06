@@ -89,7 +89,7 @@ import {
 import {
     createGenericTask,
     bindTaskData,
-    startAllTasks
+    startGenericTasks
 } from '@/api/octopus/genericTask'
 
 // 全量引入格式化工具 请按需保留
@@ -419,7 +419,7 @@ const startTasks = () => {
     })
 }
 const startTasksFunc = async () => {
-    let res = await startAllTasks({ taskSetupId: route.params.taskSetupId, mainTaskType: route.params.mainTaskType, subTaskType: route.params.subTaskType })
+    let res = await startGenericTasks({ taskSetupId: route.params.taskSetupId, mainTaskType: route.params.mainTaskType, subTaskType: route.params.subTaskType })
     if (res.code === 0) {
         ElMessage({
             type: 'success',

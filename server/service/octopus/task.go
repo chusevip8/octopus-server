@@ -1,7 +1,6 @@
 package octopus
 
 import (
-	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
@@ -194,38 +193,4 @@ func (taskService *TaskService) FindPushTask(deviceId string) (task octopus.Task
 func (taskService *TaskService) UpdateTaskStatusRunToFail() {
 	_ = global.GVA_DB.Model(&octopus.Task{}).Where("status = ?", 2).Updates(map[string]interface{}{"status": 4, "error": "服务器重启"}).Error
 	return
-}
-
-func (taskService *TaskService) StopTask(taskId string) (err error) {
-	task, err := taskService.GetTask(taskId)
-	if err != nil {
-		return err
-	}
-	StopTask <- &task
-	return nil
-}
-
-func (taskService *TaskService) StopTasks(taskSetupId string, mainTaskType string, subTaskType string) (err error) {
-	tasks, err := taskService.GetTasksByTaskSetupId(taskSetupId, mainTaskType, subTaskType)
-	if err != nil {
-		return err
-	} else if len(tasks) == 0 {
-		return fmt.Errorf("tasks not found to stop with task setup id %s", taskSetupId)
-	}
-	for _, task := range tasks {
-		StopTask <- &task
-	}
-	return nil
-}
-func (taskService *TaskService) StartTasks(taskSetupId string, mainTaskType string, subTaskType string) (err error) {
-	tasks, err := taskService.GetTasksByTaskSetupId(taskSetupId, mainTaskType, subTaskType)
-	if err != nil {
-		return err
-	} else if len(tasks) == 0 {
-		return fmt.Errorf("tasks not found to start with task setup id %s", taskSetupId)
-	}
-	for _, task := range tasks {
-		NewTask <- &task
-	}
-	return nil
 }
