@@ -95,6 +95,7 @@ import {
     startGenericTasks,
     stopGenericTasks,
     deleteGenericTasks,
+    stopGenericTask
 } from '@/api/octopus/genericTask'
 
 // 全量引入格式化工具 请按需保留
@@ -434,6 +435,26 @@ const startTasksFunc = async () => {
     }
 }
 
+const stopTask = (row) => {
+    ElMessageBox.confirm('确定停止任务吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        stopTaskFunc(row)
+    })
+}
+const stopTaskFunc = async (row) => {
+    let res = await stopGenericTask({ taskId: row.ID })
+    if (res.code === 0) {
+        ElMessage({
+            type: 'success',
+            message: '停止成功'
+        })
+        getTableData()
+    }
+}
+
 const stopTasks = () => {
     if (total.value == 0) {
         ElMessage({
@@ -511,12 +532,6 @@ const deleteTaskFunc = async (row) => {
         }
         getTableData()
     }
-}
-
-
-// 停止任务
-const stopTask = async (row) => {
-
 }
 </script>
 

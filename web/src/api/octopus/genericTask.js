@@ -24,11 +24,11 @@ export const startGenericTasks = (data) => {
     })
 }
 
-export const stopGenericTask = (data) => {
+export const stopGenericTask = (params) => {
     return service({
         url: '/genericTask/stopGenericTask',
-        method: 'post',
-        data
+        method: 'get',
+        params
     })
 }
 
