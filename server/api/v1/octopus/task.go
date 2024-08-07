@@ -62,7 +62,7 @@ func (taskApi *TaskApi) CreateTask(c *gin.Context) {
 //		}
 //	}
 func (taskApi *TaskApi) DeleteTask(c *gin.Context) {
-	id := c.Query("id")
+	id := c.Query("ID")
 	userId := utils.GetUserID(c)
 	if err := taskService.DeleteTask(id, userId); err != nil {
 		global.GVA_LOG.Error("删除失败!", zap.Error(err))
@@ -186,9 +186,11 @@ func (taskApi *TaskApi) FindTaskByDeviceId(c *gin.Context) {
 	deviceId := c.Query("deviceId")
 	taskSetupId := c.Query("taskSetupId")
 	mainTaskType := c.Query("mainTaskType")
-	if retask, err := taskService.GetTaskByDeviceId(taskSetupId, deviceId, mainTaskType); err != nil {
+	if tasks, err := taskService.GetTasksByDeviceId(taskSetupId, deviceId, mainTaskType); err != nil {
+		response.OkWithData(nil, c)
+	} else if len(tasks) == 0 {
 		response.OkWithData(nil, c)
 	} else {
-		response.OkWithData(retask, c)
+		response.OkWithData(tasks[0], c)
 	}
 }

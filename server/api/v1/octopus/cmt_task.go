@@ -45,17 +45,6 @@ func (cmtTaskApi *CmtTaskApi) CreateWriteCmtTask(c *gin.Context) {
 	}
 }
 
-//func (cmtTaskApi *CmtTaskApi) DeleteCmtTask(c *gin.Context) {
-//	id := c.Query("Id")
-//	userId := utils.GetUserID(c)
-//	if err := cmtTaskService.DeleteCmtTask(id, userId); err != nil {
-//		global.GVA_LOG.Error("删除失败!", zap.Error(err))
-//		response.FailWithMessage("删除失败", c)
-//	} else {
-//		response.OkWithMessage("删除成功", c)
-//	}
-//}
-
 func (cmtTaskApi *CmtTaskApi) UploadComment(c *gin.Context) {
 	var commentReq octopusReq.CommentReq
 	err := c.ShouldBindJSON(&commentReq)
@@ -71,4 +60,52 @@ func (cmtTaskApi *CmtTaskApi) UploadComment(c *gin.Context) {
 		response.OkWithMessage("创建成功", c)
 	}
 
+}
+func (cmtTaskApi *CmtTaskApi) DeleteCmtTask(c *gin.Context) {
+	id := c.Query("id")
+	userId := utils.GetUserID(c)
+	if err := cmtTaskService.DeleteCmtTask(id, userId); err != nil {
+		global.GVA_LOG.Error("删除失败!", zap.Error(err))
+		response.FailWithMessage("删除失败", c)
+	} else {
+		response.OkWithMessage("删除成功", c)
+	}
+}
+func (cmtTaskApi *CmtTaskApi) DeleteCmtTasks(c *gin.Context) {
+	var taskSetup octopusReq.TaskSetup
+	err := c.ShouldBindJSON(&taskSetup)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	userId := utils.GetUserID(c)
+	if err := cmtTaskService.DeleteCmtTasks(taskSetup, userId); err != nil {
+		global.GVA_LOG.Error("删除任务失败!", zap.Error(err))
+		response.FailWithMessage("删除任务失败", c)
+	} else {
+		response.OkWithMessage("删除任务成功", c)
+	}
+}
+func (cmtTaskApi *CmtTaskApi) StopCmtTask(c *gin.Context) {
+	id := c.Query("id")
+	if err := cmtTaskService.StopCmtTask(id); err != nil {
+		global.GVA_LOG.Error("停止失败!", zap.Error(err))
+		response.FailWithMessage("停止失败", c)
+	} else {
+		response.OkWithMessage("停止成功", c)
+	}
+}
+func (cmtTaskApi *CmtTaskApi) StopCmtTasks(c *gin.Context) {
+	var taskSetup octopusReq.TaskSetup
+	err := c.ShouldBindJSON(&taskSetup)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if err := cmtTaskService.StopCmtTasks(taskSetup); err != nil {
+		global.GVA_LOG.Error("停止任务失败!", zap.Error(err))
+		response.FailWithMessage("停止任务失败", c)
+	} else {
+		response.OkWithMessage("停止任务成功", c)
+	}
 }

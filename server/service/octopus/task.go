@@ -32,57 +32,15 @@ func (taskService *TaskService) CreateTaskWithoutNotify(task *octopus.Task) (err
 
 // DeleteTask 删除任务记录
 // Author [piexlmax](https://github.com/piexlmax)
-//
-//	func (taskService *TaskService) DeleteTask(ID string, userID uint) (err error) {
-//		err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-//			if err := tx.Model(&octopus.Task{}).Where("id = ?", ID).Update("deleted_by", userID).Error; err != nil {
-//				return err
-//			}
-//			if err = tx.Delete(&octopus.Task{}, "id = ?", ID).Error; err != nil {
-//				return err
-//			}
-//			return nil
-//		})
-//		return err
-//	}
-func (taskService *TaskService) DeleteTask(id string, userId uint) (err error) {
-	var task octopus.Task
-	err = global.GVA_DB.Preload("TaskParams").First(&task, id).Error
-	if err != nil {
-		return
-	}
-	var taskIds []uint
-	err = global.GVA_DB.Model(&octopus.Task{}).
-		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
-		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ? AND oct_task.device_id = ?", task.TaskParams.TaskSetupId, task.TaskParams.MainTaskType, task.DeviceId).
-		Pluck("oct_task.id", &taskIds).Error
-	if err != nil {
-		return
-	}
 
-	var taskParamsIds []uint
-	err = global.GVA_DB.Model(&octopus.Task{}).
-		Where("id in ?", taskIds).
-		Pluck("oct_task.task_params_id", &taskParamsIds).Error
-	if err != nil {
-		return
-	}
-
+func (taskService *TaskService) DeleteTask(ID string, userID uint) (err error) {
 	err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Model(&octopus.Task{}).Where("id in ?", taskIds).Update("deleted_by", userId).Error; err != nil {
+		if err := tx.Model(&octopus.Task{}).Where("id = ?", ID).Update("deleted_by", userID).Error; err != nil {
 			return err
 		}
-		if err := tx.Where("id in ?", taskIds).Delete(&octopus.Task{}).Error; err != nil {
+		if err = tx.Delete(&octopus.Task{}, "id = ?", ID).Error; err != nil {
 			return err
 		}
-
-		if err := tx.Model(&octopus.TaskParams{}).Where("id in ?", taskParamsIds).Update("deleted_by", userId).Error; err != nil {
-			return err
-		}
-		if err := tx.Where("id in ?", taskParamsIds).Delete(&octopus.TaskParams{}).Error; err != nil {
-			return err
-		}
-
 		return nil
 	})
 	return err
@@ -168,17 +126,24 @@ func (taskService *TaskService) GetTaskInfoList(info octopusReq.TaskSearch) (lis
 	err = db.Find(&tasks).Error
 	return tasks, total, err
 }
-func (taskService *TaskService) GetTaskByDeviceId(taskSetupId string, deviceId string, mainTaskType string) (task octopus.Task, err error) {
+
+func (taskService *TaskService) GetTasksByDeviceId(taskSetupId string, deviceId string, mainTaskType string) (task []octopus.Task, err error) {
 	err = global.GVA_DB.Model(&octopus.Task{}).
 		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
-		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ? AND oct_task.device_id = ?", taskSetupId, mainTaskType, deviceId).First(&task).Error
+		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ? AND oct_task.device_id = ?", taskSetupId, mainTaskType, deviceId).Find(&task).Error
 	return
 }
 
 func (taskService *TaskService) GetTasksByTaskSetupId(taskSetupId string, mainTaskType string, subTaskType string) (tasks []octopus.Task, err error) {
-	err = global.GVA_DB.Model(&octopus.Task{}).
+	query := global.GVA_DB.Model(&octopus.Task{}).
 		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
-		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ? AND oct_task_params.sub_task_type = ?", taskSetupId, mainTaskType, subTaskType).Find(&tasks).Error
+		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ?", taskSetupId, mainTaskType)
+
+	if subTaskType != "" {
+		query = query.Where("oct_task_params.sub_task_type = ?", subTaskType)
+	}
+	err = query.Find(&tasks).Error
+
 	return
 }
 

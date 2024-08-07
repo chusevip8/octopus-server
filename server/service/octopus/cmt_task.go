@@ -11,6 +11,7 @@ import (
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
 	"gorm.io/gorm"
 	"strconv"
+	"time"
 )
 
 type CmtTaskService struct{}
@@ -162,49 +163,6 @@ func (cmtTaskService *CmtTaskService) UpdateFindCmtTaskParams(cmtTaskSetup octop
 	return
 }
 
-//func (cmtTaskService *CmtTaskService) DeleteCmtTask(id string, userId uint) (err error) {
-//	var task octopus.Task
-//	err = global.GVA_DB.Preload("TaskParams").First(&task, id).Error
-//	if err != nil {
-//		return
-//	}
-//	var taskIds []uint
-//	err = global.GVA_DB.Model(&octopus.Task{}).
-//		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
-//		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ? AND oct_task.device_id = ?", task.TaskParams.TaskSetupId, task.TaskParams.MainTaskType, task.DeviceId).
-//		Pluck("oct_task.id", &taskIds).Error
-//	if err != nil {
-//		return
-//	}
-//
-//	var taskParamsIds []uint
-//	err = global.GVA_DB.Model(&octopus.Task{}).
-//		Where("id in ?", taskIds).
-//		Pluck("oct_task.task_params_id", &taskParamsIds).Error
-//	if err != nil {
-//		return
-//	}
-//
-//	err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-//		if err := tx.Model(&octopus.Task{}).Where("id in ?", taskIds).Update("deleted_by", userId).Error; err != nil {
-//			return err
-//		}
-//		if err := tx.Where("id in ?", taskIds).Delete(&octopus.Task{}).Error; err != nil {
-//			return err
-//		}
-//
-//		if err := tx.Model(&octopus.TaskParams{}).Where("id in ?", taskParamsIds).Update("deleted_by", userId).Error; err != nil {
-//			return err
-//		}
-//		if err := tx.Where("id in ?", taskParamsIds).Delete(&octopus.TaskParams{}).Error; err != nil {
-//			return err
-//		}
-//
-//		return nil
-//	})
-//	return err
-//}
-
 func (cmtTaskService *CmtTaskService) buildPostId(poster string, postTitle string, postDesc string) (postId string, err error) {
 	// 拼接字符串
 	data := poster + postTitle + postDesc
@@ -305,4 +263,111 @@ func (cmtTaskService *CmtTaskService) CreateComment(commentReq *octopusReq.Comme
 		return ErrorCreateComment, err
 	}
 	return 0, nil
+}
+func (cmtTaskService *CmtTaskService) DeleteCmtTask(id string, userId uint) (err error) {
+	var task octopus.Task
+	err = global.GVA_DB.Preload("TaskParams").First(&task, id).Error
+	if err != nil {
+		return
+	}
+	var taskIds []uint
+	err = global.GVA_DB.Model(&octopus.Task{}).
+		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
+		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ? AND oct_task.device_id = ?", task.TaskParams.TaskSetupId, task.TaskParams.MainTaskType, task.DeviceId).
+		Pluck("oct_task.id", &taskIds).Error
+	if err != nil {
+		return
+	}
+
+	var taskParamsIds []uint
+	err = global.GVA_DB.Model(&octopus.Task{}).
+		Where("id in ?", taskIds).
+		Pluck("oct_task.task_params_id", &taskParamsIds).Error
+	if err != nil {
+		return
+	}
+
+	err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+		now := time.Now()
+		if err := tx.Model(&octopus.Task{}).Where("id in ?", taskIds).Updates(map[string]interface{}{
+			"deleted_by": userId,
+			"deleted_at": now,
+		}).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Model(&octopus.TaskParams{}).Where("id in ?", taskParamsIds).Updates(map[string]interface{}{
+			"deleted_by": userId,
+			"deleted_at": now,
+		}).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+	return err
+}
+func (cmtTaskService *CmtTaskService) StopCmtTask(id string) (err error) {
+	var task octopus.Task
+	err = global.GVA_DB.Preload("TaskParams").First(&task, id).Error
+	if err != nil {
+		return
+	}
+	tasks, err := TaskServiceApp.GetTasksByDeviceId(strconv.Itoa(int(task.TaskParams.TaskSetupId)), strconv.Itoa(int(task.DeviceId)), task.TaskParams.MainTaskType)
+	if err != nil {
+		return
+	} else if len(tasks) == 0 {
+		return fmt.Errorf("tasks not found to stop with task setup id %s", task.TaskParams.TaskSetupId)
+	}
+	for _, t := range tasks {
+		StopTask <- &t
+	}
+	return nil
+}
+func (cmtTaskService *CmtTaskService) StopCmtTasks(taskSetup octopusReq.TaskSetup) (err error) {
+	tasks, err := TaskServiceApp.GetTasksByTaskSetupId(taskSetup.TaskSetupId, taskSetup.MainTaskType, "")
+	if err != nil {
+		return err
+	} else if len(tasks) == 0 {
+		return fmt.Errorf("tasks not found to stop with task setup id %s", taskSetup.TaskSetupId)
+	}
+	for _, task := range tasks {
+		StopTask <- &task
+	}
+	return nil
+}
+func (cmtTaskService *CmtTaskService) DeleteCmtTasks(taskSetup octopusReq.TaskSetup, userId uint) (err error) {
+	var taskIds []uint
+	err = global.GVA_DB.Model(&octopus.Task{}).
+		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
+		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ?", taskSetup.TaskSetupId, taskSetup.MainTaskType).
+		Pluck("oct_task.id", &taskIds).Error
+	if err != nil {
+		return
+	}
+	var taskParamsIds []uint
+	err = global.GVA_DB.Model(&octopus.Task{}).
+		Where("id in ?", taskIds).
+		Pluck("oct_task.task_params_id", &taskParamsIds).Error
+	if err != nil {
+		return
+	}
+	err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+		now := time.Now()
+		if err := tx.Model(&octopus.Task{}).Where("id in ?", taskIds).Updates(map[string]interface{}{
+			"deleted_by": userId,
+			"deleted_at": now,
+		}).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Model(&octopus.TaskParams{}).Where("id in ?", taskParamsIds).Updates(map[string]interface{}{
+			"deleted_by": userId,
+			"deleted_at": now,
+		}).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+	return err
 }

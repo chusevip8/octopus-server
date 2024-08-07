@@ -63,7 +63,7 @@ func (genericTaskApi *GenericTaskApi) StopGenericTasks(c *gin.Context) {
 		return
 	}
 	if err := genericTaskService.StopGenericTasks(taskSetup); err != nil {
-		global.GVA_LOG.Error("运行任务失败!", zap.Error(err))
+		global.GVA_LOG.Error("停止任务失败!", zap.Error(err))
 		response.FailWithMessage("停止任务失败", c)
 	} else {
 		response.OkWithMessage("停止任务成功", c)
