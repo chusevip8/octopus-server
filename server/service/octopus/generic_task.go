@@ -11,6 +11,7 @@ import (
 	"reflect"
 	"regexp"
 	"strconv"
+	"time"
 )
 
 type GenericTaskService struct{}
@@ -237,20 +238,20 @@ func (genericTaskService *GenericTaskService) DeleteGenericTasks(taskSetup octop
 		return
 	}
 	err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Model(&octopus.Task{}).Where("id in ?", taskIds).Update("deleted_by", userId).Error; err != nil {
-			return err
-		}
-		if err := tx.Where("id in ?", taskIds).Delete(&octopus.Task{}).Error; err != nil {
-			return err
-		}
-
-		if err := tx.Model(&octopus.TaskParams{}).Where("id in ?", taskParamsIds).Update("deleted_by", userId).Error; err != nil {
-			return err
-		}
-		if err := tx.Where("id in ?", taskParamsIds).Delete(&octopus.TaskParams{}).Error; err != nil {
+		now := time.Now()
+		if err := tx.Model(&octopus.Task{}).Where("id in ?", taskIds).Updates(map[string]interface{}{
+			"deleted_by": userId,
+			"deleted_at": now,
+		}).Error; err != nil {
 			return err
 		}
 
+		if err := tx.Model(&octopus.TaskParams{}).Where("id in ?", taskParamsIds).Updates(map[string]interface{}{
+			"deleted_by": userId,
+			"deleted_at": now,
+		}).Error; err != nil {
+			return err
+		}
 		return nil
 	})
 	return err
