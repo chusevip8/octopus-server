@@ -35,7 +35,6 @@
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
         <el-table-column align="center" label="设备编号" prop="device.number" width="120" />
-        <el-table-column align="center" label="设备备注" prop="device.note" width="360" />
         <el-table-column align="center" label="任务状态" width="120">
           <template #default="scope">
             <span>{{ taskStatusFilter(scope.row.status) }}</span>
@@ -46,6 +45,7 @@
             <span>{{ deviceStatusFilter(scope.row.device.status) }}</span>
           </template>
         </el-table-column>
+        <el-table-column align="center" label="参数" prop="taskParams.params" width="240" />
         <el-table-column align="center" label="错误信息" prop="error" min-width="120" />
         <el-table-column align="center" label="操作" fixed="right" min-width="240">
           <template #default="scope">

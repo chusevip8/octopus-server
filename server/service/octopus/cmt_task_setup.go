@@ -5,6 +5,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
 	"gorm.io/gorm"
+	"time"
 )
 
 type CmtTaskSetupService struct{}
@@ -20,14 +21,51 @@ func (cmtTaskSetupService *CmtTaskSetupService) CreateCmtTaskSetup(cmtTaskSetup 
 
 // DeleteCmtTaskSetup 删除评论任务设置记录
 // Author [piexlmax](https://github.com/piexlmax)
+//func (cmtTaskSetupService *CmtTaskSetupService) DeleteCmtTaskSetup(ID string, userID uint) (err error) {
+//	err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+//		if err := tx.Model(&octopus.CmtTaskSetup{}).Where("id = ?", ID).Update("deleted_by", userID).Error; err != nil {
+//			return err
+//		}
+//		if err = tx.Delete(&octopus.CmtTaskSetup{}, "id = ?", ID).Error; err != nil {
+//			return err
+//		}
+//		return nil
+//	})
+//	return err
+//}
+
 func (cmtTaskSetupService *CmtTaskSetupService) DeleteCmtTaskSetup(ID string, userID uint) (err error) {
+	var taskIds []uint
+	err = global.GVA_DB.Model(&octopus.Task{}).
+		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
+		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ?", ID, "cmt").
+		Pluck("oct_task.id", &taskIds).Error
+	if err != nil {
+		return
+	}
 	err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Model(&octopus.CmtTaskSetup{}).Where("id = ?", ID).Update("deleted_by", userID).Error; err != nil {
+		now := time.Now()
+		if err := tx.Model(&octopus.Task{}).Where("id in ?", taskIds).Updates(map[string]interface{}{
+			"deleted_by": userID,
+			"deleted_at": now,
+		}).Error; err != nil {
 			return err
 		}
-		if err = tx.Delete(&octopus.CmtTaskSetup{}, "id = ?", ID).Error; err != nil {
+
+		if err := tx.Model(&octopus.TaskParams{}).Where("task_setup_id = ?", ID).Where("main_task_type = ?", "cmt").Updates(map[string]interface{}{
+			"deleted_by": userID,
+			"deleted_at": now,
+		}).Error; err != nil {
 			return err
 		}
+
+		if err := tx.Model(&octopus.CmtTaskSetup{}).Where("id = ?", ID).Updates(map[string]interface{}{
+			"deleted_by": userID,
+			"deleted_at": now,
+		}).Error; err != nil {
+			return err
+		}
+
 		return nil
 	})
 	return err

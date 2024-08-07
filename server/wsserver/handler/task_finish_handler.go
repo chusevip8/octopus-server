@@ -15,6 +15,8 @@ func TaskFinishHandler(client *socket.Client, data []byte) {
 		global.GVA_LOG.Error("TaskFinishHandler json Unmarshal", zap.String("error", err.Error()))
 		return
 	}
+	client.ClientLock.Lock()
+	defer client.ClientLock.Unlock()
 	if taskFinish.Error == "" {
 		_ = service.TaskService.UpdateTaskStatusToFinish(taskFinish.TaskId)
 	} else {
