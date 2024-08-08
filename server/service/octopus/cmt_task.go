@@ -148,7 +148,8 @@ func (cmtTaskService *CmtTaskService) buildFindCmtTaskParams(setupId uint) (para
 	} else {
 		postLink := cmtTaskSetup.PostLink
 		keyword := cmtTaskSetup.Keyword
-		params = fmt.Sprintf(`{"postLink": "%s", "keyword": "%s"}`, postLink, keyword)
+		cmtCount := cmtTaskSetup.CmtCount
+		params = fmt.Sprintf(`{"postLink": "%s", "keyword": "%s","cmtCount":"%s"}`, postLink, keyword, cmtCount)
 		return params, nil
 	}
 }
