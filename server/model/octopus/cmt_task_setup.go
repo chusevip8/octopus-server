@@ -12,6 +12,7 @@ type CmtTaskSetup struct {
 	TaskTitle        string `json:"taskTitle" form:"taskTitle" gorm:"column:task_title;comment:任务标题;size:128;" binding:"required"`                      //任务标题
 	PostLink         string `json:"postLink" form:"postLink" gorm:"column:post_link;comment:帖子链接;" binding:"required"`                                  //帖子链接
 	Keyword          string `json:"keyword" form:"keyword" gorm:"column:keyword;comment:评论关键字;"`                                                        //评论关键字
+	CmtCount         uint   `json:"cmtCount" form:"cmtCount" gorm:"default:0;column:cmt_count;comment:评论条数;"`                                           //评论条数
 	FindCmtScriptId  uint   `json:"findCmtScriptId" form:"findCmtScriptId" gorm:"column:find_cmt_script_id;comment:查找评论脚本Id;" binding:"required"`       //查找评论脚本Id
 	WriteCmtScriptId uint   `json:"writeCmtScriptId" form:"writeCmtScriptId" gorm:"column:write_cmt_script_id;comment:第一次回复评论脚本Id;" binding:"required"` //第一次回复评论脚本Id
 	ReplyCmtScriptId uint   `json:"replyCmtScriptId" form:"replyCmtScriptId" gorm:"column:reply_cmt_script_id;comment:回复评论脚本id;" binding:"required"`    //回复评论脚本id

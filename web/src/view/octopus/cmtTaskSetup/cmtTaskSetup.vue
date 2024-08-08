@@ -36,6 +36,7 @@
         <el-table-column align="center" label="任务标题" prop="taskTitle" width="180" />
         <el-table-column align="center" label="帖子链接" prop="postLink" width="120" />
         <el-table-column align="center" label="评论关键字" prop="keyword" min-width="240" />
+        <el-table-column align="center" label="评论条数" prop="cmtCount" width="120" />
         <el-table-column align="center" label="操作" fixed="right" min-width="240">
           <template #default="scope">
             <el-button type="primary" link icon="Cellphone" class="table-button"
@@ -70,8 +71,11 @@
         <el-form-item label="帖子链接:" prop="postLink">
           <el-input v-model="formData.postLink" :clearable="false" placeholder="请输入帖子链接" />
         </el-form-item>
-        <el-form-item label="评论关键字:（以半角逗号分隔）" prop="keyword">
+        <el-form-item label="评论关键字:（以半角逗号分隔，空为所有评论）" prop="keyword">
           <el-input v-model="formData.keyword" :clearable="false" placeholder="请输入评论关键字" />
+        </el-form-item>
+        <el-form-item label="评论数量:（0为所有评论）" prop="cmtCount">
+          <el-input v-model="formData.cmtCount" :clearable="false" placeholder="请输入评论数量" />
         </el-form-item>
       </el-form>
     </el-drawer>
@@ -110,6 +114,7 @@ const formData = ref({
   taskTitle: '',
   postLink: '',
   keyword: '',
+  cmtCount: 0,
   findCmtScriptId: undefined,
   writeCmtScriptId: undefined,
   replyCmtScriptId: undefined,
@@ -140,7 +145,17 @@ const rule = reactive({
     message: '不能只输入空格',
     trigger: ['input', 'blur'],
   }
-  ]
+  ],
+  cmtCount: [{
+    required: true,
+    message: '评论数不能为空',
+    trigger: ['input', 'blur'],
+  },
+  {
+    pattern: /^\d+$/,
+    message: '评论数只能输入数字',
+    trigger: ['input', 'blur'],
+  }]
 })
 
 const searchRule = reactive({
@@ -323,6 +338,7 @@ const closeDialog = () => {
     taskTitle: '',
     postLink: '',
     keyword: '',
+    cmtCount: 0,
     findCmtScriptId: undefined,
     writeCmtScriptId: undefined,
     replyCmtScriptId: undefined,
