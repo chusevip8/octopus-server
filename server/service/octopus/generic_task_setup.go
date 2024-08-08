@@ -97,10 +97,8 @@ func (genericTaskSetupService *GenericTaskSetupService) DeleteBindData(setupId s
 	if err != nil {
 		return err
 	}
-	err = os.Remove(taskSetup.DataFilePath)
-	if err != nil {
-		return err
-	}
+	_ = os.Remove(taskSetup.DataFilePath)
+
 	taskSetup.DataFile = ""
 	taskSetup.DataFilePath = ""
 	err = genericTaskSetupService.UpdateGenericTaskSetup(taskSetup)
