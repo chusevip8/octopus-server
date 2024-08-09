@@ -17,19 +17,24 @@ func TaskFinishHandler(client *socket.Client, data []byte) {
 	}
 	client.ClientLock.Lock()
 	defer client.ClientLock.Unlock()
+	var err error
 	if taskFinish.Error == "" {
-		_ = service.TaskService.UpdateTaskStatusToFinish(taskFinish.TaskId)
+		err = service.TaskService.UpdateTaskStatusToFinish(taskFinish.TaskId)
 	} else {
-		_ = service.TaskService.UpdateTaskStatusToFail(taskFinish.TaskId, taskFinish.Error)
+		err = service.TaskService.UpdateTaskStatusToFail(taskFinish.TaskId, taskFinish.Error)
+	}
+	if err != nil {
+		global.GVA_LOG.Error("Task finished,update task status", zap.String("error", err.Error()))
+		return
 	}
 
 	taskFinishPush := protocol.TaskFinishPush{Token: taskFinish.Token, TaskId: taskFinish.TaskId}
 
 	message := map[string]interface{}{"code": protocol.CodeTaskFinishPush, "data": taskFinishPush}
-	data, err := json.Marshal(message)
+	msgData, err := json.Marshal(message)
 	if err != nil {
 		global.GVA_LOG.Error("TaskFinishHandler json marshal", zap.String("error", err.Error()))
 	} else {
-		client.SendMessage(data)
+		client.SendMessage(msgData)
 	}
 }
