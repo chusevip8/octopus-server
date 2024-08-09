@@ -19,5 +19,6 @@ func (s *GenericTaskRouter) InitGenericTaskRouter(Router *gin.RouterGroup, Publi
 		genericTaskRouter.GET("stopGenericTask", genericTaskApi.StopGenericTask)        // 停止单个任务
 		genericTaskRouter.POST("stopGenericTasks", genericTaskApi.StopGenericTasks)     // 停止所有任务
 		genericTaskRouter.POST("deleteGenericTasks", genericTaskApi.DeleteGenericTasks) // 删除所有任务
+		genericTaskRouter.DELETE("deleteGenericTask", genericTaskApi.DeleteGenericTask) // 删除任务
 	}
 }

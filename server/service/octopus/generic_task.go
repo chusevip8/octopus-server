@@ -256,3 +256,27 @@ func (genericTaskService *GenericTaskService) DeleteGenericTasks(taskSetup octop
 	})
 	return err
 }
+func (genericTaskService *GenericTaskService) DeleteGenericTask(id string, userId uint) (err error) {
+	task, err := TaskServiceApp.GetTask(id)
+	if err != nil {
+		return err
+	}
+	err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+		now := time.Now()
+		if err := tx.Model(&octopus.Task{}).Where("id in ?", task.ID).Updates(map[string]interface{}{
+			"deleted_by": userId,
+			"deleted_at": now,
+		}).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Model(&octopus.TaskParams{}).Where("id in ?", task.TaskParamsId).Updates(map[string]interface{}{
+			"deleted_by": userId,
+			"deleted_at": now,
+		}).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+	return err
+}

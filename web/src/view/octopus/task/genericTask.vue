@@ -95,7 +95,8 @@ import {
     startGenericTasks,
     stopGenericTasks,
     deleteGenericTasks,
-    stopGenericTask
+    stopGenericTask,
+    deleteGenericTask
 } from '@/api/octopus/genericTask'
 
 // 全量引入格式化工具 请按需保留
@@ -521,7 +522,7 @@ const deleteRow = (row) => {
 }
 
 const deleteTaskFunc = async (row) => {
-    const res = await deleteTask({ id: row.ID })
+    const res = await deleteGenericTask({ id: row.ID })
     if (res.code === 0) {
         ElMessage({
             type: 'success',

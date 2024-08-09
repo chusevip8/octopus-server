@@ -98,3 +98,14 @@ func (genericTaskApi *GenericTaskApi) DeleteGenericTasks(c *gin.Context) {
 		response.OkWithMessage("删除任务成功", c)
 	}
 }
+
+func (genericTaskApi *GenericTaskApi) DeleteGenericTask(c *gin.Context) {
+	id := c.Query("id")
+	userId := utils.GetUserID(c)
+	if err := genericTaskService.DeleteGenericTask(id, userId); err != nil {
+		global.GVA_LOG.Error("删除失败!", zap.Error(err))
+		response.FailWithMessage("删除失败", c)
+	} else {
+		response.OkWithMessage("删除成功", c)
+	}
+}
