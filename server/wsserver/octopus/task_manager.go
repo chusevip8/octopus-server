@@ -1,6 +1,7 @@
 package octopus
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
@@ -76,8 +77,13 @@ func buildTaskPush(task octopus.Task, taskPush *protocol.TaskPush) (err error) {
 			scriptContent = strings.ReplaceAll(scriptContent, placeholder, value)
 		}
 	}
+	var compactBuffer bytes.Buffer
+	if err = json.Compact(&compactBuffer, []byte(scriptContent)); err != nil {
+		taskPush.Error = "Task script compact error"
+		return
+	}
 	taskPush.TaskId = strconv.Itoa(int(task.ID))
-	taskPush.Script = scriptContent
+	taskPush.Script = compactBuffer.String()
 	taskPush.Error = ""
 	return
 }
