@@ -263,14 +263,14 @@ func (genericTaskService *GenericTaskService) DeleteGenericTask(id string, userI
 	}
 	err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
 		now := time.Now()
-		if err := tx.Model(&octopus.Task{}).Where("id in ?", task.ID).Updates(map[string]interface{}{
+		if err := tx.Model(&octopus.Task{}).Where("id = ?", task.ID).Updates(map[string]interface{}{
 			"deleted_by": userId,
 			"deleted_at": now,
 		}).Error; err != nil {
 			return err
 		}
 
-		if err := tx.Model(&octopus.TaskParams{}).Where("id in ?", task.TaskParamsId).Updates(map[string]interface{}{
+		if err := tx.Model(&octopus.TaskParams{}).Where("id = ?", task.TaskParamsId).Updates(map[string]interface{}{
 			"deleted_by": userId,
 			"deleted_at": now,
 		}).Error; err != nil {

@@ -46,10 +46,10 @@ export const deleteGenericTasks = (data) => {
         data
     })
 }
-export const deleteGenericTask = (data) => {
+export const deleteGenericTask = (params) => {
     return service({
         url: '/genericTask/deleteGenericTask',
         method: 'delete',
-        data
+        params
     })
 }
