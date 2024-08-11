@@ -1,17 +1,39 @@
 [
   {
     "app": {
-      "name": "Edge浏览器",
-      "packageName": "com.microsoft.emmx",
-      "intent": {
-        "scheme": "${postLink}",
-        "action": "android.intent.action.VIEW"
-      }
+      "name": "Octopus 浏览器",
+      "packageName": "com.octopus.browser"
     },
     "activities": [
       {
-        "title": "主页面",
-        "className": "org.chromium.chrome.browser.ChromeTabbedActivity",
+        "title": "启动页面",
+        "className": "com.octopus.start.Activity",
+        "views": [
+          {
+            "title": "启动",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "launch",
+                "value": "scheme://${postLink}",
+                "next": "1001"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "app": {
+      "name": "小红书",
+      "packageName": "com.octopus.browser"
+    },
+    "activities": [
+      {
+        "title": "启动页面",
+        "className": "com.octopus.start.Activity",
         "views": [
           {
             "title": "等待-0",
@@ -20,7 +42,7 @@
             "event": {
               "yesEvent": {
                 "type": "wait",
-                "value": "2000",
+                "value": "3000",
                 "next": "1001"
               }
             }
