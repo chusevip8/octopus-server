@@ -71,7 +71,70 @@
               "yesEvent": {
                 "type": "click",
                 "value": "",
-                "next": "1001"
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "等待-1",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "2000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "更新界面-2",
+            "type": "update",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "作者ID-3",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 1
+            },
+            "condition": {
+              "type": "contains",
+              "match": "text",
+              "value": "小红书号"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://map/text/posterId",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "作者名称-3",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://map/text/poster",
+                "next": ""
               }
             }
           }
