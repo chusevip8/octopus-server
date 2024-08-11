@@ -28,7 +28,7 @@
   {
     "app": {
       "name": "小红书",
-      "packageName": "com.octopus.browser"
+      "packageName": "com.xingin.xhs"
     },
     "activities": [
       {
@@ -43,6 +43,34 @@
               "yesEvent": {
                 "type": "wait",
                 "value": "3000",
+                "next": "1003"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "title": "详情页面",
+        "className": "com.xingin.matrix.notedetail.NoteDetailActivity",
+        "views": [
+          {
+            "title": "作者-0",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.widget.Button",
+              "index": 1
+            },
+            "condition": {
+              "type": "contains",
+              "match": "des",
+              "value": "作者,"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "click",
+                "value": "",
                 "next": "1001"
               }
             }
