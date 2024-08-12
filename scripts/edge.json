@@ -42,7 +42,7 @@
             "event": {
               "yesEvent": {
                 "type": "wait",
-                "value": "3000",
+                "value": "2000",
                 "next": "1003"
               }
             }
@@ -187,6 +187,34 @@
               "yesEvent": {
                 "type": "extract",
                 "value": "collect://map/text/postTitle",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "评论按钮-9",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.view.ViewGroup",
+              "index": 0,
+              "deep": "child://3"
+            },
+            "condition": {
+              "type": "equals",
+              "match": "des",
+              "value": "评论 0"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "error",
+                "value": "没有评论",
+                "next": ""
+              },
+              "noEvent": {
+                "type": "click",
+                "value": "",
                 "next": "1001"
               }
             }
