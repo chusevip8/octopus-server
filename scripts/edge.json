@@ -122,7 +122,7 @@
             }
           },
           {
-            "title": "作者名称-3",
+            "title": "作者名称-4",
             "type": "view",
             "value": "",
             "match": {
@@ -135,6 +135,59 @@
                 "type": "extract",
                 "value": "collect://map/text/poster",
                 "next": ""
+              }
+            }
+          },
+          {
+            "title": "返回-5",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "back",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "等待-6",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "2000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "更新界面-7",
+            "type": "update",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "文章标题/描述-8",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 1
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://map/text/postTitle",
+                "next": "1001"
               }
             }
           }
