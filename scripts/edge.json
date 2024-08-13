@@ -153,8 +153,18 @@
               "value": "androidx.recyclerview.widget.RecyclerView",
               "index": 1
             },
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "0"
+            },
             "event": {
               "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "1001"
+              },
+              "noEvent": {
                 "type": "",
                 "value": "",
                 "next": ""
@@ -169,17 +179,51 @@
               "yesEvent": {
                 "type": "",
                 "value": "",
-                "next": ""
+                "next": "9"
               },
               "noneEvent": {
                 "type": "",
                 "value": "",
-                "next": "1001"
+                "next": ""
               }
             }
           },
           {
-            "title": "评论项-7",
+            "title": "检测是否到底-7",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "des",
+              "value": "已到底",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "1001"
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "滑动列表-8",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "slide",
+                "value": "2,0,0.3,0,0.3",
+                "next": "3"
+              }
+            }
+          },
+          {
+            "title": "评论项-9",
             "type": "view",
             "value": "",
             "match": {
@@ -191,7 +235,7 @@
             "condition": {
               "type": "contains",
               "match": "text",
-              "value": "list://"
+              "value": "list://${keyword}"
             },
             "event": {
               "yesEvent": {
@@ -207,7 +251,7 @@
             }
           },
           {
-            "title": "评论作者-8",
+            "title": "评论作者-10",
             "type": "view",
             "value": "",
             "match": {
@@ -225,7 +269,7 @@
             }
           },
           {
-            "title": "放入Collect-9",
+            "title": "放入Collect-11",
             "type": "view",
             "value": "",
             "event": {
@@ -237,7 +281,7 @@
             }
           },
           {
-            "title": "上传数据-10",
+            "title": "上传数据-12",
             "type": "output",
             "value": "http://bzy",
             "event": {
@@ -249,7 +293,7 @@
             }
           },
           {
-            "title": "计数-11",
+            "title": "计数-13",
             "type": "count",
             "value": "${cmtCount}",
             "condition": {
@@ -271,7 +315,7 @@
             }
           },
           {
-            "title": "清除数据-12",
+            "title": "清除数据-14",
             "type": "view",
             "value": "",
             "event": {
