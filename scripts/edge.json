@@ -207,7 +207,7 @@
             }
           },
           {
-            "title": "评论作者-7",
+            "title": "评论作者-8",
             "type": "view",
             "value": "",
             "match": {
@@ -225,7 +225,7 @@
             }
           },
           {
-            "title": "放入Collect-8",
+            "title": "放入Collect-9",
             "type": "view",
             "value": "",
             "event": {
@@ -237,13 +237,47 @@
             }
           },
           {
-            "title": "上传数据-9",
+            "title": "上传数据-10",
             "type": "output",
             "value": "http://bzy",
             "event": {
               "yesEvent": {
                 "type": "",
                 "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "计数-11",
+            "type": "count",
+            "value": "${cmtCount}",
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "1"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "1001"
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "清除数据-12",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "clean",
+                "value": "comments",
                 "next": "6"
               }
             }
