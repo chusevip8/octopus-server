@@ -220,6 +220,30 @@
               "yesEvent": {
                 "type": "extract",
                 "value": "collect://block/text/commenter",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "放入Collect-8",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://list/comments",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "上传数据-9",
+            "type": "output",
+            "value": "http://bzy",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
                 "next": "6"
               }
             }
