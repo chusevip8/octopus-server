@@ -325,7 +325,7 @@
           {
             "title": "上传数据-12",
             "type": "output",
-            "value": "https://bzy.ai4mobi.com/api/cmtTask/uploadComment?cmtFrom=find",
+            "value": "https://bzy.ai4mobi.com/api/cmtTask/uploadFindComment",
             "event": {
               "yesEvent": {
                 "type": "",

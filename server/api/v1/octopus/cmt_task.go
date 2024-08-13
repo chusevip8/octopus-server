@@ -46,7 +46,6 @@ func (cmtTaskApi *CmtTaskApi) CreateWriteCmtTask(c *gin.Context) {
 }
 
 func (cmtTaskApi *CmtTaskApi) UploadFindComment(c *gin.Context) {
-
 	var findCommentReq octopusReq.FindCommentReq
 	err := c.ShouldBindJSON(&findCommentReq)
 	if err != nil {
