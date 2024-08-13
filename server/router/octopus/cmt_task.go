@@ -23,6 +23,6 @@ func (s *CmtTaskRouter) InitCmtTaskRouter(Router *gin.RouterGroup, PublicRouter 
 		cmtTaskRouter.POST("deleteCmtTasks", cmtTaskApi.DeleteCmtTasks)         // 删除所有任务
 	}
 	{
-		cmtTaskRouterWithoutAuth.POST("uploadComment", cmtTaskApi.UploadComment)
+		cmtTaskRouterWithoutAuth.POST("uploadFindComment", cmtTaskApi.UploadFindComment)
 	}
 }

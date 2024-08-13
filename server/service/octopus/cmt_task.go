@@ -77,7 +77,7 @@ func (cmtTaskService *CmtTaskService) CreateWriteCmtTask(writeCmtTask *octopusRe
 		return err
 	}
 
-	commentReq := octopusReq.CommentReq{TaskId: task.ID,
+	commentReq := octopusReq.CommentReq{TaskId: strconv.Itoa(int(task.ID)),
 		Poster:           cmtThread.Poster,
 		PostTitle:        cmtThread.PostTitle,
 		PostDesc:         cmtThread.PostDesc,

@@ -45,13 +45,25 @@ func (cmtTaskApi *CmtTaskApi) CreateWriteCmtTask(c *gin.Context) {
 	}
 }
 
-func (cmtTaskApi *CmtTaskApi) UploadComment(c *gin.Context) {
-	var commentReq octopusReq.CommentReq
-	err := c.ShouldBindJSON(&commentReq)
+func (cmtTaskApi *CmtTaskApi) UploadFindComment(c *gin.Context) {
+
+	var findCommentReq octopusReq.FindCommentReq
+	err := c.ShouldBindJSON(&findCommentReq)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+	commentReq := octopusReq.CommentReq{TaskId: findCommentReq.TaskId,
+		Poster:           findCommentReq.Poster,
+		PostTitle:        findCommentReq.PostTitle,
+		PostDesc:         findCommentReq.PostDesc,
+		CommentReplier:   findCommentReq.CommentReplier,
+		CommentReplierId: findCommentReq.CommentReplierId,
+		Content:          findCommentReq.Comments[0].Content,
+		Commenter:        findCommentReq.Comments[0].Commenter,
+		CommenterId:      findCommentReq.Comments[0].CommenterId,
+		PostAt:           findCommentReq.Comments[0].PostAt,
+		CmtFrom:          "find"}
 	var errCode int
 	if errCode, err = cmtTaskService.CreateComment(&commentReq); err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
@@ -59,8 +71,8 @@ func (cmtTaskApi *CmtTaskApi) UploadComment(c *gin.Context) {
 	} else {
 		response.OkWithMessage("创建成功", c)
 	}
-
 }
+
 func (cmtTaskApi *CmtTaskApi) DeleteCmtTask(c *gin.Context) {
 	id := c.Query("id")
 	userId := utils.GetUserID(c)
