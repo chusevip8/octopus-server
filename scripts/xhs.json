@@ -1,0 +1,31 @@
+[
+  {
+    "app": {
+      "name": "小红书",
+      "packageName": "com.xingin.xhs",
+      "intent": {
+        "scheme": "xhsdiscover://message/comments"
+      }
+    },
+    "activities": [
+      {
+        "title": "启动页面",
+        "className": "com.octopus.aa.Activity",
+        "views": [
+          {
+            "title": "启动",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "launch",
+                "value": "scheme://${postLink}",
+                "next": "1001"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

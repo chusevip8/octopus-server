@@ -1,22 +1,64 @@
 [
   {
     "app": {
+      "name": "小红书",
+      "packageName": "com.xingin.xhs",
+      "intent": {
+        "scheme": "xhsdiscover://profile"
+      }
+    },
+    "activities": [
+      {
+        "title": "个人页面",
+        "className": "com.xingin.xhs.index.v2.IndexActivityV2",
+        "views": [
+          {
+            "title": "账号",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://map/text/commentReplier",
+                "next": "1001"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "app": {
       "name": "Octopus 浏览器",
-      "packageName": "com.octopus.browser"
+      "packageName": "com.octopus.browser",
+      "intent": {
+        "scheme": "${postLink}"
+      }
     },
     "activities": [
       {
         "title": "启动页面",
-        "className": "com.octopus.start.Activity",
+        "className": "com.octopus.browser.activity.MainActivity",
         "views": [
           {
-            "title": "启动",
+            "title": "打开看看",
             "type": "view",
             "value": "",
+            "match": {
+              "by": "text",
+              "value": "打开看看",
+              "index": 0
+            },
             "event": {
               "yesEvent": {
-                "type": "launch",
-                "value": "scheme://${postLink}",
+                "type": "click",
+                "value": "",
                 "next": "1001"
               }
             }
@@ -283,7 +325,7 @@
           {
             "title": "上传数据-12",
             "type": "output",
-            "value": "http://bzy",
+            "value": "https://bzy.ai4mobi.com/api/cmtTask/uploadComment?cmtFrom=find",
             "event": {
               "yesEvent": {
                 "type": "",
