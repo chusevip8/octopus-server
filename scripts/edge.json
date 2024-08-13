@@ -275,6 +275,34 @@
               "index": 1
             },
             "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "作者"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "6"
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "评论项-10",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "6",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 1
+            },
+            "condition": {
               "type": "contains",
               "match": "text",
               "value": "list://${keyword}"
@@ -293,7 +321,7 @@
             }
           },
           {
-            "title": "评论作者-10",
+            "title": "评论作者-11",
             "type": "view",
             "value": "",
             "match": {
@@ -311,7 +339,7 @@
             }
           },
           {
-            "title": "放入Collect-11",
+            "title": "放入Collect-12",
             "type": "view",
             "value": "",
             "event": {
@@ -323,7 +351,7 @@
             }
           },
           {
-            "title": "上传数据-12",
+            "title": "上传数据-13",
             "type": "output",
             "value": "https://bzy.ai4mobi.com/api/cmtTask/uploadFindComment",
             "event": {
@@ -335,7 +363,7 @@
             }
           },
           {
-            "title": "计数-13",
+            "title": "计数-14",
             "type": "count",
             "value": "${cmtCount}",
             "condition": {
@@ -357,7 +385,7 @@
             }
           },
           {
-            "title": "清除数据-14",
+            "title": "清除数据-15",
             "type": "view",
             "value": "",
             "event": {
