@@ -488,7 +488,7 @@
             "match": {
               "by": "class",
               "value": "androidx.recyclerview.widget.RecyclerView",
-              "index": 1
+              "index": 0
             },
             "condition": {
               "type": "equals",
