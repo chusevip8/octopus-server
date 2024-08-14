@@ -548,19 +548,49 @@
             }
           },
           {
-            "title": "滑动列表-4",
+            "title": "滚动评论列表-4",
             "type": "view",
             "value": "",
+            "match": {
+              "start": "",
+              "by": "class",
+              "value": "androidx.recyclerview.widget.RecyclerView",
+              "index": 0
+            },
             "event": {
               "yesEvent": {
-                "type": "slide",
-                "value": "2,0,0.3,0,0.3",
-                "next": "0"
+                "type": "scroll",
+                "value": "",
+                "next": ""
               }
             }
           },
           {
-            "title": "过滤作者回复的评论-5",
+            "title": "等待-5",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "2000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "更新界面-6",
+            "type": "update",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "1"
+              }
+            }
+          },
+          {
+            "title": "过滤作者回复的评论-7",
             "type": "view",
             "value": "",
             "match": {
@@ -588,7 +618,7 @@
             }
           },
           {
-            "title": "评论项-6",
+            "title": "评论项-8",
             "type": "view",
             "value": "",
             "match": {
@@ -616,7 +646,7 @@
             }
           },
           {
-            "title": "评论作者-7",
+            "title": "评论作者-9",
             "type": "view",
             "value": "",
             "match": {
@@ -634,7 +664,7 @@
             }
           },
           {
-            "title": "放入Collect-8",
+            "title": "放入Collect-10",
             "type": "view",
             "value": "",
             "event": {
@@ -646,7 +676,7 @@
             }
           },
           {
-            "title": "上传数据-9",
+            "title": "上传数据-11",
             "type": "output",
             "value": "https://bzy.ai4mobi.com/api/cmtTask/uploadFindComment",
             "event": {
@@ -658,7 +688,7 @@
             }
           },
           {
-            "title": "计数-10",
+            "title": "计数-12",
             "type": "count",
             "value": "${cmtCount}",
             "condition": {
@@ -680,7 +710,7 @@
             }
           },
           {
-            "title": "清除数据-11",
+            "title": "清除数据-13",
             "type": "view",
             "value": "",
             "event": {
