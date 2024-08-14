@@ -114,7 +114,7 @@ const formData = ref({
   taskTitle: '',
   postLink: '',
   keyword: '',
-  cmtCount: 0,
+  cmtCount: '0',
   findCmtScriptId: undefined,
   writeCmtScriptId: undefined,
   replyCmtScriptId: undefined,
@@ -338,7 +338,7 @@ const closeDialog = () => {
     taskTitle: '',
     postLink: '',
     keyword: '',
-    cmtCount: 0,
+    cmtCount: '0',
     findCmtScriptId: undefined,
     writeCmtScriptId: undefined,
     replyCmtScriptId: undefined,
@@ -353,7 +353,8 @@ const enterDialog = async () => {
     formData.value.findCmtScriptId = parseInt(route.params.findCmtScriptId, 10)
     formData.value.writeCmtScriptId = parseInt(route.params.writeCmtScriptId, 10)
     formData.value.replyCmtScriptId = parseInt(route.params.replyCmtScriptId, 10)
-
+    formData.value.keyword = formData.value.keyword.trim()
+    formData.value.postLink = formData.value.postLink.trim()
     let res
     switch (type.value) {
       case 'create':
