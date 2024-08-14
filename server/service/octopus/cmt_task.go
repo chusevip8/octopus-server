@@ -133,7 +133,8 @@ func (cmtTaskService *CmtTaskService) buildWriteCmtTaskParams(cmtTaskSetup octop
 		"commenterId":      comment.CommenterId,
 		"commentReplier":   comment.CommentReplier,
 		"commentReplierId": comment.CommentReplierId,
-		"inputText":        cmtContent,
+		"cmtContent":       comment.Content,
+		"writeCmtContent":  cmtContent,
 	}
 	jsonData, err := json.Marshal(paramsMap)
 	if err != nil {
