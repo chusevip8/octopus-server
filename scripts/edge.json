@@ -530,8 +530,8 @@
             "type": "view",
             "value": "",
             "match": {
-              "by": "des",
-              "value": "已到底",
+              "by": "text",
+              "value": "- 到底了 -",
               "index": 0
             },
             "event": {
