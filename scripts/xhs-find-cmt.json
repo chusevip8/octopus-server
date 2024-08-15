@@ -36,29 +36,21 @@
   {
     "app": {
       "name": "Octopus 浏览器",
-      "packageName": "com.octopus.browser",
-      "intent": {
-        "scheme": "${postLink}"
-      }
+      "packageName": "com.octopus.browser"
     },
     "activities": [
       {
         "title": "启动页面",
-        "className": "com.octopus.browser.activity.MainActivity",
+        "className": "com.octopus.start.Activity",
         "views": [
           {
-            "title": "打开看看",
+            "title": "打开链接",
             "type": "view",
             "value": "",
-            "match": {
-              "by": "text",
-              "value": "打开看看",
-              "index": 0
-            },
             "event": {
               "yesEvent": {
-                "type": "click",
-                "value": "",
+                "type": "launch",
+                "value": "scheme://${postLink}",
                 "next": "1001"
               }
             }

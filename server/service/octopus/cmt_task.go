@@ -9,6 +9,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"strconv"
 	"time"
@@ -46,6 +47,7 @@ func (cmtTaskService *CmtTaskService) CreateWriteCmtTask(writeCmtTask *octopusRe
 	if err != nil {
 		return err
 	}
+	global.GVA_LOG.Info("回复列表中抓取的评论", zap.Any("comment", comment))
 	params, err := cmtTaskService.buildWriteCmtTaskParams(cmtTaskSetup, cmtThread, comment, writeCmtTask.CmtContent)
 	if err != nil {
 		return err
