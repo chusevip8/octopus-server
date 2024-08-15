@@ -80,6 +80,9 @@ func (commentService *CommentService) GetCommentInfoList(info octopusReq.Comment
 
 		commentRes := octopusRes.CommentRes{}
 		commentRes.Name = comment.Commenter
+		if comment.Mine {
+			commentRes.Name = comment.CommentReplier
+		}
 		commentRes.Date = comment.PostAt
 		commentRes.Mine = comment.Mine
 		commentRes.Text = commentService.formatCommentText(comment)
