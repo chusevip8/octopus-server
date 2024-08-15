@@ -245,7 +245,7 @@ func (cmtTaskService *CmtTaskService) CreateComment(commentReq *octopusReq.Comme
 	comment.CommenterId = commenterId
 	comment.CommentReplier = commentReq.CommentReplier
 	comment.CommentReplierId = commentReplierId
-	comment.Content = commentReq.Content
+	comment.Content = CmtTaskParsers[task.AppName].HandleComment(commentReq.CmtFrom, commentReq.Content)
 	comment.PostAt = commentReq.PostAt
 	comment.TaskId = task.ID
 	comment.CmtFrom = commentReq.CmtFrom
