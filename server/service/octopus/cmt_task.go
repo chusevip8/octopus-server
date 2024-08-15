@@ -240,29 +240,35 @@ func (cmtTaskService *CmtTaskService) CreateComment(commentReq *octopusReq.Comme
 		}
 	}
 	var comment octopus.Comment
-	comment.ConversationId = cmtConversation.ID
-	comment.Commenter = commentReq.Commenter
-	comment.CommenterId = commenterId
-	comment.CommentReplier = commentReq.CommentReplier
-	comment.CommentReplierId = commentReplierId
-	comment.Content = CmtTaskParsers[task.AppName].HandleComment(commentReq.CmtFrom, commentReq.Content)
-	comment.PostAt = commentReq.PostAt
-	comment.TaskId = task.ID
-	comment.CmtFrom = commentReq.CmtFrom
-	switch commentReq.CmtFrom {
-	case "find", "reply":
-		comment.Mine = false
-		comment.Unread = true
-	case "write":
-		comment.Mine = true
-		comment.Unread = false
-	default:
-		comment.Mine = false
-		comment.Unread = false
-	}
-
-	if err = global.GVA_DB.Create(&comment).Error; err != nil {
-		return ErrorCreateComment, err
+	cmtContent := CmtTaskParsers[task.AppName].HandleComment(commentReq.CmtFrom, commentReq.Content)
+	err = global.GVA_DB.Model(&octopus.Comment{}).
+		Where("commenter_id=?", commenterId).
+		Where("content=?", cmtContent).
+		Where("cmt_from=?", commentReq.CmtFrom).First(&comment).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		comment.ConversationId = cmtConversation.ID
+		comment.Commenter = commentReq.Commenter
+		comment.CommenterId = commenterId
+		comment.CommentReplier = commentReq.CommentReplier
+		comment.CommentReplierId = commentReplierId
+		comment.Content = cmtContent
+		comment.PostAt = commentReq.PostAt
+		comment.TaskId = task.ID
+		comment.CmtFrom = commentReq.CmtFrom
+		switch commentReq.CmtFrom {
+		case "find", "reply":
+			comment.Mine = false
+			comment.Unread = true
+		case "write":
+			comment.Mine = true
+			comment.Unread = false
+		default:
+			comment.Mine = false
+			comment.Unread = false
+		}
+		if err = global.GVA_DB.Create(&comment).Error; err != nil {
+			return ErrorCreateComment, err
+		}
 	}
 	return 0, nil
 }
