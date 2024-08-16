@@ -74,7 +74,7 @@
         <el-form-item label="评论关键字:（以半角逗号分隔，空为所有评论）" prop="keyword">
           <el-input v-model="formData.keyword" :clearable="false" placeholder="请输入评论关键字" />
         </el-form-item>
-        <el-form-item label="评论数量:（0为所有评论）" prop="cmtCount">
+        <el-form-item label="评论数量:（如果抓取所有评论，数值要大于总评论数）" prop="cmtCount">
           <el-input v-model="formData.cmtCount" :clearable="false" placeholder="请输入评论数量" />
         </el-form-item>
       </el-form>
@@ -114,7 +114,7 @@ const formData = ref({
   taskTitle: '',
   postLink: '',
   keyword: '',
-  cmtCount: '0',
+  cmtCount: '9999',
   findCmtScriptId: undefined,
   writeCmtScriptId: undefined,
   replyCmtScriptId: undefined,
@@ -338,7 +338,7 @@ const closeDialog = () => {
     taskTitle: '',
     postLink: '',
     keyword: '',
-    cmtCount: '0',
+    cmtCount: '9999',
     findCmtScriptId: undefined,
     writeCmtScriptId: undefined,
     replyCmtScriptId: undefined,
