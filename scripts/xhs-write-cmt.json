@@ -1,6 +1,40 @@
 [
   {
     "app": {
+      "name": "小红书",
+      "packageName": "com.xingin.xhs",
+      "intent": {
+        "scheme": "xhsdiscover://profile"
+      }
+    },
+    "activities": [
+      {
+        "title": "个人页面",
+        "className": "com.xingin.xhs.index.v2.IndexActivityV2",
+        "views": [
+          {
+            "title": "账号",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "1001"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "app": {
       "name": "Octopus 浏览器",
       "packageName": "com.octopus.browser"
     },
@@ -292,41 +326,7 @@
         "className": "com.xingin.matrix.detail.activity.DetailFeedActivity",
         "views": [
           {
-            "title": "作者-0",
-            "type": "view",
-            "value": "",
-            "match": {
-              "by": "id",
-              "value": "com.xingin.xhs:id/matrixNickNameView",
-              "index": 0
-            },
-            "event": {
-              "yesEvent": {
-                "type": "extract",
-                "value": "collect://map/text/poster",
-                "next": ""
-              }
-            }
-          },
-          {
-            "title": "描述-1",
-            "type": "view",
-            "value": "",
-            "match": {
-              "by": "id",
-              "value": "com.xingin.xhs:id/noteContentText",
-              "index": 0
-            },
-            "event": {
-              "yesEvent": {
-                "type": "extract",
-                "value": "collect://map/text/postDesc",
-                "next": ""
-              }
-            }
-          },
-          {
-            "title": "评论按钮-2",
+            "title": "评论按钮-0",
             "type": "view",
             "value": "",
             "match": {
@@ -386,9 +386,9 @@
             },
             "event": {
               "yesEvent": {
-                "type": "",
-                "value": "",
-                "next": "1001"
+                "type": "error",
+                "value": "未找到该评论，回复评论失败",
+                "next": ""
               },
               "noEvent": {
                 "type": "",
@@ -425,9 +425,9 @@
             },
             "event": {
               "yesEvent": {
-                "type": "",
-                "value": "",
-                "next": "1001"
+                "type": "error",
+                "value": "未找到该评论，回复评论失败",
+                "next": ""
               },
               "noneEvent": {
                 "type": "",
@@ -519,12 +519,12 @@
             "condition": {
               "type": "contains",
               "match": "text",
-              "value": "list://${keyword}"
+              "value": "${cmtContent}"
             },
             "event": {
               "yesEvent": {
-                "type": "extract",
-                "value": "collect://block/text/content",
+                "type": "",
+                "value": "",
                 "next": ""
               },
               "noEvent": {
@@ -544,69 +544,39 @@
               "value": "android.widget.TextView",
               "index": 0
             },
-            "event": {
-              "yesEvent": {
-                "type": "extract",
-                "value": "collect://block/text/commenter",
-                "next": ""
-              }
-            }
-          },
-          {
-            "title": "放入Collect-10",
-            "type": "view",
-            "value": "",
-            "event": {
-              "yesEvent": {
-                "type": "extract",
-                "value": "collect://list/comments",
-                "next": ""
-              }
-            }
-          },
-          {
-            "title": "上传数据-11",
-            "type": "output",
-            "value": "https://bzy.ai4mobi.com/api/cmtTask/uploadFindComment",
-            "event": {
-              "yesEvent": {
-                "type": "",
-                "value": "",
-                "next": ""
-              }
-            }
-          },
-          {
-            "title": "计数-12",
-            "type": "count",
-            "value": "${cmtCount}",
             "condition": {
               "type": "equals",
               "match": "text",
-              "value": "1"
+              "value": "${commenter}"
             },
             "event": {
               "yesEvent": {
                 "type": "",
                 "value": "",
-                "next": "1001"
+                "next": ""
               },
               "noEvent": {
                 "type": "",
                 "value": "",
-                "next": ""
+                "next": "2"
               }
             }
           },
           {
-            "title": "清除数据-13",
+            "title": "点击评论-10",
             "type": "view",
             "value": "",
+            "match": {
+              "start": "2",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 1
+            },
             "event": {
               "yesEvent": {
-                "type": "clean",
-                "value": "comments",
-                "next": "2"
+                "type": "click",
+                "value": "",
+                "next": "1003"
               }
             }
           }
