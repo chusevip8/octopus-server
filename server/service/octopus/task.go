@@ -5,6 +5,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
 	"gorm.io/gorm"
+	"time"
 )
 
 type TaskService struct{}
@@ -69,7 +70,7 @@ func (taskService *TaskService) UpdateTask(task octopus.Task) (err error) {
 }
 
 func (taskService *TaskService) UpdateTaskStatusRunToFailByDeviceId(deviceId uint, error string) (err error) {
-	err = global.GVA_DB.Model(&octopus.Task{}).Where("device_id = ?", deviceId).Where("status = ?", 2).Updates(map[string]interface{}{"status": 4, "error": error}).Error
+	err = global.GVA_DB.Model(&octopus.Task{}).Where("device_id = ?", deviceId).Where("status = ?", 2).Updates(map[string]interface{}{"status": 4, "finish_at": time.Now(), "error": error}).Error
 	return
 }
 func (taskService *TaskService) UpdateTaskStatusToRun(id string) (err error) {
@@ -77,11 +78,11 @@ func (taskService *TaskService) UpdateTaskStatusToRun(id string) (err error) {
 	return
 }
 func (taskService *TaskService) UpdateTaskStatusToFinish(id string) (err error) {
-	err = global.GVA_DB.Model(&octopus.Task{}).Where("id = ?", id).Updates(map[string]interface{}{"status": 3, "error": ""}).Error
+	err = global.GVA_DB.Model(&octopus.Task{}).Where("id = ?", id).Updates(map[string]interface{}{"status": 3, "finish_at": time.Now(), "error": ""}).Error
 	return
 }
 func (taskService *TaskService) UpdateTaskStatusToFail(id string, error string) (err error) {
-	err = global.GVA_DB.Model(&octopus.Task{}).Where("id = ?", id).Updates(map[string]interface{}{"status": 4, "error": error}).Error
+	err = global.GVA_DB.Model(&octopus.Task{}).Where("id = ?", id).Updates(map[string]interface{}{"status": 4, "finish_at": time.Now(), "error": error}).Error
 	return
 }
 
