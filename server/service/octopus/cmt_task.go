@@ -244,10 +244,8 @@ func (cmtTaskService *CmtTaskService) CreateComment(commentReq *octopusReq.Comme
 	var comment octopus.Comment
 	cmtContent := CmtTaskParsers[task.AppName].HandleComment(commentReq.CmtFrom, commentReq.Content)
 	global.GVA_DB.Model(&octopus.Comment{}).
-		Where("commenter_id=?", commenterId).
-		Where("comment_replier_id=?", commentReq.CommentReplierId).
-		Where("content=?", cmtContent).
-		Where("cmt_from=?", commentReq.CmtFrom).First(&comment)
+		Where("commenter_id = ? AND comment_replier_id = ? AND content = ? AND cmt_from = ?",
+			commenterId, commentReplierId, cmtContent, commentReq.CmtFrom).First(&comment)
 
 	comment.ConversationId = cmtConversation.ID
 	comment.Commenter = commentReq.Commenter
