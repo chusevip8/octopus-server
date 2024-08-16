@@ -95,6 +95,7 @@ func tryStopTask(task *octopus.Task) {
 	if ok {
 		client.ClientLock.Lock()
 		defer client.ClientLock.Unlock()
+		global.GVA_LOG.Info("Trying to stop task", zap.String("Task status", strconv.Itoa(int(task.Status))))
 		if task.Status == 1 {
 			_ = service.TaskService.UpdateTaskStatusToFail(strconv.Itoa(int(task.ID)), "服务器终止任务")
 		} else if task.Status == 2 {

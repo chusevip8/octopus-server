@@ -98,7 +98,7 @@ func (cmtTaskApi *CmtTaskApi) DeleteCmtTasks(c *gin.Context) {
 	}
 }
 func (cmtTaskApi *CmtTaskApi) StopCmtTask(c *gin.Context) {
-	id := c.Query("id")
+	id := c.Query("taskId")
 	if err := cmtTaskService.StopCmtTask(id); err != nil {
 		global.GVA_LOG.Error("停止失败!", zap.Error(err))
 		response.FailWithMessage("停止失败", c)

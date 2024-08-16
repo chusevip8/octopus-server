@@ -322,6 +322,7 @@ func (cmtTaskService *CmtTaskService) StopCmtTask(id string) (err error) {
 	if err != nil {
 		return
 	}
+	global.GVA_LOG.Info("Stop cmt task", zap.String("task id", id))
 	tasks, err := TaskServiceApp.GetTasksByDeviceId(strconv.Itoa(int(task.TaskParams.TaskSetupId)), strconv.Itoa(int(task.DeviceId)), task.TaskParams.MainTaskType)
 	if err != nil {
 		return
