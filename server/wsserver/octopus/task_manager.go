@@ -24,11 +24,11 @@ func tryPushTask(task *octopus.Task) {
 		deviceId := strconv.Itoa(int(task.DeviceId))
 		ready := service.DeviceService.DeviceIsFree(deviceId)
 		if ready {
-			data, err := PushTaskMessage(deviceId)
+			pushTaskId, data, err := PushTaskMessage(deviceId)
 			if err != nil {
 				global.GVA_LOG.Error("Try push task message", zap.String("error", err.Error()))
 			} else {
-				err = service.TaskService.UpdateTaskStatusToRun(strconv.Itoa(int(task.ID)))
+				err = service.TaskService.UpdateTaskStatusToRun(pushTaskId)
 				if err != nil {
 					global.GVA_LOG.Error("Try push task update task status", zap.String("error", err.Error()))
 				} else {
@@ -43,7 +43,7 @@ func ResetAllTasks() {
 	service.TaskService.UpdateTaskStatusRunToFail()
 }
 
-func PushTaskMessage(deviceId string) (data []byte, err error) {
+func PushTaskMessage(deviceId string) (pushTaskId string, data []byte, err error) {
 	var taskPush protocol.TaskPush
 	task, err := service.TaskService.FindPushTask(deviceId)
 	if err != nil {
@@ -53,6 +53,7 @@ func PushTaskMessage(deviceId string) (data []byte, err error) {
 	if err != nil {
 		return
 	}
+	pushTaskId = taskPush.TaskId
 	message := map[string]interface{}{"code": protocol.CodeTaskPush, "data": taskPush}
 	data, err = json.Marshal(message)
 	return

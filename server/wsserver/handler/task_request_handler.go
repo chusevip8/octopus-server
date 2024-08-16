@@ -16,13 +16,13 @@ func TaskRequestHandler(client *socket.Client, data []byte) {
 	client.ClientLock.Lock()
 	defer client.ClientLock.Unlock()
 
-	data, err := octopus.PushTaskMessage(deviceId)
+	pushTaskId, data, err := octopus.PushTaskMessage(deviceId)
 	if err != nil {
 		handleTaskPushError(client, err, "Request task handler message")
 		return
 	}
 
-	if err := service.TaskService.UpdateTaskStatusToRun(deviceId); err != nil {
+	if err := service.TaskService.UpdateTaskStatusToRun(pushTaskId); err != nil {
 		handleTaskPushError(client, err, "Request task handler update task status")
 		return
 	}
