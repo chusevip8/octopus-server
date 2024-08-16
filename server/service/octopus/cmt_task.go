@@ -243,35 +243,36 @@ func (cmtTaskService *CmtTaskService) CreateComment(commentReq *octopusReq.Comme
 	}
 	var comment octopus.Comment
 	cmtContent := CmtTaskParsers[task.AppName].HandleComment(commentReq.CmtFrom, commentReq.Content)
-	err = global.GVA_DB.Model(&octopus.Comment{}).
+	global.GVA_DB.Model(&octopus.Comment{}).
 		Where("commenter_id=?", commenterId).
+		Where("comment_replier_id=?", commentReq.CommentReplierId).
 		Where("content=?", cmtContent).
-		Where("cmt_from=?", commentReq.CmtFrom).First(&comment).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		comment.ConversationId = cmtConversation.ID
-		comment.Commenter = commentReq.Commenter
-		comment.CommenterId = commenterId
-		comment.CommentReplier = commentReq.CommentReplier
-		comment.CommentReplierId = commentReplierId
-		comment.Content = cmtContent
-		comment.PostAt = commentReq.PostAt
-		comment.TaskId = task.ID
-		comment.CmtFrom = commentReq.CmtFrom
-		switch commentReq.CmtFrom {
-		case "find", "reply":
-			comment.Mine = false
-			comment.Unread = true
-		case "write":
-			comment.Mine = true
-			comment.Unread = false
-		default:
-			comment.Mine = false
-			comment.Unread = false
-		}
-		if err = global.GVA_DB.Create(&comment).Error; err != nil {
-			return ErrorCreateComment, err
-		}
+		Where("cmt_from=?", commentReq.CmtFrom).First(&comment)
+
+	comment.ConversationId = cmtConversation.ID
+	comment.Commenter = commentReq.Commenter
+	comment.CommenterId = commenterId
+	comment.CommentReplier = commentReq.CommentReplier
+	comment.CommentReplierId = commentReplierId
+	comment.Content = cmtContent
+	comment.PostAt = commentReq.PostAt
+	comment.TaskId = task.ID
+	comment.CmtFrom = commentReq.CmtFrom
+	switch commentReq.CmtFrom {
+	case "find", "reply":
+		comment.Mine = false
+		comment.Unread = true
+	case "write":
+		comment.Mine = true
+		comment.Unread = false
+	default:
+		comment.Mine = false
+		comment.Unread = false
 	}
+	if err = global.GVA_DB.Save(&comment).Error; err != nil {
+		return ErrorCreateComment, err
+	}
+
 	return 0, nil
 }
 func (cmtTaskService *CmtTaskService) DeleteCmtTask(id string, userId uint) (err error) {
