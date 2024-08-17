@@ -1,9 +1,12 @@
 package octopus
 
 import (
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
+	"gorm.io/gorm"
 	"strconv"
+	"time"
 )
 
 type IntervalTaskService struct {
@@ -37,4 +40,36 @@ func (intervalTaskService *IntervalTaskService) CreateIntervalTask(intervalTask 
 	task.Error = ""
 	err = TaskServiceApp.CreateTask(&task)
 	return err
+}
+func (intervalTaskService *IntervalTaskService) DeleteIntervalTask(id string, userId uint) (err error) {
+	task, err := TaskServiceApp.GetTask(id)
+	if err != nil {
+		return err
+	}
+	err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+		now := time.Now()
+		if err := tx.Model(&octopus.Task{}).Where("id = ?", task.ID).Updates(map[string]interface{}{
+			"deleted_by": userId,
+			"deleted_at": now,
+		}).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Model(&octopus.TaskParams{}).Where("id = ?", task.TaskParamsId).Updates(map[string]interface{}{
+			"deleted_by": userId,
+			"deleted_at": now,
+		}).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+	return err
+}
+func (intervalTaskService *IntervalTaskService) StopIntervalTask(taskId string) (err error) {
+	task, err := TaskServiceApp.GetTask(taskId)
+	if err != nil {
+		return err
+	}
+	StopTask <- &task
+	return nil
 }
