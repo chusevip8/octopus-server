@@ -158,7 +158,7 @@ func (cmtTaskService *CmtTaskService) buildFindCmtTaskParams(setupId uint) (para
 }
 
 func (cmtTaskService *CmtTaskService) UpdateFindCmtTaskParams(cmtTaskSetup octopus.CmtTaskSetup) (err error) {
-	params := fmt.Sprintf(`{"postLink": "%s", "keyword": "%s"}`, cmtTaskSetup.PostLink, cmtTaskSetup.Keyword)
+	params := fmt.Sprintf(`{"postLink": "%s", "keyword": "%s","cmtCount":"%s"}`, cmtTaskSetup.PostLink, cmtTaskSetup.Keyword, cmtTaskSetup.CmtCount)
 	err = global.GVA_DB.Model(&octopus.TaskParams{}).
 		Where("task_setup_id = ?", cmtTaskSetup.ID).
 		Where("main_task_type = ?", "cmt").
