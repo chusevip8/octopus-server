@@ -157,6 +157,13 @@ func (taskService *TaskService) FindPushTask(deviceId string) (task octopus.Task
 }
 
 func (taskService *TaskService) UpdateTaskStatusRunToFail() {
-	_ = global.GVA_DB.Model(&octopus.Task{}).Where("status = ?", 2).Updates(map[string]interface{}{"status": 4, "error": "服务器重启"}).Error
+	_ = global.GVA_DB.Model(&octopus.Task{}).Where("status = ?", 2).Updates(map[string]interface{}{"status": 4, "finish_at": time.Now(), "error": "服务器重启"}).Error
+	return
+}
+
+func (taskService *TaskService) FindIntervalTasks() (tasks []octopus.Task, err error) {
+	err = global.GVA_DB.Model(&octopus.Task{}).Preload("TaskParams").
+		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
+		Where("oct_task_params.main_task_type = ? AND oct_task.status != ?", "interval", 2).Find(&tasks).Error
 	return
 }

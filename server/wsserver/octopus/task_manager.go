@@ -114,6 +114,50 @@ func tryStopTask(task *octopus.Task) {
 		}
 	}
 }
+func IntervalTaskMessage(task octopus.Task) (pushTaskId string, data []byte, err error) {
+
+	var taskPush protocol.TaskPush
+	if err = buildTaskPush(task, &taskPush); err != nil {
+		return "", nil, err
+	}
+
+	pushTaskId = taskPush.TaskId
+	message := map[string]interface{}{"code": protocol.CodeTaskPush, "data": taskPush}
+	if data, err = json.Marshal(message); err != nil {
+		return "", nil, err
+	}
+
+	return pushTaskId, data, nil
+}
+func TryPushIntervalTask(task octopus.Task) {
+	client, exists := socket.GetClient(task.DeviceId)
+	if !exists {
+		global.GVA_LOG.Info("device not found", zap.String("device", strconv.Itoa(int(task.DeviceId))))
+		return
+	}
+
+	client.ClientLock.Lock()
+	defer client.ClientLock.Unlock()
+
+	deviceId := strconv.Itoa(int(task.DeviceId))
+	if !service.DeviceService.DeviceIsFree(deviceId) {
+		global.GVA_LOG.Info("device is not ready", zap.String("device", strconv.Itoa(int(task.DeviceId))))
+		return
+	}
+
+	pushTaskId, data, err := IntervalTaskMessage(task)
+	if err != nil {
+		global.GVA_LOG.Error("Try push interval task message", zap.String("error", err.Error()))
+	} else {
+		err = service.TaskService.UpdateTaskStatusToRun(pushTaskId)
+		if err != nil {
+			global.GVA_LOG.Error("Try push interval task update task status", zap.String("error", err.Error()))
+		} else {
+			global.GVA_LOG.Info("interval task is running", zap.Any("task", task))
+			client.SendMessage(data)
+		}
+	}
+}
 
 func MonitorTask() {
 	go func() {
