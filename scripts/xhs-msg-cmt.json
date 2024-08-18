@@ -18,8 +18,9 @@
             "value": "",
             "match": {
               "by": "class",
-              "value": "android.widget.TextView",
-              "index": 0
+              "value": "android.view.View",
+              "index": 0,
+              "deep": "parent://1,child://1"
             },
             "event": {
               "yesEvent": {

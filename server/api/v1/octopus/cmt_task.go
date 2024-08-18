@@ -52,10 +52,18 @@ func (cmtTaskApi *CmtTaskApi) UploadFindComment(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+	postTitle := findCommentReq.PostTitle
+	if len(postTitle) > 150 {
+		postTitle = postTitle[:150]
+	}
+	postDesc := findCommentReq.PostDesc
+	if len(postDesc) > 150 {
+		postDesc = postDesc[:150]
+	}
 	commentReq := octopusReq.CommentReq{TaskId: findCommentReq.TaskId,
 		Poster:           findCommentReq.Poster,
-		PostTitle:        findCommentReq.PostTitle,
-		PostDesc:         findCommentReq.PostDesc,
+		PostTitle:        postTitle,
+		PostDesc:         postDesc,
 		CommentReplier:   findCommentReq.CommentReplier,
 		CommentReplierId: findCommentReq.CommentReplierId,
 		Content:          findCommentReq.Comments[0].Content,

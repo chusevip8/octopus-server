@@ -201,9 +201,9 @@ func (cmtTaskService *CmtTaskService) CreateComment(commentReq *octopusReq.Comme
 	}
 	var cmtThread octopus.CmtThread
 	if commentReq.CmtFrom == "msgCmt" {
-		postId, err := cmtTaskService.buildPostId(commentReq.Poster, commentReq.PostTitle, commentReq.PostDesc)
-		if err != nil {
-			return ErrorCreateThread, err
+		postId, e := cmtTaskService.buildPostId(commentReq.Poster, commentReq.PostTitle, commentReq.PostDesc)
+		if e != nil {
+			return ErrorCreateThread, e
 		}
 		err = global.GVA_DB.Model(&octopus.CmtThread{}).Where("post_id=?", postId).First(&cmtThread).Error
 	} else {
@@ -224,7 +224,6 @@ func (cmtTaskService *CmtTaskService) CreateComment(commentReq *octopusReq.Comme
 		if err = global.GVA_DB.Create(&cmtThread).Error; err != nil {
 			return ErrorCreateThread, err
 		}
-
 	}
 	commenterId := commentReq.CommenterId
 	commentReplierId := commentReq.CommentReplierId
