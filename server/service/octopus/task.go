@@ -103,7 +103,7 @@ func (taskService *TaskService) GetTaskInfoList(info octopusReq.TaskSearch) (lis
 
 	db := global.GVA_DB.Model(&octopus.Task{}).
 		Joins("LEFT JOIN oct_task_params ON oct_task_params.id = oct_task.task_params_id").
-		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ? AND oct_task.created_by = ?", info.TaskSetupId, info.MainTaskType, info.CreatedBy).
+		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ? AND oct_task_params.sub_task_type = ?", info.TaskSetupId, info.MainTaskType, info.SubTaskType).
 		Preload("TaskParams").
 		Preload("Device")
 	var tasks []octopus.Task

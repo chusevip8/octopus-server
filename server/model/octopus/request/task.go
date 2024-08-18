@@ -7,6 +7,7 @@ import (
 type TaskSearch struct {
 	TaskSetupId  string `json:"taskSetupId" form:"taskSetupId"`
 	MainTaskType string `json:"mainTaskType" form:"mainTaskType"`
+	SubTaskType  string `json:"subTaskType" form:"subTaskType"`
 	AppName      string `json:"appName" form:"appName"`
 	Type         string `json:"type" form:"type"`
 	DeviceNumber string `json:"deviceNumber" form:"deviceNumber"`
