@@ -522,7 +522,6 @@ const deleteRow = (row) => {
 }
 
 const deleteTaskFunc = async (row) => {
-    console.log(row.ID)
     const res = await deleteGenericTask({ id: row.ID })
     if (res.code === 0) {
         ElMessage({

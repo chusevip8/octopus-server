@@ -84,7 +84,9 @@ import {
 } from '@/api/octopus/task'
 
 import {
-    createIntervalTask
+    createIntervalTask,
+    stopIntervalTask,
+    deleteIntervalTask
 } from '@/api/octopus/intervalTask'
 
 // 全量引入格式化工具 请按需保留
@@ -339,7 +341,7 @@ const deleteRow = (row) => {
 }
 
 const deleteTaskFunc = async (row) => {
-    const res = await deleteTask({ id: row.ID })
+    const res = await deleteIntervalTask({ id: row.ID })
     if (res.code === 0) {
         ElMessage({
             type: 'success',
@@ -351,9 +353,24 @@ const deleteTaskFunc = async (row) => {
         getTableData()
     }
 }
-// 停止任务
-const stopTask = async (row) => {
-
+const stopTask = (row) => {
+    ElMessageBox.confirm('确定停止任务吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        stopTaskFunc(row)
+    })
+}
+const stopTaskFunc = async (row) => {
+    let res = await stopIntervalTask({ taskId: row.ID })
+    if (res.code === 0) {
+        ElMessage({
+            type: 'success',
+            message: '停止成功'
+        })
+        getTableData()
+    }
 }
 </script>
 
