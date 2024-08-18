@@ -17,7 +17,7 @@ func MonitorIntervalTask() {
 		for {
 			select {
 			case <-ticker.C:
-
+				runIntervalTask()
 			}
 		}
 	}()
