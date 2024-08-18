@@ -186,7 +186,7 @@
               "yesEvent": {
                 "type": "extract",
                 "value": "collect://block/text/content",
-                "next": ""
+                "next": "11"
               }
             }
           },
@@ -337,7 +337,19 @@
               "yesEvent": {
                 "type": "extract",
                 "value": "collect://block/text/postTitle",
-                "next": "1003"
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "返回-3",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "back",
+                "value": "",
+                "next": "1004"
               }
             }
           }
@@ -389,7 +401,7 @@
               "noneEvent": {
                 "type": "",
                 "value": "",
-                "next": "1003"
+                "next": "1004"
               }
             }
           },
@@ -406,7 +418,19 @@
               "yesEvent": {
                 "type": "extract",
                 "value": "collect://block/text/postDesc",
-                "next": "1003"
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "返回-4",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "back",
+                "value": "",
+                "next": "1004"
               }
             }
           }
@@ -436,7 +460,7 @@
               "yesEvent": {
                 "type": "back",
                 "value": "",
-                "next": "1003"
+                "next": "1004"
               }
             }
           }
