@@ -1,0 +1,447 @@
+[
+  {
+    "app": {
+      "name": "小红书",
+      "packageName": "com.xingin.xhs",
+      "intent": {
+        "scheme": "xhsdiscover://message/comments"
+      }
+    },
+    "activities": [
+      {
+        "title": "消息评论页面",
+        "className": "com.xingin.im.ui.message.inner.v2.MsgV2Activity",
+        "views": [
+          {
+            "title": "评论列表-0",
+            "type": "list",
+            "value": "class://android.widget.TextView,3",
+            "match": {
+              "by": "class",
+              "value": "androidx.recyclerview.widget.RecyclerView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "列表项-1",
+            "type": "item",
+            "value": "0",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "7"
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "检测是否到底-2",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "text",
+              "value": "- THE END -",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "1001"
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "检测更多消息-3",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "text",
+              "value": "查看更多历史消息",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "click",
+                "value": "",
+                "next": "5"
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "滑动列表-4",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "slide",
+                "value": "2,0,0.3,0,0.3",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "等待-5",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "2000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "更新界面-6",
+            "type": "update",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "0"
+              }
+            }
+          },
+          {
+            "title": "评论作者-7",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://block/text/commenter",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "判断是否作者回复-8",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 1
+            },
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "作者"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": "10"
+              }
+            }
+          },
+          {
+            "title": "评论内容-9",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 4
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://block/text/content",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "评论内容-10",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 3
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://block/text/content",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "文章缩略图-11",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "class",
+              "value": "android.widget.ImageView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "click",
+                "value": "",
+                "next": "1002"
+              }
+            }
+          },
+          {
+            "title": "放入Collect-12",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://list/comments",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "上传数据-13",
+            "type": "output",
+            "value": "https://bzy.ai4mobi.com/api/cmtTask/uploadFindComment",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "计数-14",
+            "type": "count",
+            "value": "50",
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "1"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "1001"
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "清除数据-15",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "clean",
+                "value": "comments",
+                "next": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "title": "文章详情页面",
+        "className": "com.xingin.matrix.notedetail.NoteDetailActivity",
+        "views": [
+          {
+            "title": "等待-0",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "1000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "作者-1",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.widget.Button",
+              "index": 1
+            },
+            "condition": {
+              "type": "contains",
+              "match": "des",
+              "value": "作者,"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://block/desc/poster",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "文章标题/描述-2",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 1
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://block/text/postTitle",
+                "next": "1003"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "title": "视频详情页面",
+        "className": "com.xingin.matrix.detail.activity.DetailFeedActivity",
+        "views": [
+          {
+            "title": "等待-0",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "1000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "更新界面-1",
+            "type": "update",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "作者-2",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "id",
+              "value": "com.xingin.xhs:id/matrixNickNameView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://block/text/poster",
+                "next": ""
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": "1003"
+              }
+            }
+          },
+          {
+            "title": "描述-3",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "id",
+              "value": "com.xingin.xhs:id/noteContentText",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://block/text/postDesc",
+                "next": "1003"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "title": "视频评论列表",
+        "className": "com.xingin.matrix.comment.dialog.VideoCommentListDialog",
+        "views": [
+          {
+            "title": "等待-0",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "1000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "返回-1",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "back",
+                "value": "",
+                "next": "1003"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
