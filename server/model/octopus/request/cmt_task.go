@@ -50,3 +50,18 @@ type FindCommentItem struct {
 	Commenter   string `json:"commenter" form:"commenter"`      //发评论者
 	CommenterId string `json:"commenterId" form:"commenterId" ` //发评论者Id
 }
+
+type MsgCommentReq struct {
+	CommentReplier   string           `json:"commentReplier" form:"commentReplier" `     //评论回复者
+	CommentReplierId string           `json:"commentReplierId" form:"commentReplierId" ` //评论回复者Id
+	Comments         []MsgCommentItem `json:"comments" form:"comments"`
+}
+type MsgCommentItem struct {
+	Content     string `json:"content" form:"content"`
+	PostAt      string `json:"postAt" form:"postAt" `
+	Commenter   string `json:"commenter" form:"commenter"`      //发评论者
+	CommenterId string `json:"commenterId" form:"commenterId" ` //发评论者Id
+	Poster      string `json:"poster" form:"poster" `
+	PostTitle   string `json:"postTitle" form:"postTitle" `
+	PostDesc    string `json:"postDesc" form:"postDesc" `
+}

@@ -24,5 +24,6 @@ func (s *CmtTaskRouter) InitCmtTaskRouter(Router *gin.RouterGroup, PublicRouter 
 	}
 	{
 		cmtTaskRouterWithoutAuth.POST("uploadFindComment", cmtTaskApi.UploadFindComment)
+		cmtTaskRouterWithoutAuth.POST("uploadMsgComment", cmtTaskApi.UploadMsgComment)
 	}
 }

@@ -241,7 +241,7 @@
           {
             "title": "上传数据-13",
             "type": "output",
-            "value": "https://bzy.ai4mobi.com/api/cmtTask/uploadFindComment",
+            "value": "https://bzy.ai4mobi.com/api/cmtTask/uploadMsgComment",
             "event": {
               "yesEvent": {
                 "type": "",
