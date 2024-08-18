@@ -200,7 +200,16 @@ func (cmtTaskService *CmtTaskService) CreateComment(commentReq *octopusReq.Comme
 		return ErrorNoTask, err
 	}
 	var cmtThread octopus.CmtThread
-	if errors.Is(global.GVA_DB.Model(&octopus.CmtThread{}).Where("task_setup_id=?", task.TaskParams.TaskSetupId).First(&cmtThread).Error, gorm.ErrRecordNotFound) {
+	if commentReq.CmtFrom == "msgCmt" {
+		postId, err := cmtTaskService.buildPostId(commentReq.Poster, commentReq.PostTitle, commentReq.PostDesc)
+		if err != nil {
+			return ErrorCreateThread, err
+		}
+		err = global.GVA_DB.Model(&octopus.CmtThread{}).Where("post_id=?", postId).First(&cmtThread).Error
+	} else {
+		err = global.GVA_DB.Model(&octopus.CmtThread{}).Where("task_setup_id=?", task.TaskParams.TaskSetupId).First(&cmtThread).Error
+	}
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		var postId string
 		if postId, err = cmtTaskService.buildPostId(commentReq.Poster, commentReq.PostTitle, commentReq.PostDesc); err != nil {
 			postId = strconv.Itoa(int(task.TaskParams.TaskSetupId))
@@ -257,7 +266,7 @@ func (cmtTaskService *CmtTaskService) CreateComment(commentReq *octopusReq.Comme
 	comment.TaskId = task.ID
 	comment.CmtFrom = commentReq.CmtFrom
 	switch commentReq.CmtFrom {
-	case "find", "reply":
+	case "find", "msgCmt":
 		comment.Mine = false
 		comment.Unread = true
 	case "write":

@@ -52,6 +52,7 @@ type FindCommentItem struct {
 }
 
 type MsgCommentReq struct {
+	TaskId           string           `json:"taskId" form:"taskId"`
 	CommentReplier   string           `json:"commentReplier" form:"commentReplier" `     //评论回复者
 	CommentReplierId string           `json:"commentReplierId" form:"commentReplierId" ` //评论回复者Id
 	Comments         []MsgCommentItem `json:"comments" form:"comments"`

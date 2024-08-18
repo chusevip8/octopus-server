@@ -79,7 +79,7 @@ func (cmtTaskApi *CmtTaskApi) UploadMsgComment(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	commentReq := octopusReq.CommentReq{TaskId: "",
+	commentReq := octopusReq.CommentReq{TaskId: msgCommentReq.TaskId,
 		Poster:           msgCommentReq.Comments[0].Poster,
 		PostTitle:        msgCommentReq.Comments[0].PostTitle,
 		PostDesc:         msgCommentReq.Comments[0].PostDesc,
