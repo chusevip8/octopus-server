@@ -79,10 +79,18 @@ func (cmtTaskApi *CmtTaskApi) UploadMsgComment(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+	postTitle := msgCommentReq.Comments[0].PostTitle
+	if len(postTitle) > 150 {
+		postTitle = postTitle[:150]
+	}
+	postDesc := msgCommentReq.Comments[0].PostDesc
+	if len(postDesc) > 150 {
+		postDesc = postDesc[:150]
+	}
 	commentReq := octopusReq.CommentReq{TaskId: msgCommentReq.TaskId,
 		Poster:           msgCommentReq.Comments[0].Poster,
-		PostTitle:        msgCommentReq.Comments[0].PostTitle,
-		PostDesc:         msgCommentReq.Comments[0].PostDesc,
+		PostTitle:        postTitle,
+		PostDesc:         postDesc,
 		CommentReplier:   msgCommentReq.CommentReplier,
 		CommentReplierId: msgCommentReq.CommentReplierId,
 		Content:          msgCommentReq.Comments[0].Content,

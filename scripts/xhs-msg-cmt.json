@@ -4,6 +4,40 @@
       "name": "小红书",
       "packageName": "com.xingin.xhs",
       "intent": {
+        "scheme": "xhsdiscover://profile"
+      }
+    },
+    "activities": [
+      {
+        "title": "个人页面",
+        "className": "com.xingin.xhs.index.v2.IndexActivityV2",
+        "views": [
+          {
+            "title": "账号",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://map/text/commentReplier",
+                "next": "1001"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "app": {
+      "name": "小红书",
+      "packageName": "com.xingin.xhs",
+      "intent": {
         "scheme": "xhsdiscover://message/comments"
       }
     },
