@@ -314,72 +314,72 @@
             }
           }
         ]
-      }
-    ]
-  },
-  {
-    "title": "回复评论输入页面",
-    "className": "com.xingin.matrix.notedetail.r10.comment.r10.NoteCommentActivity",
-    "views": [
-      {
-        "title": "输入框-0",
-        "type": "view",
-        "value": "",
-        "match": {
-          "start": "",
-          "by": "class",
-          "value": "android.widget.EditText",
-          "index": 0
-        },
-        "event": {
-          "yesEvent": {
-            "type": "input",
-            "value": "${writeCmtContent}",
-            "next": ""
-          }
-        }
       },
       {
-        "title": "等待-1",
-        "type": "view",
-        "value": "",
-        "event": {
-          "yesEvent": {
-            "type": "wait",
-            "value": "1000",
-            "next": ""
-          }
-        }
-      },
-      {
-        "title": "更新界面-2",
-        "type": "update",
-        "value": "",
-        "event": {
-          "yesEvent": {
-            "type": "",
+        "title": "回复评论输入页面",
+        "className": "com.xingin.matrix.notedetail.r10.comment.r10.NoteCommentActivity",
+        "views": [
+          {
+            "title": "输入框-0",
+            "type": "view",
             "value": "",
-            "next": ""
-          }
-        }
-      },
-      {
-        "title": "发送按钮-3",
-        "type": "view",
-        "value": "",
-        "match": {
-          "start": "",
-          "by": "class",
-          "value": "android.widget.TextView",
-          "index": 0
-        },
-        "event": {
-          "yesEvent": {
-            "type": "click",
+            "match": {
+              "start": "",
+              "by": "class",
+              "value": "android.widget.EditText",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "input",
+                "value": "${writeCmtContent}",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "等待-1",
+            "type": "view",
             "value": "",
-            "next": "1006"
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "1000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "更新界面-2",
+            "type": "update",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "发送按钮-3",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "click",
+                "value": "",
+                "next": "1006"
+              }
+            }
           }
-        }
+        ]
       }
     ]
   }
