@@ -14,15 +14,15 @@ type CmtTaskApi struct{}
 
 var cmtTaskService = service.ServiceGroupApp.OctopusServiceGroup.CmtTaskService
 
-func (cmtTaskApi *CmtTaskApi) CreateFindCmtTask(c *gin.Context) {
-	var findCmtTask octopusReq.FindCmtTask
-	err := c.ShouldBindJSON(&findCmtTask)
+func (cmtTaskApi *CmtTaskApi) CreateReadPostCmtTask(c *gin.Context) {
+	var readPostCmtTask octopusReq.ReadPostCmtTask
+	err := c.ShouldBindJSON(&readPostCmtTask)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	findCmtTask.CreatedBy = utils.GetUserID(c)
-	if err := cmtTaskService.CreateFindCmtTask(&findCmtTask); err != nil {
+	readPostCmtTask.CreatedBy = utils.GetUserID(c)
+	if err := cmtTaskService.CreateReadPostCmtTask(&readPostCmtTask); err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("创建失败", c)
 	} else {
@@ -30,14 +30,14 @@ func (cmtTaskApi *CmtTaskApi) CreateFindCmtTask(c *gin.Context) {
 	}
 }
 
-func (cmtTaskApi *CmtTaskApi) CreateWriteCmtTask(c *gin.Context) {
-	var writeCmtTask octopusReq.WriteCmtTask
-	err := c.ShouldBindJSON(&writeCmtTask)
+func (cmtTaskApi *CmtTaskApi) CreateReplyPostCmtTask(c *gin.Context) {
+	var replyPostCmtTask octopusReq.ReplyCmtTask
+	err := c.ShouldBindJSON(&replyPostCmtTask)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if err := cmtTaskService.CreateWriteCmtTask(&writeCmtTask); err != nil {
+	if err := cmtTaskService.CreateReplyCmtTask(&replyPostCmtTask); err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("创建失败", c)
 	} else {
@@ -45,32 +45,32 @@ func (cmtTaskApi *CmtTaskApi) CreateWriteCmtTask(c *gin.Context) {
 	}
 }
 
-func (cmtTaskApi *CmtTaskApi) UploadFindComment(c *gin.Context) {
-	var findCommentReq octopusReq.FindCommentReq
-	err := c.ShouldBindJSON(&findCommentReq)
+func (cmtTaskApi *CmtTaskApi) UploadPostComment(c *gin.Context) {
+	var postCommentReq octopusReq.PostCommentReq
+	err := c.ShouldBindJSON(&postCommentReq)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	postTitle := findCommentReq.PostTitle
+	postTitle := postCommentReq.PostTitle
 	if len(postTitle) > 150 {
 		postTitle = postTitle[:150]
 	}
-	postDesc := findCommentReq.PostDesc
+	postDesc := postCommentReq.PostDesc
 	if len(postDesc) > 150 {
 		postDesc = postDesc[:150]
 	}
-	commentReq := octopusReq.CommentReq{TaskId: findCommentReq.TaskId,
-		Poster:           findCommentReq.Poster,
+	commentReq := octopusReq.CommentReq{TaskId: postCommentReq.TaskId,
+		Poster:           postCommentReq.Poster,
 		PostTitle:        postTitle,
 		PostDesc:         postDesc,
-		CommentReplier:   findCommentReq.CommentReplier,
-		CommentReplierId: findCommentReq.CommentReplierId,
-		Content:          findCommentReq.Comments[0].Content,
-		Commenter:        findCommentReq.Comments[0].Commenter,
-		CommenterId:      findCommentReq.Comments[0].CommenterId,
-		PostAt:           findCommentReq.Comments[0].PostAt,
-		CmtFrom:          "find"}
+		CommentReplier:   postCommentReq.CommentReplier,
+		CommentReplierId: postCommentReq.CommentReplierId,
+		Content:          postCommentReq.Comments[0].Content,
+		Commenter:        postCommentReq.Comments[0].Commenter,
+		CommenterId:      postCommentReq.Comments[0].CommenterId,
+		PostAt:           postCommentReq.Comments[0].PostAt,
+		CmtFrom:          "postCmt"}
 	var errCode int
 	if errCode, err = cmtTaskService.CreateComment(&commentReq); err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))

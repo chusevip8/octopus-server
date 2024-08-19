@@ -15,15 +15,15 @@ func (s *CmtTaskRouter) InitCmtTaskRouter(Router *gin.RouterGroup, PublicRouter 
 	var cmtTaskApi = v1.ApiGroupApp.OctopusApiGroup.CmtTaskApi
 
 	{
-		cmtTaskRouter.POST("createFindCmtTask", cmtTaskApi.CreateFindCmtTask)   // 新建任务
-		cmtTaskRouter.POST("createWriteCmtTask", cmtTaskApi.CreateWriteCmtTask) // 新建任务
-		cmtTaskRouter.DELETE("deleteCmtTask", cmtTaskApi.DeleteCmtTask)         // 删除单个任务
-		cmtTaskRouter.GET("stopCmtTask", cmtTaskApi.StopCmtTask)                // 停止单个任务
-		cmtTaskRouter.POST("stopCmtTasks", cmtTaskApi.StopCmtTasks)             // 停止所有任务
-		cmtTaskRouter.POST("deleteCmtTasks", cmtTaskApi.DeleteCmtTasks)         // 删除所有任务
+		cmtTaskRouter.POST("createReadPostCmtTask", cmtTaskApi.CreateReadPostCmtTask)   // 新建任务
+		cmtTaskRouter.POST("createReplyPostCmtTask", cmtTaskApi.CreateReplyPostCmtTask) // 新建任务
+		cmtTaskRouter.DELETE("deleteCmtTask", cmtTaskApi.DeleteCmtTask)                 // 删除单个任务
+		cmtTaskRouter.GET("stopCmtTask", cmtTaskApi.StopCmtTask)                        // 停止单个任务
+		cmtTaskRouter.POST("stopCmtTasks", cmtTaskApi.StopCmtTasks)                     // 停止所有任务
+		cmtTaskRouter.POST("deleteCmtTasks", cmtTaskApi.DeleteCmtTasks)                 // 删除所有任务
 	}
 	{
-		cmtTaskRouterWithoutAuth.POST("uploadFindComment", cmtTaskApi.UploadFindComment)
+		cmtTaskRouterWithoutAuth.POST("uploadPostComment", cmtTaskApi.UploadPostComment)
 		cmtTaskRouterWithoutAuth.POST("uploadMsgComment", cmtTaskApi.UploadMsgComment)
 	}
 }

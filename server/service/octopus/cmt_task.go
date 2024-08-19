@@ -26,10 +26,10 @@ const (
 
 var CmtTaskServiceApp = new(CmtTaskService)
 
-func (cmtTaskService *CmtTaskService) CreateWriteCmtTask(writeCmtTask *octopusReq.WriteCmtTask) (err error) {
+func (cmtTaskService *CmtTaskService) CreateReplyCmtTask(replyCmtTask *octopusReq.ReplyCmtTask) (err error) {
 
 	var cmtThread octopus.CmtThread
-	cmtThread, err = CmtThreadServiceApp.GetCmtThread(writeCmtTask.ThreadId)
+	cmtThread, err = CmtThreadServiceApp.GetCmtThread(replyCmtTask.ThreadId)
 	if err != nil {
 		return err
 	}
@@ -41,14 +41,14 @@ func (cmtTaskService *CmtTaskService) CreateWriteCmtTask(writeCmtTask *octopusRe
 	}
 	var comment octopus.Comment
 	err = global.GVA_DB.Model(&octopus.Comment{}).Preload("Task").
-		Where("conversation_id=?", writeCmtTask.ConversationId).
+		Where("conversation_id=?", replyCmtTask.ConversationId).
 		Where("mine=?", 0).
 		Order("id desc").First(&comment).Error
 	if err != nil {
 		return err
 	}
 	global.GVA_LOG.Info("回复列表中抓取的评论", zap.Any("comment", comment))
-	params, err := cmtTaskService.buildWriteCmtTaskParams(cmtTaskSetup, cmtThread, comment, writeCmtTask.CmtContent)
+	params, err := cmtTaskService.buildReplyCmtTaskParams(cmtTaskSetup, cmtThread, comment, replyCmtTask.CmtContent)
 	if err != nil {
 		return err
 	}
@@ -56,12 +56,12 @@ func (cmtTaskService *CmtTaskService) CreateWriteCmtTask(writeCmtTask *octopusRe
 	taskParams.TaskSetupId = cmtTaskSetup.ID
 	taskParams.CreatedBy = cmtTaskSetup.CreatedBy
 	taskParams.MainTaskType = "cmt"
-	scriptId := cmtTaskSetup.WriteCmtScriptId
-	if comment.CmtFrom == "reply" {
-		scriptId = cmtTaskSetup.ReplyCmtScriptId
+	scriptId := cmtTaskSetup.ReplyPostCmtScriptId
+	if comment.CmtFrom == "msgCmt" {
+		scriptId = cmtTaskSetup.ReplyMsgCmtScriptId
 	}
 	taskParams.ScriptId = scriptId
-	taskParams.SubTaskType = "writeCmt"
+	taskParams.SubTaskType = "replyCmt"
 	taskParams.Params = params
 	err = TaskParamsServiceApp.CreateTaskParams(&taskParams)
 	if err != nil {
@@ -89,24 +89,24 @@ func (cmtTaskService *CmtTaskService) CreateWriteCmtTask(writeCmtTask *octopusRe
 		CommentReplierId: comment.CommentReplierId,
 		PostAt:           Today(),
 		CmtFrom:          "write",
-		Content:          writeCmtTask.CmtContent,
+		Content:          replyCmtTask.CmtContent,
 	}
 	_, err = cmtTaskService.CreateComment(&commentReq)
 	return err
 }
 
-func (cmtTaskService *CmtTaskService) CreateFindCmtTask(findCmtTask *octopusReq.FindCmtTask) (err error) {
-	params, err := cmtTaskService.buildFindCmtTaskParams(findCmtTask.TaskSetupId)
+func (cmtTaskService *CmtTaskService) CreateReadPostCmtTask(readPostCmtTask *octopusReq.ReadPostCmtTask) (err error) {
+	params, err := cmtTaskService.buildReadPostCmtTaskParams(readPostCmtTask.TaskSetupId)
 	if err != nil {
 		return err
 	}
 
 	var taskParams octopus.TaskParams
-	taskParams.TaskSetupId = findCmtTask.TaskSetupId
-	taskParams.ScriptId = findCmtTask.ScriptId
-	taskParams.CreatedBy = findCmtTask.CreatedBy
-	taskParams.MainTaskType = findCmtTask.MainTaskType
-	taskParams.SubTaskType = findCmtTask.SubTaskType
+	taskParams.TaskSetupId = readPostCmtTask.TaskSetupId
+	taskParams.ScriptId = readPostCmtTask.ScriptId
+	taskParams.CreatedBy = readPostCmtTask.CreatedBy
+	taskParams.MainTaskType = readPostCmtTask.MainTaskType
+	taskParams.SubTaskType = readPostCmtTask.SubTaskType
 	taskParams.Params = params
 	err = TaskParamsServiceApp.CreateTaskParams(&taskParams)
 	if err != nil {
@@ -115,16 +115,16 @@ func (cmtTaskService *CmtTaskService) CreateFindCmtTask(findCmtTask *octopusReq.
 
 	var task octopus.Task
 	task.TaskParamsId = taskParams.ID
-	task.AppName = findCmtTask.AppName
-	task.DeviceId = findCmtTask.DeviceId
-	task.CreatedBy = findCmtTask.CreatedBy
-	task.Status = findCmtTask.Status
-	task.Error = findCmtTask.Error
+	task.AppName = readPostCmtTask.AppName
+	task.DeviceId = readPostCmtTask.DeviceId
+	task.CreatedBy = readPostCmtTask.CreatedBy
+	task.Status = readPostCmtTask.Status
+	task.Error = readPostCmtTask.Error
 	err = TaskServiceApp.CreateTask(&task)
 	return err
 }
 
-func (cmtTaskService *CmtTaskService) buildWriteCmtTaskParams(cmtTaskSetup octopus.CmtTaskSetup, cmtThread octopus.CmtThread, comment octopus.Comment, cmtContent string) (params string, err error) {
+func (cmtTaskService *CmtTaskService) buildReplyCmtTaskParams(cmtTaskSetup octopus.CmtTaskSetup, cmtThread octopus.CmtThread, comment octopus.Comment, cmtContent string) (params string, err error) {
 	paramsMap := map[string]string{
 		"postLink":         cmtTaskSetup.PostLink,
 		"keyword":          cmtTaskSetup.Keyword,
@@ -145,7 +145,7 @@ func (cmtTaskService *CmtTaskService) buildWriteCmtTaskParams(cmtTaskSetup octop
 	return string(jsonData), nil
 }
 
-func (cmtTaskService *CmtTaskService) buildFindCmtTaskParams(setupId uint) (params string, err error) {
+func (cmtTaskService *CmtTaskService) buildReadPostCmtTaskParams(setupId uint) (params string, err error) {
 	if cmtTaskSetup, err := CmtTaskSetupServiceApp.GetCmtTaskSetup(strconv.Itoa(int(setupId))); err != nil {
 		return "", err
 	} else {
@@ -157,7 +157,7 @@ func (cmtTaskService *CmtTaskService) buildFindCmtTaskParams(setupId uint) (para
 	}
 }
 
-func (cmtTaskService *CmtTaskService) UpdateFindCmtTaskParams(cmtTaskSetup octopus.CmtTaskSetup) (err error) {
+func (cmtTaskService *CmtTaskService) UpdateReadPostCmtTaskParams(cmtTaskSetup octopus.CmtTaskSetup) (err error) {
 	params := fmt.Sprintf(`{"postLink": "%s", "keyword": "%s","cmtCount":"%s"}`, cmtTaskSetup.PostLink, cmtTaskSetup.Keyword, cmtTaskSetup.CmtCount)
 	err = global.GVA_DB.Model(&octopus.TaskParams{}).
 		Where("task_setup_id = ?", cmtTaskSetup.ID).

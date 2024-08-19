@@ -1,6 +1,6 @@
 package request
 
-type FindCmtTask struct {
+type ReadPostCmtTask struct {
 	TaskSetupId  uint   `json:"taskSetupId" form:"taskSetupId"`
 	ScriptId     uint   `json:"scriptId" form:"scriptId"`
 	AppName      string `json:"appName" form:"appName"`
@@ -12,13 +12,10 @@ type FindCmtTask struct {
 	CreatedBy    uint   `json:"createdBy" form:"createdBy"`
 }
 
-type WriteCmtTask struct {
+type ReplyCmtTask struct {
 	ThreadId       string `json:"threadId" form:"threadId"`
 	ConversationId string `json:"conversationId" form:"conversationId"`
 	CmtContent     string `json:"cmtContent" form:"cmtContent"`
-}
-
-type ReplyCmtTask struct {
 }
 
 type CommentReq struct {
@@ -35,16 +32,16 @@ type CommentReq struct {
 	CmtFrom          string `json:"cmtFrom" form:"cmtFrom" `
 }
 
-type FindCommentReq struct {
+type PostCommentReq struct {
 	TaskId           string            `json:"taskId" form:"taskId"`
 	Poster           string            `json:"poster" form:"poster" `
 	PostTitle        string            `json:"postTitle" form:"postTitle" `
 	PostDesc         string            `json:"postDesc" form:"postDesc" `
 	CommentReplier   string            `json:"commentReplier" form:"commentReplier" `     //评论回复者
 	CommentReplierId string            `json:"commentReplierId" form:"commentReplierId" ` //评论回复者Id
-	Comments         []FindCommentItem `json:"comments" form:"comments"`
+	Comments         []PostCommentItem `json:"comments" form:"comments"`
 }
-type FindCommentItem struct {
+type PostCommentItem struct {
 	Content     string `json:"content" form:"content" ` //评论内容
 	PostAt      string `json:"postAt" form:"postAt" `
 	Commenter   string `json:"commenter" form:"commenter"`      //发评论者
