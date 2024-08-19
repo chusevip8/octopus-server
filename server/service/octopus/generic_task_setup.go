@@ -70,6 +70,9 @@ func (genericTaskSetupService *GenericTaskSetupService) GetGenericTaskSetupInfoL
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
 	db := global.GVA_DB.Model(&octopus.GenericTaskSetup{})
+
+	filter(db, info.CreatedBy)
+
 	var genericTaskSetups []octopus.GenericTaskSetup
 	// 如果有条件搜索 下方会自动创建搜索语句
 	if info.TaskTitle != "" {

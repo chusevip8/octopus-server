@@ -6,5 +6,6 @@ import (
 
 type GenericTaskSetupSearch struct {
 	TaskTitle string `json:"taskTitle" form:"taskTitle"`
+	CreatedBy uint   `json:"createdBy" form:"createdBy"`
 	request.PageInfo
 }

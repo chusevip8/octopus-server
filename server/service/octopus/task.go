@@ -106,6 +106,11 @@ func (taskService *TaskService) GetTaskInfoList(info octopusReq.TaskSearch) (lis
 		Where("oct_task_params.task_setup_id = ? AND oct_task_params.main_task_type = ? AND oct_task_params.sub_task_type = ?", info.TaskSetupId, info.MainTaskType, info.SubTaskType).
 		Preload("TaskParams").
 		Preload("Device")
+
+	if !isAdmin(info.CreatedBy) {
+		db.Where("oct_task.created_by = ?", info.CreatedBy)
+	}
+
 	var tasks []octopus.Task
 	// 如果有条件搜索 下方会自动创建搜索语句
 

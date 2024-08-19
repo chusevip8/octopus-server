@@ -14,3 +14,11 @@ func filter(db *gorm.DB, userId uint) {
 		db = db.Where("created_by = ?", userId)
 	}
 }
+
+func isAdmin(userId uint) bool {
+	user, err := system.UserServiceApp.FindUserById(int(userId))
+	if err != nil {
+		return false
+	}
+	return user.AuthorityId == 1 || user.AuthorityId == 2
+}

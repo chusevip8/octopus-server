@@ -69,6 +69,9 @@ func (cmtThreadService *CmtThreadService) GetCmtThreadInfoList(info octopusReq.C
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
 	db := global.GVA_DB.Model(&octopus.CmtThread{})
+
+	filter(db, info.CreatedBy)
+
 	var cmtThreads []octopus.CmtThread
 	// 如果有条件搜索 下方会自动创建搜索语句
 	if info.AppName != "" {
