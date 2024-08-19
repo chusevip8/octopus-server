@@ -1,16 +1,16 @@
 import service from '@/utils/request'
 
-export const createFindCmtTask = (data) => {
+export const createReadPostCmtTask = (data) => {
     return service({
-        url: '/cmtTask/createFindCmtTask',
+        url: '/cmtTask/createReadPostCmtTask',
         method: 'post',
         data
     })
 }
 
-export const createWriteCmtTask = (data) => {
+export const createReplyCmtTask = (data) => {
     return service({
-        url: '/cmtTask/createWriteCmtTask',
+        url: '/cmtTask/createReplyCmtTask',
         method: 'post',
         data
     })

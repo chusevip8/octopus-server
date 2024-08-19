@@ -115,9 +115,9 @@ const formData = ref({
   postLink: '',
   keyword: '',
   cmtCount: '9999',
-  findCmtScriptId: undefined,
-  writeCmtScriptId: undefined,
-  replyCmtScriptId: undefined,
+  readPostCmtScriptId: undefined,
+  replyPostCmtScriptId: undefined,
+  replyMsgCmtScriptId: undefined,
 })
 
 
@@ -318,7 +318,7 @@ const deleteCmtTaskSetupFunc = async (row) => {
 }
 
 const openTaskManager = (row) => {
-  router.push({ name: 'cmtTask', params: { appName: route.params.appName, mainTaskType: 'cmt', subTaskType: 'findCmt', taskSetupId: row.ID, scriptId: parseInt(route.params.findCmtScriptId, 10) } })
+  router.push({ name: 'cmtTask', params: { appName: route.params.appName, mainTaskType: 'cmt', subTaskType: 'readPostCmt', taskSetupId: row.ID, scriptId: parseInt(route.params.readPostCmtScriptId, 10) } })
 }
 
 // 弹窗控制标记
@@ -339,9 +339,9 @@ const closeDialog = () => {
     postLink: '',
     keyword: '',
     cmtCount: '9999',
-    findCmtScriptId: undefined,
-    writeCmtScriptId: undefined,
-    replyCmtScriptId: undefined,
+    readPostCmtScriptId: undefined,
+    replyPostCmtScriptId: undefined,
+    replyMsgCmtScriptId: undefined,
   }
 }
 // 弹窗确定
@@ -350,9 +350,9 @@ const enterDialog = async () => {
     if (!valid) return
 
     formData.value.appName = route.params.appName
-    formData.value.findCmtScriptId = parseInt(route.params.findCmtScriptId, 10)
-    formData.value.writeCmtScriptId = parseInt(route.params.writeCmtScriptId, 10)
-    formData.value.replyCmtScriptId = parseInt(route.params.replyCmtScriptId, 10)
+    formData.value.readPostCmtScriptId = parseInt(route.params.readPostCmtScriptId, 10)
+    formData.value.replyPostCmtScriptId = parseInt(route.params.replyPostCmtScriptId, 10)
+    formData.value.replyMsgCmtScriptId = parseInt(route.params.replyMsgCmtScriptId, 10)
     formData.value.keyword = formData.value.keyword.trim()
     formData.value.postLink = formData.value.postLink.trim()
     let res

@@ -16,7 +16,7 @@ import {
 } from '@/api/octopus/cmtThread'
 
 import {
-  createWriteCmtTask
+  createReplyCmtTask
 } from '@/api/octopus/cmtTask'
 
 // 全量引入格式化工具 请按需保留
@@ -89,7 +89,7 @@ const onSubmit = async () => {
     formData.value.conversationId = route.params.conversationId
     formData.value.threadId = route.params.threadId
     formData.value.cmtContent = text
-    const res = await createWriteCmtTask(formData.value)
+    const res = await createReplyCmtTask(formData.value)
     if (res.code === 0) {
       formData.value = {
         conversationId: '',

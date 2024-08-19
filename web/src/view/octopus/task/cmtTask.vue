@@ -85,7 +85,7 @@ import {
 } from '@/api/octopus/task'
 
 import {
-  createFindCmtTask,
+  createReadPostCmtTask,
   deleteCmtTask,
   stopCmtTask,
   stopCmtTasks,
@@ -196,7 +196,7 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async () => {
-  const table = await getTaskList({ page: page.value, pageSize: pageSize.value, taskSetupId: route.params.taskSetupId, mainTaskType: route.params.mainTaskType, subTaskType: 'findCmt', ...searchInfo.value })
+  const table = await getTaskList({ page: page.value, pageSize: pageSize.value, taskSetupId: route.params.taskSetupId, mainTaskType: route.params.mainTaskType, subTaskType: 'readPostCmt', ...searchInfo.value })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -323,7 +323,7 @@ const saveTask = async (params) => {
         message: '该设备已添加'
       })
     } else {
-      let res = await createFindCmtTask(formData.value)
+      let res = await createReadPostCmtTask(formData.value)
       if (res.code === 0) {
         ElMessage({
           type: 'success',

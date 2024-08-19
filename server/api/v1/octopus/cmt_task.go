@@ -30,14 +30,14 @@ func (cmtTaskApi *CmtTaskApi) CreateReadPostCmtTask(c *gin.Context) {
 	}
 }
 
-func (cmtTaskApi *CmtTaskApi) CreateReplyPostCmtTask(c *gin.Context) {
-	var replyPostCmtTask octopusReq.ReplyCmtTask
-	err := c.ShouldBindJSON(&replyPostCmtTask)
+func (cmtTaskApi *CmtTaskApi) CreateReplyCmtTask(c *gin.Context) {
+	var replyCmtTask octopusReq.ReplyCmtTask
+	err := c.ShouldBindJSON(&replyCmtTask)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if err := cmtTaskService.CreateReplyCmtTask(&replyPostCmtTask); err != nil {
+	if err := cmtTaskService.CreateReplyCmtTask(&replyCmtTask); err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("创建失败", c)
 	} else {
