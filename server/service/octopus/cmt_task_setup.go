@@ -110,6 +110,9 @@ func (cmtTaskSetupService *CmtTaskSetupService) GetCmtTaskSetupInfoList(info oct
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
 	db := global.GVA_DB.Model(&octopus.CmtTaskSetup{})
+
+	filter(db, info.CreatedBy)
+
 	var cmtTaskSetups []octopus.CmtTaskSetup
 	// 如果有条件搜索 下方会自动创建搜索语句
 

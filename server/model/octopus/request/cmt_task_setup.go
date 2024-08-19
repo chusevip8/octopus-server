@@ -8,5 +8,6 @@ type CmtTaskSetupSearch struct {
 	AppName   string `json:"appName" form:"appName"`
 	Keyword   string `json:"keyword" form:"keyword" `
 	TaskTitle string `json:"taskTitle" form:"taskTitle"`
+	CreatedBy uint   `json:"createdBy" form:"createdBy"`
 	request.PageInfo
 }

@@ -2,19 +2,18 @@ package octopus
 
 import (
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
-    "github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
-    octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
-    "github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
-    "github.com/flipped-aurora/gin-vue-admin/server/service"
-    "github.com/gin-gonic/gin"
-    "go.uber.org/zap"
-    "github.com/flipped-aurora/gin-vue-admin/server/utils"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
+	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
+	"github.com/flipped-aurora/gin-vue-admin/server/service"
+	"github.com/flipped-aurora/gin-vue-admin/server/utils"
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
-type CmtTaskSetupApi struct {}
+type CmtTaskSetupApi struct{}
 
 var cmtTaskSetupService = service.ServiceGroupApp.OctopusServiceGroup.CmtTaskSetupService
-
 
 // CreateCmtTaskSetup 创建评论任务设置
 // @Tags CmtTaskSetup
@@ -32,10 +31,10 @@ func (cmtTaskSetupApi *CmtTaskSetupApi) CreateCmtTaskSetup(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-    cmtTaskSetup.CreatedBy = utils.GetUserID(c)
+	cmtTaskSetup.CreatedBy = utils.GetUserID(c)
 
 	if err := cmtTaskSetupService.CreateCmtTaskSetup(&cmtTaskSetup); err != nil {
-        global.GVA_LOG.Error("创建失败!", zap.Error(err))
+		global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("创建失败", c)
 	} else {
 		response.OkWithMessage("创建成功", c)
@@ -53,9 +52,9 @@ func (cmtTaskSetupApi *CmtTaskSetupApi) CreateCmtTaskSetup(c *gin.Context) {
 // @Router /cmtTaskSetup/deleteCmtTaskSetup [delete]
 func (cmtTaskSetupApi *CmtTaskSetupApi) DeleteCmtTaskSetup(c *gin.Context) {
 	ID := c.Query("ID")
-    	userID := utils.GetUserID(c)
-	if err := cmtTaskSetupService.DeleteCmtTaskSetup(ID,userID); err != nil {
-        global.GVA_LOG.Error("删除失败!", zap.Error(err))
+	userID := utils.GetUserID(c)
+	if err := cmtTaskSetupService.DeleteCmtTaskSetup(ID, userID); err != nil {
+		global.GVA_LOG.Error("删除失败!", zap.Error(err))
 		response.FailWithMessage("删除失败", c)
 	} else {
 		response.OkWithMessage("删除成功", c)
@@ -72,9 +71,9 @@ func (cmtTaskSetupApi *CmtTaskSetupApi) DeleteCmtTaskSetup(c *gin.Context) {
 // @Router /cmtTaskSetup/deleteCmtTaskSetupByIds [delete]
 func (cmtTaskSetupApi *CmtTaskSetupApi) DeleteCmtTaskSetupByIds(c *gin.Context) {
 	IDs := c.QueryArray("IDs[]")
-    userID := utils.GetUserID(c)
-	if err := cmtTaskSetupService.DeleteCmtTaskSetupByIds(IDs,userID); err != nil {
-        global.GVA_LOG.Error("批量删除失败!", zap.Error(err))
+	userID := utils.GetUserID(c)
+	if err := cmtTaskSetupService.DeleteCmtTaskSetupByIds(IDs, userID); err != nil {
+		global.GVA_LOG.Error("批量删除失败!", zap.Error(err))
 		response.FailWithMessage("批量删除失败", c)
 	} else {
 		response.OkWithMessage("批量删除成功", c)
@@ -97,10 +96,10 @@ func (cmtTaskSetupApi *CmtTaskSetupApi) UpdateCmtTaskSetup(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-    cmtTaskSetup.UpdatedBy = utils.GetUserID(c)
+	cmtTaskSetup.UpdatedBy = utils.GetUserID(c)
 
 	if err := cmtTaskSetupService.UpdateCmtTaskSetup(cmtTaskSetup); err != nil {
-        global.GVA_LOG.Error("更新失败!", zap.Error(err))
+		global.GVA_LOG.Error("更新失败!", zap.Error(err))
 		response.FailWithMessage("更新失败", c)
 	} else {
 		response.OkWithMessage("更新成功", c)
@@ -119,7 +118,7 @@ func (cmtTaskSetupApi *CmtTaskSetupApi) UpdateCmtTaskSetup(c *gin.Context) {
 func (cmtTaskSetupApi *CmtTaskSetupApi) FindCmtTaskSetup(c *gin.Context) {
 	ID := c.Query("ID")
 	if recmtTaskSetup, err := cmtTaskSetupService.GetCmtTaskSetup(ID); err != nil {
-        global.GVA_LOG.Error("查询失败!", zap.Error(err))
+		global.GVA_LOG.Error("查询失败!", zap.Error(err))
 		response.FailWithMessage("查询失败", c)
 	} else {
 		response.OkWithData(recmtTaskSetup, c)
@@ -142,17 +141,18 @@ func (cmtTaskSetupApi *CmtTaskSetupApi) GetCmtTaskSetupList(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+	pageInfo.CreatedBy = utils.GetUserID(c)
 	if list, total, err := cmtTaskSetupService.GetCmtTaskSetupInfoList(pageInfo); err != nil {
-	    global.GVA_LOG.Error("获取失败!", zap.Error(err))
-        response.FailWithMessage("获取失败", c)
-    } else {
-        response.OkWithDetailed(response.PageResult{
-            List:     list,
-            Total:    total,
-            Page:     pageInfo.Page,
-            PageSize: pageInfo.PageSize,
-        }, "获取成功", c)
-    }
+		global.GVA_LOG.Error("获取失败!", zap.Error(err))
+		response.FailWithMessage("获取失败", c)
+	} else {
+		response.OkWithDetailed(response.PageResult{
+			List:     list,
+			Total:    total,
+			Page:     pageInfo.Page,
+			PageSize: pageInfo.PageSize,
+		}, "获取成功", c)
+	}
 }
 
 // GetCmtTaskSetupPublic 不需要鉴权的评论任务设置接口
@@ -164,9 +164,9 @@ func (cmtTaskSetupApi *CmtTaskSetupApi) GetCmtTaskSetupList(c *gin.Context) {
 // @Success 200 {object} response.Response{data=object,msg=string} "获取成功"
 // @Router /cmtTaskSetup/getCmtTaskSetupPublic [get]
 func (cmtTaskSetupApi *CmtTaskSetupApi) GetCmtTaskSetupPublic(c *gin.Context) {
-    // 此接口不需要鉴权
-    // 示例为返回了一个固定的消息接口，一般本接口用于C端服务，需要自己实现业务逻辑
-    response.OkWithDetailed(gin.H{
-       "info": "不需要鉴权的评论任务设置接口信息",
-    }, "获取成功", c)
+	// 此接口不需要鉴权
+	// 示例为返回了一个固定的消息接口，一般本接口用于C端服务，需要自己实现业务逻辑
+	response.OkWithDetailed(gin.H{
+		"info": "不需要鉴权的评论任务设置接口信息",
+	}, "获取成功", c)
 }

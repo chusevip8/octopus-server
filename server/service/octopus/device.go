@@ -17,7 +17,7 @@ var DeviceServiceApp = new(DeviceService)
 
 func (deviceService *DeviceService) RegisterDevice(d octopus.Device) (device octopus.Device, err error) {
 	var user system.SysUser
-	if errors.Is(global.GVA_DB.Model(&system.SysUser{}).Where("username = ?", d.Username).First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
+	if errors.Is(global.GVA_DB.Model(&system.SysUser{}).Where("username = ? AND enable = ?", d.Username, 1).First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
 		return device, errors.New("用户未注册")
 	}
 
@@ -93,6 +93,9 @@ func (deviceService *DeviceService) GetDeviceInfoList(info octopusReq.DeviceSear
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
 	db := global.GVA_DB.Model(&octopus.Device{}).Preload("User")
+
+	filter(db, info.CreatedBy)
+
 	var devices []octopus.Device
 
 	if info.Number != "" {
