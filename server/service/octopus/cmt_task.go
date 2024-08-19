@@ -88,7 +88,7 @@ func (cmtTaskService *CmtTaskService) CreateReplyCmtTask(replyCmtTask *octopusRe
 		CommentReplier:   comment.CommentReplier,
 		CommentReplierId: comment.CommentReplierId,
 		PostAt:           Today(),
-		CmtFrom:          "write",
+		CmtFrom:          "replyCmt",
 		Content:          replyCmtTask.CmtContent,
 	}
 	_, err = cmtTaskService.CreateComment(&commentReq)
@@ -162,7 +162,7 @@ func (cmtTaskService *CmtTaskService) UpdateReadPostCmtTaskParams(cmtTaskSetup o
 	err = global.GVA_DB.Model(&octopus.TaskParams{}).
 		Where("task_setup_id = ?", cmtTaskSetup.ID).
 		Where("main_task_type = ?", "cmt").
-		Where("sub_task_type = ?", "findCmt").
+		Where("sub_task_type = ?", "postCmt").
 		Update("params", params).Error
 	return
 }
@@ -266,10 +266,10 @@ func (cmtTaskService *CmtTaskService) CreateComment(commentReq *octopusReq.Comme
 	comment.TaskId = task.ID
 	comment.CmtFrom = commentReq.CmtFrom
 	switch commentReq.CmtFrom {
-	case "find", "msgCmt":
+	case "postCmt", "msgCmt":
 		comment.Mine = false
 		comment.Unread = true
-	case "write":
+	case "replyCmt":
 		comment.Mine = true
 		comment.Unread = false
 	default:

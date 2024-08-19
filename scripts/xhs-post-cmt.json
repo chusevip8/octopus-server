@@ -18,8 +18,9 @@
             "value": "",
             "match": {
               "by": "class",
-              "value": "android.widget.TextView",
-              "index": 0
+              "value": "android.view.View",
+              "index": 0,
+              "deep": "parent://1,child://1"
             },
             "event": {
               "yesEvent": {
@@ -345,7 +346,7 @@
           {
             "title": "上传数据-13",
             "type": "output",
-            "value": "https://bzy.ai4mobi.com/api/cmtTask/uploadFindComment",
+            "value": "https://bzy.ai4mobi.com/api/cmtTask/uploadPostComment",
             "event": {
               "yesEvent": {
                 "type": "",
