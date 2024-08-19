@@ -18,7 +18,7 @@ type XHS struct {
 
 func (xhs XHS) HandleComment(cmtFrom string, comment string) string {
 	switch cmtFrom {
-	case "find":
+	case "postCmt":
 		parts := strings.Fields(comment) // 使用 Fields 自动去掉多余空格，并将字符串分割为单词
 		if len(parts) < 4 {
 			return comment
