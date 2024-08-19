@@ -1,0 +1,386 @@
+[
+  {
+    "app": {
+      "name": "小红书",
+      "packageName": "com.xingin.xhs",
+      "intent": {
+        "scheme": "xhsdiscover://profile"
+      }
+    },
+    "activities": [
+      {
+        "title": "个人页面",
+        "className": "com.xingin.xhs.index.v2.IndexActivityV2",
+        "views": [
+          {
+            "title": "账号",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.view.View",
+              "index": 0,
+              "deep": "parent://1,child://1"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://map/text/commentReplier",
+                "next": "1001"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "app": {
+      "name": "小红书",
+      "packageName": "com.xingin.xhs",
+      "intent": {
+        "scheme": "xhsdiscover://message/comments"
+      }
+    },
+    "activities": [
+      {
+        "title": "消息评论页面",
+        "className": "com.xingin.im.ui.message.inner.v2.MsgV2Activity",
+        "views": [
+          {
+            "title": "评论列表-0",
+            "type": "list",
+            "value": "class://android.widget.TextView,3",
+            "match": {
+              "by": "class",
+              "value": "androidx.recyclerview.widget.RecyclerView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "列表项-1",
+            "type": "item",
+            "value": "0",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "7"
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "检测是否到底-2",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "text",
+              "value": "- THE END -",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "error",
+                "value": "未找到该评论，回复评论失败",
+                "next": ""
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "检测更多消息-3",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "text",
+              "value": "查看更多历史消息",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "click",
+                "value": "",
+                "next": "5"
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "滑动列表-4",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "slide",
+                "value": "2,0,0.3,0,0.3",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "等待-5",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "2000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "更新界面-6",
+            "type": "update",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "0"
+              }
+            }
+          },
+          {
+            "title": "评论作者-7",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "${commenter}"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": "12"
+              }
+            }
+          },
+          {
+            "title": "判断是否作者回复-8",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 1
+            },
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "作者"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": "10"
+              }
+            }
+          },
+          {
+            "title": "评论内容-9",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 4
+            },
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "${cmtContent}"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "11"
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": "12"
+              }
+            }
+          },
+          {
+            "title": "评论内容-10",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 3
+            },
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "${cmtContent}"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": "12"
+              }
+            }
+          },
+          {
+            "title": "回复按钮-11",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "text",
+              "value": "回复",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "click",
+                "value": "",
+                "next": "1003"
+              }
+            }
+          },
+          {
+            "title": "计数-12",
+            "type": "count",
+            "value": "50",
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "1"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "error",
+                "value": "未找到该评论，回复评论失败",
+                "next": ""
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": "1"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "回复评论输入页面",
+    "className": "com.xingin.matrix.notedetail.r10.comment.r10.NoteCommentActivity",
+    "views": [
+      {
+        "title": "输入框-0",
+        "type": "view",
+        "value": "",
+        "match": {
+          "start": "",
+          "by": "class",
+          "value": "android.widget.EditText",
+          "index": 0
+        },
+        "event": {
+          "yesEvent": {
+            "type": "input",
+            "value": "${writeCmtContent}",
+            "next": ""
+          }
+        }
+      },
+      {
+        "title": "等待-1",
+        "type": "view",
+        "value": "",
+        "event": {
+          "yesEvent": {
+            "type": "wait",
+            "value": "1000",
+            "next": ""
+          }
+        }
+      },
+      {
+        "title": "更新界面-2",
+        "type": "update",
+        "value": "",
+        "event": {
+          "yesEvent": {
+            "type": "",
+            "value": "",
+            "next": ""
+          }
+        }
+      },
+      {
+        "title": "发送按钮-3",
+        "type": "view",
+        "value": "",
+        "match": {
+          "start": "",
+          "by": "class",
+          "value": "android.widget.TextView",
+          "index": 0
+        },
+        "event": {
+          "yesEvent": {
+            "type": "click",
+            "value": "",
+            "next": "1006"
+          }
+        }
+      }
+    ]
+  }
+]
