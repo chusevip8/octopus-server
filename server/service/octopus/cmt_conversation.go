@@ -4,6 +4,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
+	octopusRes "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/response"
 	"gorm.io/gorm"
 )
 
@@ -64,7 +65,7 @@ func (cmtConversationService *CmtConversationService) GetCmtConversation(ID stri
 
 // GetCmtConversationInfoList 分页获取评论会话记录记录
 // Author [piexlmax](https://github.com/piexlmax)
-func (cmtConversationService *CmtConversationService) GetCmtConversationInfoList(info octopusReq.CmtConversationSearch) (list []octopus.CmtConversation, total int64, err error) {
+func (cmtConversationService *CmtConversationService) GetCmtConversationInfoList(info octopusReq.CmtConversationSearch) (list []octopusRes.CmtConversationRes, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
@@ -90,5 +91,17 @@ func (cmtConversationService *CmtConversationService) GetCmtConversationInfoList
 	}
 
 	err = db.Find(&cmtConversations).Error
-	return cmtConversations, total, err
+
+	var conversationResList []octopusRes.CmtConversationRes
+	if err == nil && len(cmtConversations) > 0 {
+		for _, conversation := range cmtConversations {
+			var unreadCount int64
+			global.GVA_DB.Model(&octopus.Comment{}).
+				Where("conversation_id = ? AND unread = ?", conversation.ID, 1).
+				Count(&unreadCount)
+			conversationRes := octopusRes.CmtConversationRes{ID: conversation.ID, Commenter: conversation.Commenter, CommentReplier: conversation.CommentReplier, Unread: unreadCount}
+			conversationResList = append(conversationResList, conversationRes)
+		}
+	}
+	return conversationResList, total, err
 }

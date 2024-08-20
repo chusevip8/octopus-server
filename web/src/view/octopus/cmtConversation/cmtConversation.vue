@@ -37,6 +37,13 @@
         <el-table-column type="selection" width="55" />
         <el-table-column align="center" label="发评论者" prop="commenter" min-width="240" />
         <el-table-column align="center" label="评论回复者" prop="commentReplier" min-width="240" />
+        <el-table-column align="center" label="未读" prop="unread" min-width="120">
+          <template #default="scope">
+            <span :style="{ color: scope.row.unread !== 0 ? 'red' : '' }">
+              {{ scope.row.unread }}
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="操作" fixed="right" min-width="240">
           <template #default="scope">
             <el-button type="primary" link icon="View" class="table-button"
@@ -183,11 +190,11 @@ const closeDialog = () => {
   dialogFormVisible.value = false
   threadId.value = ''
   conversationId.value = ''
+  getTableData()
 }
 
 
 const viewConversation = (row) => {
-  // router.push({ name: 'comment', params: { threadId: route.params.threadId, conversationId: row.ID } })
   threadId.value = route.params.threadId
   conversationId.value = row.ID
   dialogFormVisible.value = true
