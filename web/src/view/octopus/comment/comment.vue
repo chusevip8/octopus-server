@@ -43,7 +43,7 @@ const getPostInfo = async () => {
   const cmtThread = await findCmtThread({ ID: route.params.threadId })
   if (cmtThread.code == 0) {
     chatConfig.value.name = cmtThread.data.poster
-    chatConfig.value.dept = cmtThread.data.postDesc
+    chatConfig.value.dept = cmtThread.data.postTitle.length > 0 ? cmtThread.data.postTitle : cmtThread.data.postDesc
   }
 }
 getPostInfo()
