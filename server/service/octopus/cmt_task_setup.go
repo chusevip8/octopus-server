@@ -125,6 +125,9 @@ func (cmtTaskSetupService *CmtTaskSetupService) GetCmtTaskSetupInfoList(info oct
 	if info.Keyword != "" {
 		db = db.Where("keyword LIKE ?", "%"+info.Keyword+"%")
 	}
+
+	db = db.Order("id DESC")
+
 	err = db.Count(&total).Error
 	if err != nil {
 		return

@@ -78,6 +78,9 @@ func (genericTaskSetupService *GenericTaskSetupService) GetGenericTaskSetupInfoL
 	if info.TaskTitle != "" {
 		db = db.Where("task_title LIKE ?", "%"+info.TaskTitle+"%")
 	}
+
+	db = db.Order("id DESC")
+
 	err = db.Count(&total).Error
 	if err != nil {
 		return
