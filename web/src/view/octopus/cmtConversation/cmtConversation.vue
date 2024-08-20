@@ -54,42 +54,19 @@
     <el-drawer destroy-on-close size="800" v-model="dialogFormVisible" :show-close="false" :before-close="closeDialog">
       <template #header>
         <div class="flex justify-between items-center">
-          <span class="text-lg">{{ type === 'create' ? '添加' : '修改' }}</span>
+          <span class="text-lg">评论</span>
           <div>
-            <el-button type="primary" @click="enterDialog">确 定</el-button>
-            <el-button @click="closeDialog">取 消</el-button>
+            <el-button @click="closeDialog">关闭</el-button>
           </div>
         </div>
       </template>
-
-      <el-form :model="formData" label-position="top" ref="elFormRef" :rules="rule" label-width="80px">
-        <el-form-item label="会话Id:" prop="threadId">
-          <el-input v-model.number="formData.threadId" :clearable="false" placeholder="请输入会话Id" />
-        </el-form-item>
-        <el-form-item label="发评论者:" prop="commenter">
-          <el-input v-model="formData.commenter" :clearable="false" placeholder="请输入发评论者" />
-        </el-form-item>
-        <el-form-item label="发评论者Id:" prop="commentId">
-          <el-input v-model="formData.commentId" :clearable="false" placeholder="请输入发评论者Id" />
-        </el-form-item>
-        <el-form-item label="评论回复者:" prop="commentReplier">
-          <el-input v-model="formData.commentReplier" :clearable="false" placeholder="请输入评论回复者" />
-        </el-form-item>
-        <el-form-item label="评论回复者Id:" prop="commentReplierId">
-          <el-input v-model="formData.commentReplierId" :clearable="false" placeholder="请输入评论回复者Id" />
-        </el-form-item>
-      </el-form>
+      <comment :thread-id="threadId" :conversation-id="conversationId"></comment>
     </el-drawer>
   </div>
 </template>
 
 <script setup>
 import {
-  createCmtConversation,
-  deleteCmtConversation,
-  deleteCmtConversationByIds,
-  updateCmtConversation,
-  findCmtConversation,
   getCmtConversationList
 } from '@/api/octopus/cmtConversation'
 
@@ -98,37 +75,15 @@ import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, R
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { Comment } from '@/view/octopus/components'
 
 defineOptions({
   name: 'CmtConversation'
 })
 
-
-const router = useRouter()
 const route = useRoute()
 // 控制更多查询条件显示/隐藏状态
 const showAllQuery = ref(false)
-
-// 自动化生成的字典（可能为空）以及字段
-const formData = ref({
-  threadId: undefined,
-  commenter: '',
-  commentId: '',
-  commentReplier: '',
-  commentReplierId: '',
-})
-
-
-
-// 验证规则
-const rule = reactive({
-  threadId: [{
-    required: true,
-    message: '',
-    trigger: ['input', 'blur'],
-  },
-  ],
-})
 
 const searchRule = reactive({
   createdAt: [
@@ -148,7 +103,6 @@ const searchRule = reactive({
   ],
 })
 
-const elFormRef = ref()
 const elSearchFormRef = ref()
 
 // =========== 表格控制部分 ===========
@@ -216,128 +170,27 @@ const handleSelectionChange = (val) => {
   multipleSelection.value = val
 }
 
-// 删除行
-const deleteRow = (row) => {
-  ElMessageBox.confirm('确定要删除吗?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    deleteCmtConversationFunc(row)
-  })
-}
 
-// 多选删除
-const onDelete = async () => {
-  ElMessageBox.confirm('确定要删除吗?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(async () => {
-    const IDs = []
-    if (multipleSelection.value.length === 0) {
-      ElMessage({
-        type: 'warning',
-        message: '请选择要删除的数据'
-      })
-      return
-    }
-    multipleSelection.value &&
-      multipleSelection.value.map(item => {
-        IDs.push(item.ID)
-      })
-    const res = await deleteCmtConversationByIds({ IDs })
-    if (res.code === 0) {
-      ElMessage({
-        type: 'success',
-        message: '删除成功'
-      })
-      if (tableData.value.length === IDs.length && page.value > 1) {
-        page.value--
-      }
-      getTableData()
-    }
-  })
-}
-
-// 行为控制标记（弹窗内部需要增还是改）
-const type = ref('')
-
-// 更新行
-const updateCmtConversationFunc = async (row) => {
-  const res = await findCmtConversation({ ID: row.ID })
-  type.value = 'update'
-  if (res.code === 0) {
-    formData.value = res.data
-    dialogFormVisible.value = true
-  }
-}
-
-
-// 删除行
-const deleteCmtConversationFunc = async (row) => {
-  const res = await deleteCmtConversation({ ID: row.ID })
-  if (res.code === 0) {
-    ElMessage({
-      type: 'success',
-      message: '删除成功'
-    })
-    if (tableData.value.length === 1 && page.value > 1) {
-      page.value--
-    }
-    getTableData()
-  }
-}
+const threadId = ref('')
+const conversationId = ref('')
 
 // 弹窗控制标记
 const dialogFormVisible = ref(false)
 
-// 打开弹窗
-const openDialog = () => {
-  type.value = 'create'
-  dialogFormVisible.value = true
-}
 
 // 关闭弹窗
 const closeDialog = () => {
   dialogFormVisible.value = false
-  formData.value = {
-    threadId: undefined,
-    commenter: '',
-    commentId: '',
-    commentReplier: '',
-    commentReplierId: '',
-  }
-}
-// 弹窗确定
-const enterDialog = async () => {
-  elFormRef.value?.validate(async (valid) => {
-    if (!valid) return
-    let res
-    switch (type.value) {
-      case 'create':
-        res = await createCmtConversation(formData.value)
-        break
-      case 'update':
-        res = await updateCmtConversation(formData.value)
-        break
-      default:
-        res = await createCmtConversation(formData.value)
-        break
-    }
-    if (res.code === 0) {
-      ElMessage({
-        type: 'success',
-        message: '创建/更改成功'
-      })
-      closeDialog()
-      getTableData()
-    }
-  })
+  threadId.value = ''
+  conversationId.value = ''
 }
 
+
 const viewConversation = (row) => {
-  router.push({ name: 'comment', params: { threadId: route.params.threadId, conversationId: row.ID } })
+  // router.push({ name: 'comment', params: { threadId: route.params.threadId, conversationId: row.ID } })
+  threadId.value = route.params.threadId
+  conversationId.value = row.ID
+  dialogFormVisible.value = true
 }
 
 </script>

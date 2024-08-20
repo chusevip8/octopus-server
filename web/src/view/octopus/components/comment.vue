@@ -1,7 +1,7 @@
 <template>
   <div>
     <JwChat :taleList="tableData" @enter="onSubmit" v-model="formData.cmtContent" :showRightBox="false"
-      scrollType="scroll" width="80%" height="750px" :toolConfig="chatTool" :config="chatConfig">
+      scrollType="scroll" width="80%" height="800px" :toolConfig="chatTool" :config="chatConfig">
     </JwChat>
   </div>
 </template>
@@ -28,6 +28,18 @@ defineOptions({
   name: 'Comment'
 })
 
+const props = defineProps({
+  threadId: {
+    type: String,
+    required: true
+  },
+  conversationId: {
+    type: String,
+    required: true
+  }
+})
+
+
 const route = useRoute()
 
 const chatTool = ref({
@@ -40,7 +52,7 @@ const chatConfig = ref({
 })
 
 const getPostInfo = async () => {
-  const cmtThread = await findCmtThread({ ID: route.params.threadId })
+  const cmtThread = await findCmtThread({ ID: props.threadId })
   if (cmtThread.code == 0) {
     chatConfig.value.name = cmtThread.data.poster
     chatConfig.value.dept = cmtThread.data.postTitle.length > 0 ? cmtThread.data.postTitle : cmtThread.data.postDesc
@@ -63,7 +75,7 @@ const tableData = ref([])
 
 // 查询
 const getTableData = async () => {
-  const table = await getCommentList({ page: page.value, pageSize: pageSize.value, conversationId: route.params.conversationId })
+  const table = await getCommentList({ page: page.value, pageSize: pageSize.value, conversationId: props.conversationId })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -86,8 +98,8 @@ const onSubmit = async () => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(async () => {
-    formData.value.conversationId = route.params.conversationId
-    formData.value.threadId = route.params.threadId
+    formData.value.conversationId = props.conversationId + ''
+    formData.value.threadId = props.threadId + ''
     formData.value.cmtContent = text
     const res = await createReplyCmtTask(formData.value)
     if (res.code === 0) {
