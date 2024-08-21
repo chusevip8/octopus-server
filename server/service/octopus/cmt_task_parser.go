@@ -11,6 +11,7 @@ var CmtTaskParsers = map[string]CmtTaskParser{
 
 type CmtTaskParser interface {
 	HandleComment(cmtFrom string, comment string) string
+	HandleAccount(account string) string
 }
 
 type XHS struct {
@@ -43,4 +44,12 @@ func (xhs XHS) HandleComment(cmtFrom string, comment string) string {
 		// 直接返回原始 comment 并去除首尾空格
 		return strings.TrimSpace(comment)
 	}
+}
+func (xhs XHS) HandleAccount(account string) string {
+	parts := strings.Split(account, "：")
+	if len(parts) < 2 {
+		return ""
+	}
+	accountId := parts[1]
+	return accountId
 }

@@ -228,8 +228,16 @@ func (cmtTaskService *CmtTaskService) CreateComment(commentReq *octopusReq.Comme
 	}
 	commenterId := commentReq.CommenterId
 	commentReplierId := commentReq.CommentReplierId
+
+	if commenterId != "" {
+		commenterId = CmtTaskParsers[task.AppName].HandleAccount(commenterId)
+	}
 	if commenterId == "" {
 		commenterId, err = cmtTaskService.buildCommenterId(commentReq.Commenter)
+	}
+
+	if commentReplierId != "" {
+		commentReplierId = CmtTaskParsers[task.AppName].HandleAccount(commentReplierId)
 	}
 	if commentReplierId == "" {
 		commentReplierId, err = cmtTaskService.buildCommenterId(commentReq.CommentReplier)
