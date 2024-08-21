@@ -42,6 +42,13 @@
         <el-table-column align="center" label="发帖者" prop="poster" width="240" />
         <el-table-column align="center" label="帖子标题" prop="postTitle" min-width="120" />
         <el-table-column align="center" label="帖子描述" prop="postDesc" min-width="240" />
+        <el-table-column align="center" label="未读" prop="unreadCount" min-width="120">
+          <template #default="scope">
+            <span :style="{ color: scope.row.unreadCount !== 0 ? 'red' : '' }">
+              {{ scope.row.unreadCount }}
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="操作" fixed="right" min-width="240">
           <template #default="scope">
             <el-button type="primary" link icon="View" class="table-button"

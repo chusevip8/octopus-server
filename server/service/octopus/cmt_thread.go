@@ -70,7 +70,9 @@ func (cmtThreadService *CmtThreadService) GetCmtThreadInfoList(info octopusReq.C
 	// 创建db
 	db := global.GVA_DB.Model(&octopus.CmtThread{})
 
-	filter(db, info.CreatedBy)
+	if !isAdmin(info.CreatedBy) {
+		db = db.Where("oct_cmt_thread.created_by = ?", info.CreatedBy)
+	}
 
 	var cmtThreads []octopus.CmtThread
 	// 如果有条件搜索 下方会自动创建搜索语句
@@ -95,6 +97,12 @@ func (cmtThreadService *CmtThreadService) GetCmtThreadInfoList(info octopusReq.C
 		db = db.Limit(limit).Offset(offset)
 	}
 
-	err = db.Find(&cmtThreads).Error
+	err = db.Select("oct_cmt_thread.*, COUNT(oct_comment.id) AS unread_count").
+		Joins("LEFT JOIN oct_cmt_conversation ON oct_cmt_conversation.thread_id = oct_cmt_thread.id").
+		Joins("LEFT JOIN oct_comment ON oct_comment.conversation_id = oct_cmt_conversation.id AND oct_comment.unread = 1").
+		Group("oct_cmt_thread.id").
+		Order("unread_count DESC").
+		Find(&cmtThreads).Error
+
 	return cmtThreads, total, err
 }

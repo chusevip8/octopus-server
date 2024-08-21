@@ -17,6 +17,7 @@ type CmtThread struct {
 	CreatedBy   uint   `gorm:"column:created_by;comment:创建者"`
 	UpdatedBy   uint   `gorm:"column:updated_by;comment:更新者"`
 	DeletedBy   uint   `gorm:"column:deleted_by;comment:删除者"`
+	UnreadCount uint   `json:"unreadCount" form:"unreadCount" gorm:"column:unread_count"`
 }
 
 // TableName 评论会话 CmtThread自定义表名 oct_cmt_thread

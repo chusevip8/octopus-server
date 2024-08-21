@@ -108,7 +108,7 @@ func (taskService *TaskService) GetTaskInfoList(info octopusReq.TaskSearch) (lis
 		Preload("Device")
 
 	if !isAdmin(info.CreatedBy) {
-		db.Where("oct_task.created_by = ?", info.CreatedBy)
+		db = db.Where("oct_task.created_by = ?", info.CreatedBy)
 	}
 
 	var tasks []octopus.Task
