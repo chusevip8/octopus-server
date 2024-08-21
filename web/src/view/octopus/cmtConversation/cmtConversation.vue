@@ -37,10 +37,10 @@
         <el-table-column type="selection" width="55" />
         <el-table-column align="center" label="发评论者" prop="commenter" min-width="240" />
         <el-table-column align="center" label="评论回复者" prop="commentReplier" min-width="240" />
-        <el-table-column align="center" label="未读" prop="unread" min-width="120">
+        <el-table-column align="center" label="未读" prop="unreadCount" min-width="120">
           <template #default="scope">
-            <span :style="{ color: scope.row.unread !== 0 ? 'red' : '' }">
-              {{ scope.row.unread }}
+            <span :style="{ color: scope.row.unreadCount !== 0 ? 'red' : '' }">
+              {{ scope.row.unreadCount }}
             </span>
           </template>
         </el-table-column>
