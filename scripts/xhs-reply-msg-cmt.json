@@ -144,7 +144,7 @@
             "event": {
               "yesEvent": {
                 "type": "wait",
-                "value": "2000",
+                "value": "3000",
                 "next": ""
               }
             }

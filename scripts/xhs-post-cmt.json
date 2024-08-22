@@ -162,7 +162,7 @@
             "event": {
               "yesEvent": {
                 "type": "wait",
-                "value": "2000",
+                "value": "3000",
                 "next": ""
               }
             }
@@ -565,7 +565,7 @@
             "event": {
               "yesEvent": {
                 "type": "wait",
-                "value": "2000",
+                "value": "3000",
                 "next": ""
               }
             }
@@ -671,7 +671,7 @@
           {
             "title": "上传数据-11",
             "type": "output",
-            "value": "https://bzy.ai4mobi.com/api/cmtTask/uploadFindComment",
+            "value": "https://bzy.ai4mobi.com/api/cmtTask/uploadPostComment",
             "event": {
               "yesEvent": {
                 "type": "",
