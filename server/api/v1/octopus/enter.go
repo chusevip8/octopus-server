@@ -19,4 +19,5 @@ type ApiGroup struct {
 	MsgTaskSetupApi
 	MsgConversationApi
 	MessageApi
+	MsgTaskApi
 }
