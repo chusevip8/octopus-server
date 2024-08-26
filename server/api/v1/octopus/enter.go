@@ -17,4 +17,6 @@ type ApiGroup struct {
 	GenericTaskApi
 	TaskBindDataApi
 	MsgTaskSetupApi
+	MsgConversationApi
+	MessageApi
 }

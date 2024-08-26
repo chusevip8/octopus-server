@@ -35,6 +35,8 @@ func initBizRouter(routers ...*gin.RouterGroup) {
 		octopusRouter.InitGenericTaskRouter(privateGroup, publicGroup)
 		octopusRouter.InitTaskBindDataRouter(privateGroup, publicGroup)
 		octopusRouter.InitMsgTaskSetupRouter(privateGroup, publicGroup)
+		octopusRouter.InitMsgConversationRouter(privateGroup, publicGroup)
+		octopusRouter.InitMessageRouter(privateGroup, publicGroup)
 
 	}
 

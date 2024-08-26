@@ -17,4 +17,6 @@ type RouterGroup struct {
 	GenericTaskRouter
 	TaskBindDataRouter
 	MsgTaskSetupRouter
+	MsgConversationRouter
+	MessageRouter
 }

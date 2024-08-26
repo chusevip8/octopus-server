@@ -17,4 +17,6 @@ type ServiceGroup struct {
 	GenericTaskService
 	TaskBindDataService
 	MsgTaskSetupService
+	MsgConversationService
+	MessageService
 }
