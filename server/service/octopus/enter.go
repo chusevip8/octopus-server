@@ -16,4 +16,5 @@ type ServiceGroup struct {
 	DataFileService
 	GenericTaskService
 	TaskBindDataService
+	MsgTaskSetupService
 }

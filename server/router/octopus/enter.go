@@ -16,4 +16,5 @@ type RouterGroup struct {
 	DataFileRouter
 	GenericTaskRouter
 	TaskBindDataRouter
+	MsgTaskSetupRouter
 }
