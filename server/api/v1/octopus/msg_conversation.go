@@ -53,7 +53,7 @@ func (msgConversationApi *MsgConversationApi) CreateMsgConversation(c *gin.Conte
 func (msgConversationApi *MsgConversationApi) DeleteMsgConversation(c *gin.Context) {
 	ID := c.Query("ID")
 	userID := utils.GetUserID(c)
-	if err := msgConversationService.DeleteMsgConversaton(ID, userID); err != nil {
+	if err := msgConversationService.DeleteMsgConversation(ID, userID); err != nil {
 		global.GVA_LOG.Error("删除失败!", zap.Error(err))
 		response.FailWithMessage("删除失败", c)
 	} else {

@@ -3,23 +3,6 @@
     <div class="gva-search-box">
       <el-form ref="elSearchFormRef" :inline="true" :model="searchInfo" class="demo-form-inline" :rules="searchRule"
         @keyup.enter="onSubmit">
-        <el-form-item label="创建日期" prop="createdAt">
-          <template #label>
-            <span>
-              创建日期
-              <el-tooltip content="搜索范围是开始日期（包含）至结束日期（不包含）">
-                <el-icon>
-                  <QuestionFilled />
-                </el-icon>
-              </el-tooltip>
-            </span>
-          </template>
-          <el-date-picker v-model="searchInfo.startCreatedAt" type="datetime" placeholder="开始日期"
-            :disabled-date="time => searchInfo.endCreatedAt ? time.getTime() > searchInfo.endCreatedAt.getTime() : false"></el-date-picker>
-          —
-          <el-date-picker v-model="searchInfo.endCreatedAt" type="datetime" placeholder="结束日期"
-            :disabled-date="time => searchInfo.startCreatedAt ? time.getTime() < searchInfo.startCreatedAt.getTime() : false"></el-date-picker>
-        </el-form-item>
 
         <el-form-item label="发送者" prop="sender">
           <el-input v-model="searchInfo.sender" placeholder="搜索条件" />
@@ -52,21 +35,19 @@
       <el-table ref="multipleTable" style="width: 100%" tooltip-effect="dark" :data="tableData" row-key="ID"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-
-        <el-table-column align="left" label="日期" prop="createdAt" width="180">
-          <template #default="scope">{{ formatDate(scope.row.CreatedAt) }}</template>
-        </el-table-column>
-
-        <el-table-column align="left" label="发送者" prop="sender" width="120" />
-        <el-table-column align="left" label="发送者Id" prop="senderId" width="120" />
-        <el-table-column align="left" label="接收者" prop="receiver" width="120" />
-        <el-table-column align="left" label="接收者Id" prop="receiverId" width="120" />
-        <el-table-column align="left" label="未读数" prop="unreadCount" width="120" />
-        <el-table-column align="left" label="操作" fixed="right" min-width="240">
+        <el-table-column align="center" label="发送者" prop="sender" min-width="120" />
+        <el-table-column align="center" label="接收者" prop="receiver" min-width="120" />
+        <el-table-column align="center" label="未读" prop="unreadCount" min-width="120">
           <template #default="scope">
-            <el-button type="primary" link icon="edit" class="table-button"
-              @click="updateMsgConversationFunc(scope.row)">变更</el-button>
-            <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
+            <span :style="{ color: scope.row.unreadCount !== 0 ? 'red' : '' }">
+              {{ scope.row.unreadCount }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="操作" fixed="right" min-width="240">
+          <template #default="scope">
+            <el-button type="primary" link icon="View" class="table-button"
+              @click="viewConversation(scope.row)">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
