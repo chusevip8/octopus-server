@@ -15,8 +15,8 @@ type Message struct {
 	SenderId       string `json:"senderId" form:"senderId" gorm:"column:sender_id;comment:发送者Id;size:128;"`       //发送者Id
 	Receiver       string `json:"receiver" form:"receiver" gorm:"column:receiver;comment:接收者;size:64;"`           //接收者
 	ReceiverId     string `json:"receiverId" form:"receiverId" gorm:"column:receiver_id;comment:接收者Id;size:128;"` //接收者Id
-	Content        string `json:"content" form:"content" gorm:"column:content;comment:评论内容;" binding:"required"`  //评论内容
-	PostAt         string `json:"postAt" form:"postAt" gorm:"column:post_at;comment:评论时间;size:20;"`               //评论时间
+	Content        string `json:"content" form:"content" gorm:"column:content;comment:消息内容;" binding:"required"`  //消息内容
+	SendAt         string `json:"sendAt" form:"sendAt" gorm:"column:send_at;comment:消息时间;size:20;"`               //消息时间
 	Unread         bool   `json:"unread" form:"unread" gorm:"column:unread;comment:是否未读;default:false;"`
 	Mine           bool   `json:"mine" form:"mine" gorm:"column:mine;comment:是否自己回复;default:false;"`
 	CreatedBy      uint   `gorm:"column:created_by;comment:创建者"`
