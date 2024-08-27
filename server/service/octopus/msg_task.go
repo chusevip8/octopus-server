@@ -39,6 +39,7 @@ func (msgTaskService *MsgTaskService) CreateMessage(messageReq *octopusReq.Messa
 		msgConversation.Receiver = messageReq.Receiver
 		msgConversation.SenderId = senderId
 		msgConversation.ReceiverId = receiverId
+		msgConversation.CreatedBy = task.CreatedBy
 		if err = global.GVA_DB.Create(&msgConversation).Error; err != nil {
 			return
 		}
