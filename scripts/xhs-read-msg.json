@@ -1,0 +1,447 @@
+[
+  {
+    "app": {
+      "name": "小红书",
+      "packageName": "com.xingin.xhs",
+      "intent": {
+        "scheme": "xhsdiscover://profile"
+      }
+    },
+    "activities": [
+      {
+        "title": "个人页面",
+        "className": "com.xingin.xhs.index.v2.IndexActivityV2",
+        "views": [
+          {
+            "title": "账号",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.view.View",
+              "index": 0,
+              "deep": "parent://1,child://1"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://map/text/Receiver",
+                "next": "1001"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "app": {
+      "name": "小红书",
+      "packageName": "com.xingin.xhs",
+      "intent": {
+        "scheme": "xhsdiscover://messages"
+      }
+    },
+    "activities": [
+      {
+        "title": "消息页面",
+        "className": "com.xingin.xhs.index.v2.IndexActivityV2",
+        "views": [
+          {
+            "title": "消息列表-0",
+            "type": "list",
+            "value": "class://android.widget.TextView,0",
+            "match": {
+              "by": "class",
+              "value": "androidx.recyclerview.widget.RecyclerView",
+              "index": 0
+            },
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "1"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": "1001"
+              }
+            }
+          },
+          {
+            "title": "列表项-1",
+            "type": "item",
+            "value": "0",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "5"
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "滑动列表-2",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "slide",
+                "value": "2,0,0.3,0,0.3",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "等待-3",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "3000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "更新界面-4",
+            "type": "update",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "0"
+              }
+            }
+          },
+          {
+            "title": "发消息人-5",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "list://系统消息,陌生人消息,活动消息"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "1"
+              },
+              "noEvent": {
+                "type": "extract",
+                "value": "collect://map/text/sender",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "点击发消息人-6",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "click",
+                "value": "",
+                "next": "1002"
+              }
+            }
+          },
+          {
+            "title": "计数-7",
+            "type": "count",
+            "value": "50",
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "1"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "1001"
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "title": "消息详情页面",
+        "className": "com.xingin.im.ui.activity.ChatActivity",
+        "views": [
+          {
+            "title": "等待-0",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "1000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "消息列表-1",
+            "type": "list",
+            "value": "class://android.widget.TextView,0",
+            "match": {
+              "by": "class",
+              "value": "androidx.recyclerview.widget.RecyclerView",
+              "index": 0
+            },
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "1"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": "1004"
+              }
+            }
+          },
+          {
+            "title": "列表项-2",
+            "type": "item",
+            "value": "1",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "6"
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "滑动列表-3",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "slide",
+                "value": "2,0,0.3,0,0.3",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "等待-4",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "3000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "更新界面-5",
+            "type": "update",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "1"
+              }
+            }
+          },
+          {
+            "title": "头像-6",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "2",
+              "by": "class",
+              "value": "android.widget.ImageView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "click",
+                "value": "1002",
+                "next": ""
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": "2"
+              }
+            }
+          },
+          {
+            "title": "信息内容-7",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "2",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 1
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://block/text/content",
+                "next": "9"
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "信息内容-8",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "2",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://block/text/content",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "放入Collect-9",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://list/messages",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "上传数据-10",
+            "type": "output",
+            "value": "https://bzy.ai4mobi.com/api/msgTask/uploadMessage",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "2"
+              }
+            }
+          },
+          {
+            "title": "清除数据-11",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "clean",
+                "value": "messages",
+                "next": "2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "title": "用户详情页面",
+        "className": "com.xingin.matrix.v2.profile.newpage.NewOtherUserActivity",
+        "views": [
+          {
+            "title": "等待-0",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "1000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "昵称-1",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "extract",
+                "value": "collect://block/text/writer",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "返回-2",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "back",
+                "value": "",
+                "next": "1004"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
