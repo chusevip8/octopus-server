@@ -40,7 +40,7 @@ const chatTool = ref({
 })
 
 const chatConfig = ref({
-  name: '',
+  name: '发信息',
   dept: ''
 })
 
