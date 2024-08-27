@@ -67,10 +67,15 @@ func (msgConversationService *MsgConversationService) GetMsgConversationInfoList
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
 	db := global.GVA_DB.Model(&octopus.MsgConversation{})
+
+	if !isAdmin(info.CreatedBy) {
+		db = db.Where("oct_msg_conversation.created_by = ?", info.CreatedBy)
+	}
+
 	var msgConversations []octopus.MsgConversation
 	// 如果有条件搜索 下方会自动创建搜索语句
-	if info.StartCreatedAt != nil && info.EndCreatedAt != nil {
-		db = db.Where("created_at BETWEEN ? AND ?", info.StartCreatedAt, info.EndCreatedAt)
+	if info.AppName != "" {
+		db = db.Where("app_name = ?", info.AppName)
 	}
 	if info.Sender != "" {
 		db = db.Where("sender LIKE ?", "%"+info.Sender+"%")
@@ -87,6 +92,11 @@ func (msgConversationService *MsgConversationService) GetMsgConversationInfoList
 		db = db.Limit(limit).Offset(offset)
 	}
 
-	err = db.Find(&msgConversations).Error
+	err = db.Select("oct_msg_conversation.*, COUNT(oct_message.id) AS unread_count").
+		Joins("LEFT JOIN oct_message ON oct_message.conversation_id = oct_cmt_conversation.id AND oct_message.unread = 1").
+		Group("oct_msg_conversation.id").
+		Order("unread_count DESC").
+		Find(&msgConversations).Error
+
 	return msgConversations, total, err
 }

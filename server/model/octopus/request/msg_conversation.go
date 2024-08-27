@@ -2,13 +2,12 @@ package request
 
 import (
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
-	"time"
 )
 
 type MsgConversationSearch struct {
-	StartCreatedAt *time.Time `json:"startCreatedAt" form:"startCreatedAt"`
-	EndCreatedAt   *time.Time `json:"endCreatedAt" form:"endCreatedAt"`
-	Sender         string     `json:"sender" form:"sender" `
-	Receiver       string     `json:"receiver" form:"receiver" `
+	AppName   string `json:"appName" form:"appName"`
+	Sender    string `json:"sender" form:"sender" `
+	Receiver  string `json:"receiver" form:"receiver" `
+	CreatedBy uint   `gorm:"column:created_by;comment:创建者"`
 	request.PageInfo
 }
