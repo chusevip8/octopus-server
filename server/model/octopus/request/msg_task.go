@@ -1,6 +1,7 @@
 package request
 
 type ReplyMsgTask struct {
+	AppName        string `json:"appName" form:"appName"`
 	ConversationId string `json:"conversationId" form:"conversationId"`
 	MsgContent     string `json:"msgContent" form:"msgContent"`
 }

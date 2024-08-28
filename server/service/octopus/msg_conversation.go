@@ -9,6 +9,8 @@ import (
 
 type MsgConversationService struct{}
 
+var MsgConversationServiceApp = new(MsgConversationService)
+
 // CreateMsgConversation 创建私信会话纪录记录
 // Author [piexlmax](https://github.com/piexlmax)
 func (msgConversationService *MsgConversationService) CreateMsgConversation(msgConversation *octopus.MsgConversation) (err error) {

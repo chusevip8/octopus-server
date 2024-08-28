@@ -3,6 +3,7 @@ package octopus
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
@@ -81,5 +82,55 @@ func (msgTaskService *MsgTaskService) buildWriterId(writer string) (writerId str
 	return writerId, nil
 }
 func (msgTaskService *MsgTaskService) CreateReplyMsgTask(replyMsgTask *octopusReq.ReplyMsgTask) (err error) {
-	return err
+	var msgConversation octopus.MsgConversation
+	msgConversation, err = MsgConversationServiceApp.GetMsgConversation(replyMsgTask.ConversationId)
+	if err != nil {
+		return
+	}
+	var msgTaskSetup octopus.MsgTaskSetup
+	msgTaskSetup, err = MsgTaskSetupServiceApp.GetMsgTaskSetupByAppName(replyMsgTask.AppName)
+	if err != nil {
+		return
+	}
+	var params string
+	params, err = msgTaskService.buildReplyMsgTaskParams(msgConversation, replyMsgTask.MsgContent)
+	if err != nil {
+		return err
+	}
+	var taskParams octopus.TaskParams
+	taskParams.TaskSetupId = msgTaskSetup.ID
+	taskParams.CreatedBy = msgConversation.CreatedBy
+	taskParams.MainTaskType = "msg"
+	taskParams.ScriptId = msgTaskSetup.ScriptId
+	taskParams.SubTaskType = "replyMsg"
+	taskParams.Params = params
+	err = TaskParamsServiceApp.CreateTaskParams(&taskParams)
+	if err != nil {
+		return err
+	}
+	var task octopus.Task
+	task.TaskParamsId = taskParams.ID
+	task.AppName = msgTaskSetup.AppName
+	//task.DeviceId = comment.Task.DeviceId
+	task.CreatedBy = msgConversation.CreatedBy
+	task.Status = 1
+	task.Error = ""
+	err = TaskServiceApp.CreateTask(&task)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (msgTaskService *MsgTaskService) buildReplyMsgTaskParams(msgConversation octopus.MsgConversation, msgContent string) (params string, err error) {
+	paramsMap := map[string]string{
+		"userName":        msgConversation.Sender,
+		"userId":          msgConversation.SenderId,
+		"writeMsgContent": msgContent,
+	}
+	jsonData, err := json.Marshal(paramsMap)
+	if err != nil {
+		return "", err
+	}
+	return string(jsonData), nil
 }
