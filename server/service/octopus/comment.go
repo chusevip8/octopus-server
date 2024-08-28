@@ -86,6 +86,10 @@ func (commentService *CommentService) GetCommentInfoList(info octopusReq.Comment
 		commentRes.Date = comment.PostAt
 		commentRes.Mine = comment.Mine
 		commentRes.Text = commentService.formatCommentText(comment)
+		commentRes.Img = "avatar_blue.jpg"
+		if comment.Mine {
+			commentRes.Img = "avatar_red.jpg"
+		}
 		commentResList = append(commentResList, commentRes)
 	}
 

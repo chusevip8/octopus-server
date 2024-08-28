@@ -9,4 +9,5 @@ type CommentRes struct {
 	Text Text   `json:"text"`
 	Date string `json:"date"`
 	Mine bool   `json:"mine"`
+	Img  string `json:"img"`
 }
