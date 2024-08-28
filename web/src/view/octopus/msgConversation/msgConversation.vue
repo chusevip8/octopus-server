@@ -60,42 +60,19 @@
     <el-drawer destroy-on-close size="800" v-model="dialogFormVisible" :show-close="false" :before-close="closeDialog">
       <template #header>
         <div class="flex justify-between items-center">
-          <span class="text-lg">{{ type === 'create' ? '添加' : '修改' }}</span>
+          <span class="text-lg">信息</span>
           <div>
-            <el-button type="primary" @click="enterDialog">确 定</el-button>
-            <el-button @click="closeDialog">取 消</el-button>
+            <el-button @click="closeDialog">关闭</el-button>
           </div>
         </div>
       </template>
-
-      <el-form :model="formData" label-position="top" ref="elFormRef" :rules="rule" label-width="80px">
-        <el-form-item label="发送者:" prop="sender">
-          <el-input v-model="formData.sender" :clearable="false" placeholder="请输入发送者" />
-        </el-form-item>
-        <el-form-item label="发送者Id:" prop="senderId">
-          <el-input v-model="formData.senderId" :clearable="false" placeholder="请输入发送者Id" />
-        </el-form-item>
-        <el-form-item label="接收者:" prop="receiver">
-          <el-input v-model="formData.receiver" :clearable="false" placeholder="请输入接收者" />
-        </el-form-item>
-        <el-form-item label="接收者Id:" prop="receiverId">
-          <el-input v-model="formData.receiverId" :clearable="false" placeholder="请输入接收者Id" />
-        </el-form-item>
-        <el-form-item label="未读数:" prop="unreadCount">
-          <el-input v-model.number="formData.unreadCount" :clearable="false" placeholder="请输入未读数" />
-        </el-form-item>
-      </el-form>
+      <message :conversation-id="conversationId"></message>
     </el-drawer>
   </div>
 </template>
 
 <script setup>
 import {
-  createMsgConversation,
-  deleteMsgConversation,
-  deleteMsgConversationByIds,
-  updateMsgConversation,
-  findMsgConversation,
   getMsgConversationList
 } from '@/api/octopus/msgConversation'
 
@@ -104,6 +81,7 @@ import { getDictFunc, formatDate, formatBoolean, filterDict, filterDataSource, R
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { Message } from '@/view/octopus/components'
 
 defineOptions({
   name: 'MsgConversation'
@@ -115,16 +93,6 @@ const route = useRoute()
 
 // 控制更多查询条件显示/隐藏状态
 const showAllQuery = ref(false)
-
-// 自动化生成的字典（可能为空）以及字段
-const formData = ref({
-  sender: '',
-  senderId: '',
-  receiver: '',
-  receiverId: '',
-  unreadCount: undefined,
-})
-
 
 
 // 验证规则
@@ -149,7 +117,6 @@ const searchRule = reactive({
   ],
 })
 
-const elFormRef = ref()
 const elSearchFormRef = ref()
 
 // =========== 表格控制部分 ===========
@@ -217,125 +184,22 @@ const handleSelectionChange = (val) => {
   multipleSelection.value = val
 }
 
-// 删除行
-const deleteRow = (row) => {
-  ElMessageBox.confirm('确定要删除吗?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    deleteMsgConversationFunc(row)
-  })
-}
-
-// 多选删除
-const onDelete = async () => {
-  ElMessageBox.confirm('确定要删除吗?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(async () => {
-    const IDs = []
-    if (multipleSelection.value.length === 0) {
-      ElMessage({
-        type: 'warning',
-        message: '请选择要删除的数据'
-      })
-      return
-    }
-    multipleSelection.value &&
-      multipleSelection.value.map(item => {
-        IDs.push(item.ID)
-      })
-    const res = await deleteMsgConversationByIds({ IDs })
-    if (res.code === 0) {
-      ElMessage({
-        type: 'success',
-        message: '删除成功'
-      })
-      if (tableData.value.length === IDs.length && page.value > 1) {
-        page.value--
-      }
-      getTableData()
-    }
-  })
-}
-
-// 行为控制标记（弹窗内部需要增还是改）
-const type = ref('')
-
-// 更新行
-const updateMsgConversationFunc = async (row) => {
-  const res = await findMsgConversation({ ID: row.ID })
-  type.value = 'update'
-  if (res.code === 0) {
-    formData.value = res.data
-    dialogFormVisible.value = true
-  }
-}
-
-
-// 删除行
-const deleteMsgConversationFunc = async (row) => {
-  const res = await deleteMsgConversation({ ID: row.ID })
-  if (res.code === 0) {
-    ElMessage({
-      type: 'success',
-      message: '删除成功'
-    })
-    if (tableData.value.length === 1 && page.value > 1) {
-      page.value--
-    }
-    getTableData()
-  }
-}
-
+const conversationId = ref('')
 // 弹窗控制标记
 const dialogFormVisible = ref(false)
-
-// 打开弹窗
-const openDialog = () => {
-  type.value = 'create'
-  dialogFormVisible.value = true
-}
 
 // 关闭弹窗
 const closeDialog = () => {
   dialogFormVisible.value = false
-  formData.value = {
-    sender: '',
-    senderId: '',
-    receiver: '',
-    receiverId: '',
-    unreadCount: undefined,
-  }
+  conversationId.value = ''
+  getTableData()
 }
-// 弹窗确定
-const enterDialog = async () => {
-  elFormRef.value?.validate(async (valid) => {
-    if (!valid) return
-    let res
-    switch (type.value) {
-      case 'create':
-        res = await createMsgConversation(formData.value)
-        break
-      case 'update':
-        res = await updateMsgConversation(formData.value)
-        break
-      default:
-        res = await createMsgConversation(formData.value)
-        break
-    }
-    if (res.code === 0) {
-      ElMessage({
-        type: 'success',
-        message: '创建/更改成功'
-      })
-      closeDialog()
-      getTableData()
-    }
-  })
+
+const viewConversation = (row) => {
+  conversationId.value = row.ID
+  dialogFormVisible.value = true
 }
+
 
 watch(() => route.path, (newPath, oldPath) => {
   if (newPath !== oldPath) {

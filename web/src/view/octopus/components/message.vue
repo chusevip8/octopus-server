@@ -75,7 +75,7 @@ const onSubmit = async () => {
   if (formData.value.msgContent.trim() === '') {
     return
   }
-  const text = formData.value.cmtContent
+  const text = formData.value.msgContent
   ElMessageBox.confirm('确定要提交吗?提交后消息不能修改和删除。', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
