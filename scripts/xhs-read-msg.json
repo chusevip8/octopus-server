@@ -172,6 +172,24 @@
                 "next": "1"
               },
               "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "发消息人-7",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
                 "type": "extract",
                 "value": "collect://map/text/sender",
                 "next": ""
@@ -179,7 +197,7 @@
             }
           },
           {
-            "title": "点击发消息人-7",
+            "title": "点击发消息人-8",
             "type": "view",
             "value": "",
             "match": {
@@ -197,7 +215,7 @@
             }
           },
           {
-            "title": "计数-8",
+            "title": "计数-9",
             "type": "count",
             "value": "50",
             "condition": {
@@ -329,8 +347,8 @@
             "event": {
               "yesEvent": {
                 "type": "click",
-                "value": "1002",
-                "next": ""
+                "value": "",
+                "next": "1002"
               },
               "noneEvent": {
                 "type": "",
