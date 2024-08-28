@@ -155,6 +155,16 @@ func (msgConversationApi *MsgConversationApi) GetMsgConversationList(c *gin.Cont
 	}
 }
 
+func (msgConversationApi *MsgConversationApi) GetMsgConversationByCommentId(c *gin.Context) {
+	commentId := c.Query("commentId")
+	if remsgConversation, err := msgConversationService.GetMsgConversationByCommentId(commentId); err != nil {
+		global.GVA_LOG.Error("查询失败!", zap.Error(err))
+		response.FailWithMessage("查询失败", c)
+	} else {
+		response.OkWithData(remsgConversation, c)
+	}
+}
+
 // GetMsgConversationPublic 不需要鉴权的私信会话纪录接口
 // @Tags MsgConversation
 // @Summary 不需要鉴权的私信会话纪录接口

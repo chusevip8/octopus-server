@@ -6,9 +6,12 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/model/octopus"
 	octopusReq "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/request"
 	octopusRes "github.com/flipped-aurora/gin-vue-admin/server/model/octopus/response"
+	"strconv"
 )
 
 type CommentService struct{}
+
+var commentServiceApp = new(CommentService)
 
 // CreateComment 创建评论记录
 // Author [piexlmax](https://github.com/piexlmax)
@@ -79,6 +82,7 @@ func (commentService *CommentService) GetCommentInfoList(info octopusReq.Comment
 	for _, comment := range comments {
 
 		commentRes := octopusRes.CommentRes{}
+		commentRes.Id = strconv.Itoa(int(comment.ID))
 		commentRes.Name = comment.Commenter
 		if comment.Mine {
 			commentRes.Name = comment.CommentReplier

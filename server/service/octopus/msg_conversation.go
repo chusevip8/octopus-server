@@ -62,6 +62,18 @@ func (msgConversationService *MsgConversationService) GetMsgConversation(ID stri
 	return
 }
 
+func (msgConversationService *MsgConversationService) GetMsgConversationByCommentId(commentId string) (msgConversation octopus.MsgConversation, err error) {
+	var comment octopus.Comment
+	comment, err = commentServiceApp.GetComment(commentId)
+	if err != nil {
+		return msgConversation, err
+	}
+	err = global.GVA_DB.Where("sender_id = ?", comment.CommenterId).
+		Where("receiver_id = ?", comment.CommentReplierId).
+		First(&msgConversation).Error
+	return msgConversation, err
+}
+
 // GetMsgConversationInfoList 分页获取私信会话纪录记录
 // Author [piexlmax](https://github.com/piexlmax)
 func (msgConversationService *MsgConversationService) GetMsgConversationInfoList(info octopusReq.MsgConversationSearch) (list []octopus.MsgConversation, total int64, err error) {

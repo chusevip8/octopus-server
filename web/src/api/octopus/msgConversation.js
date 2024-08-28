@@ -95,3 +95,11 @@ export const getMsgConversationList = (params) => {
     params
   })
 }
+
+export const getMsgConversationByCommentId = (params) => {
+  return service({
+    url: '/msgConversation/getMsgConversationByCommentId',
+    method: 'get',
+    params
+  })
+}

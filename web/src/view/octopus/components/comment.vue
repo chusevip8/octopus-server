@@ -1,7 +1,8 @@
 <template>
   <div>
     <JwChat :taleList="tableData" @enter="onSubmit" v-model="formData.cmtContent" :showRightBox="false"
-      scrollType="scroll" width="80%" height="800px" :toolConfig="chatTool" :config="chatConfig">
+      scrollType="scroll" width="80%" height="800px" :toolConfig="chatTool" :config="chatConfig"
+      @clickTalk="enterUserMsg">
     </JwChat>
   </div>
 </template>
@@ -18,6 +19,10 @@ import {
 import {
   createReplyCmtTask
 } from '@/api/octopus/cmtTask'
+
+import {
+  getMsgConversationByCommentId
+} from '@/api/octopus/msgConversation'
 
 // 全量引入格式化工具 请按需保留
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -116,6 +121,18 @@ const onSubmit = async () => {
     }
   })
 
+}
+
+const enterUserMsg = async (cmt) => {
+  const res = await getMsgConversationByCommentId(cmd.id)
+  if (res.code === 0) {
+
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '打开私信记录失败'
+    })
+  }
 }
 
 </script>

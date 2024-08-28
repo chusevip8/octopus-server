@@ -5,6 +5,7 @@ type Text struct {
 }
 
 type CommentRes struct {
+	Id   string `json:"id"`
 	Name string `json:"name"`
 	Text Text   `json:"text"`
 	Date string `json:"date"`

@@ -20,6 +20,7 @@ func (s *MsgConversationRouter) InitMsgConversationRouter(Router *gin.RouterGrou
 		msgConversationRouter.DELETE("deleteMsgConversation", msgConversationApi.DeleteMsgConversation)           // 删除私信会话纪录
 		msgConversationRouter.DELETE("deleteMsgConversationByIds", msgConversationApi.DeleteMsgConversationByIds) // 批量删除私信会话纪录
 		msgConversationRouter.PUT("updateMsgConversation", msgConversationApi.UpdateMsgConversation)              // 更新私信会话纪录
+		msgConversationRouter.GET("getMsgConversationByCommentId", msgConversationApi.GetMsgConversationByCommentId)
 	}
 	{
 		msgConversationRouterWithoutRecord.GET("findMsgConversation", msgConversationApi.FindMsgConversation)       // 根据ID获取私信会话纪录
