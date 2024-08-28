@@ -27,6 +27,7 @@ func tryPushTask(task *octopus.Task) {
 			pushTaskId, data, err := PushTaskMessage(deviceId)
 			if err != nil {
 				global.GVA_LOG.Error("Try push task message", zap.String("error", err.Error()))
+				_ = service.TaskService.UpdateTaskStatusToFail(pushTaskId, "Try push task message"+err.Error())
 			} else {
 				err = service.TaskService.UpdateTaskStatusToRun(pushTaskId)
 				if err != nil {
