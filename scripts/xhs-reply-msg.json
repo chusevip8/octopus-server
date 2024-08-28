@@ -305,8 +305,8 @@
             "value": "",
             "match": {
               "start": "",
-              "by": "class",
-              "value": "android.widget.TextView",
+              "by": "text",
+              "value": "发送",
               "index": 0
             },
             "event": {
