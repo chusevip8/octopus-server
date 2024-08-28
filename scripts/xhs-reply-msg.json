@@ -60,7 +60,7 @@
             "match": {
               "by": "class",
               "value": "androidx.recyclerview.widget.RecyclerView",
-              "index": 0
+              "index": 1
             },
             "condition": {
               "type": "equals",
@@ -240,9 +240,9 @@
             "type": "view",
             "value": "",
             "match": {
-              "by": "class",
-              "value": "android.widget.ImageView",
-              "index": 1
+              "by": "des",
+              "value": "发消息",
+              "index": 0
             },
             "event": {
               "yesEvent": {
