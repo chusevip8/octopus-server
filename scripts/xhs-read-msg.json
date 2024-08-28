@@ -149,6 +149,29 @@
                 "next": "1"
               },
               "noEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "发消息人-6",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "1",
+              "by": "text",
+              "value": "新增关注",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "1"
+              },
+              "noneEvent": {
                 "type": "extract",
                 "value": "collect://map/text/sender",
                 "next": ""
@@ -156,7 +179,7 @@
             }
           },
           {
-            "title": "点击发消息人-6",
+            "title": "点击发消息人-7",
             "type": "view",
             "value": "",
             "match": {
@@ -174,7 +197,7 @@
             }
           },
           {
-            "title": "计数-7",
+            "title": "计数-8",
             "type": "count",
             "value": "50",
             "condition": {
@@ -377,7 +400,7 @@
               "yesEvent": {
                 "type": "",
                 "value": "",
-                "next": "2"
+                "next": ""
               }
             }
           },
