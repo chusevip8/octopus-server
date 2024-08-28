@@ -80,3 +80,6 @@ func (msgTaskService *MsgTaskService) buildWriterId(writer string) (writerId str
 	writerId = hex.EncodeToString(hash.Sum(nil))
 	return writerId, nil
 }
+func (msgTaskService *MsgTaskService) CreateReplyMsgTask(replyMsgTask *octopusReq.ReplyMsgTask) (err error) {
+	return err
+}

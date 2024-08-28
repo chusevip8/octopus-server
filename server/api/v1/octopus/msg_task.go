@@ -27,3 +27,18 @@ func (msgTaskApi *MsgTaskApi) UploadMessage(c *gin.Context) {
 		response.OkWithMessage("创建成功", c)
 	}
 }
+
+func (msgTaskApi *MsgTaskApi) CreateReplyMsgTask(c *gin.Context) {
+	var replyMsgTask octopusReq.ReplyMsgTask
+	err := c.ShouldBindJSON(&replyMsgTask)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if err := msgTaskService.CreateReplyMsgTask(&replyMsgTask); err != nil {
+		global.GVA_LOG.Error("创建失败!", zap.Error(err))
+		response.FailWithMessage("创建失败", c)
+	} else {
+		response.OkWithMessage("创建成功", c)
+	}
+}

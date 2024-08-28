@@ -1,5 +1,10 @@
 package request
 
+type ReplyMsgTask struct {
+	ConversationId string `json:"conversationId" form:"conversationId"`
+	MsgContent     string `json:"msgContent" form:"msgContent"`
+}
+
 type MessageReq struct {
 	TaskId     string        `json:"taskId" form:"taskId"`
 	Receiver   string        `json:"receiver" form:"receiver"`     //接收者
