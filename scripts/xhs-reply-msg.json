@@ -1,0 +1,324 @@
+[
+  {
+    "app": {
+      "name": "小红书",
+      "packageName": "com.xingin.xhs",
+      "intent": {
+        "scheme": "xhsdiscover://search/result?keyword=拜托了梳妆台"
+      }
+    },
+    "activities": [
+      {
+        "title": "搜索页面",
+        "className": "com.xingin.alioth.search.GlobalSearchActivity",
+        "views": [
+          {
+            "title": "用户Tab-0",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "androidx.appcompat.app.ActionBar$Tab",
+              "index": 1
+            },
+            "event": {
+              "yesEvent": {
+                "type": "click",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "等待-1",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "2000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "更新界面-2",
+            "type": "update",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "用户列表-3",
+            "type": "list",
+            "value": "class://android.widget.TextView,1",
+            "match": {
+              "by": "class",
+              "value": "androidx.recyclerview.widget.RecyclerView",
+              "index": 0
+            },
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "1"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              },
+              "noEvent": {
+                "type": "error",
+                "value": "未找到该用户",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "列表项-4",
+            "type": "item",
+            "value": "3",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "9"
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "检测是否到底-5",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "text",
+              "value": "无更多内容",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "error",
+                "value": "未找到用户",
+                "next": ""
+              },
+              "noneEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "滑动列表-6",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "slide",
+                "value": "2,0,0.3,0,0.3",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "等待-7",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "2000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "更新界面-8",
+            "type": "update",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": "3"
+              }
+            }
+          },
+          {
+            "title": "用户昵称-9",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "4",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "condition": {
+              "type": "equals",
+              "match": "text",
+              "value": "拜托了梳妆台"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": "4"
+              }
+            }
+          },
+          {
+            "title": "用户id-10",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "4",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 1
+            },
+            "condition": {
+              "type": "contains",
+              "match": "text",
+              "value": "101642512"
+            },
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              },
+              "noEvent": {
+                "type": "",
+                "value": "",
+                "next": "4"
+              }
+            }
+          },
+          {
+            "title": "点击用户-11",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "4",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "click",
+                "value": "",
+                "next": "1003"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "title": "用户详情页面",
+        "className": "com.xingin.matrix.v2.profile.newpage.NewOtherUserActivity",
+        "views": [
+          {
+            "title": "私信按钮-0",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.widget.ImageView",
+              "index": 1
+            },
+            "event": {
+              "yesEvent": {
+                "type": "click",
+                "value": "",
+                "next": "1003"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "title": "私信页面",
+        "className": "com.xingin.im.ui.activity.ChatActivity",
+        "views": [
+          {
+            "title": "输入框-0",
+            "type": "view",
+            "value": "",
+            "match": {
+              "by": "class",
+              "value": "android.widget.EditText",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "input",
+                "value": "你好",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "等待-1",
+            "type": "view",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "wait",
+                "value": "1000",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "更新界面-2",
+            "type": "update",
+            "value": "",
+            "event": {
+              "yesEvent": {
+                "type": "",
+                "value": "",
+                "next": ""
+              }
+            }
+          },
+          {
+            "title": "发送按钮-3",
+            "type": "view",
+            "value": "",
+            "match": {
+              "start": "",
+              "by": "class",
+              "value": "android.widget.TextView",
+              "index": 0
+            },
+            "event": {
+              "yesEvent": {
+                "type": "click",
+                "value": "",
+                "next": "1006"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
