@@ -101,6 +101,10 @@ func (messageService *MessageService) GetMessageInfoList(info octopusReq.Message
 		messageRes.Date = message.SendAt
 		messageRes.Mine = message.Mine
 		messageRes.Text = messageService.formatMessageText(message)
+		messageRes.Img = "avatar_blue.jpg"
+		if message.Mine {
+			messageRes.Img = "avatar_red.jpg"
+		}
 		messageResList = append(messageResList, messageRes)
 	}
 	return messageResList, total, err
