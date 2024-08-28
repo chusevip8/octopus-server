@@ -64,6 +64,7 @@ func buildTaskPush(task octopus.Task, taskPush *protocol.TaskPush) (err error) {
 	script, err := service.ScriptService.GetScript(strconv.Itoa(int(task.TaskParams.ScriptId)))
 	if err != nil {
 		taskPush.Error = "Can't find task script"
+		global.GVA_LOG.Error("Build task push,Can't find task script", zap.String("error", err.Error()))
 		return
 	}
 	scriptContent := script.Content
@@ -72,6 +73,7 @@ func buildTaskPush(task octopus.Task, taskPush *protocol.TaskPush) (err error) {
 		err = json.Unmarshal([]byte(task.TaskParams.Params), &params)
 		if err != nil {
 			taskPush.Error = "Task params json unmarshal error"
+			global.GVA_LOG.Error("Build task push,Task params json unmarshal error", zap.String("error", err.Error()))
 			return
 		}
 		for key, value := range params {
@@ -82,6 +84,7 @@ func buildTaskPush(task octopus.Task, taskPush *protocol.TaskPush) (err error) {
 	var compactBuffer bytes.Buffer
 	if err = json.Compact(&compactBuffer, []byte(scriptContent)); err != nil {
 		taskPush.Error = "Task script compact error"
+		global.GVA_LOG.Error("Build task push,Task script compact error", zap.String("error", err.Error()))
 		return
 	}
 	taskPush.TaskId = strconv.Itoa(int(task.ID))
