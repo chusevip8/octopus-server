@@ -19,4 +19,5 @@ type RouterGroup struct {
 	MsgTaskSetupRouter
 	MsgConversationRouter
 	MessageRouter
+	MsgTaskRouter
 }

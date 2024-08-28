@@ -141,6 +141,7 @@ func (msgConversationApi *MsgConversationApi) GetMsgConversationList(c *gin.Cont
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+	pageInfo.CreatedBy = utils.GetUserID(c)
 	if list, total, err := msgConversationService.GetMsgConversationInfoList(pageInfo); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Error(err))
 		response.FailWithMessage("获取失败", c)

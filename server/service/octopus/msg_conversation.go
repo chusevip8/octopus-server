@@ -93,7 +93,7 @@ func (msgConversationService *MsgConversationService) GetMsgConversationInfoList
 	}
 
 	err = db.Select("oct_msg_conversation.*, COUNT(oct_message.id) AS unread_count").
-		Joins("LEFT JOIN oct_message ON oct_message.conversation_id = oct_cmt_conversation.id AND oct_message.unread = 1").
+		Joins("LEFT JOIN oct_message ON oct_message.conversation_id = oct_msg_conversation.id AND oct_message.unread = 1").
 		Group("oct_msg_conversation.id").
 		Order("unread_count DESC").
 		Find(&msgConversations).Error
